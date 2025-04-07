@@ -1,2 +1,5 @@
 # STOP COMITTING THE PYTHON CACHE FILES
 **/__pycache__
+
+# Don't track the virtual environment
+**/.venv
