@@ -3,3 +3,6 @@
 
 # Don't track the virtual environment
 **/.venv
+
+# Don't track database
+database/database.db
