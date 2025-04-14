@@ -6,3 +6,6 @@
 
 # Don't track database
 database/database.db
+
+# Don't track the environment variables
+.env
