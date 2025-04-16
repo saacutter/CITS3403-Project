@@ -40,7 +40,7 @@ pip install -r requirements.txt
 |---------------|------------|-----------------------------------------------|
 | Jordan Joseph | 23332309   | [Jordan-672](https://github.com/Jordan-672)   |
 | Arnav Kaul    | 23857081   | [arnavkaul77](https://github.com/arnavkaul77) |
-| Jay Owens     | 23459289   | UNDEFINED                                     |
+| Jay Owens     | 23459289   | [JayJay7704](https://github.com/JayJay7704)   |
 | Isaac Rutter  | 24273992   | [saacutter](https://github.com/saacutter)     |
 
 </div>
