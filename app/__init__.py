@@ -1,12 +1,12 @@
 from flask import Flask
-import os
-from dotenv import load_dotenv
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+from app.config import Config
 
 # Initialise the Flask server
 application = Flask(__name__)
+application.config.from_object(Config)
+db = SQLAlchemy(application)
+migrate = Migrate(application, db)
 
-# Set the secret key for forms
-load_dotenv()
-application.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
-
-import app.routes
+from app import routes, models
