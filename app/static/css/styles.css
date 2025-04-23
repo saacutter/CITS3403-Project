@@ -1,3 +1,78 @@
-* {
+:root {
     font-family: Helvetica, Arial, sans-serif;
+    color: whitesmoke;
+    background-color: rgba(26, 26, 26, 0.975);
+}
+
+/* Styling for HTML elements */
+body {
+    margin: 0px;
+}
+
+img {
+    background-color: yellow;
+    width: 3em;
+    height: 3em;
+    border-radius: 50%;
+    padding: 10px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:visited {
+    color: white;
+}
+
+/* Styling for reusable classes */
+.container-flex {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 8em;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.black-bg {
+    background-color: rgba(0, 0, 0, 1);
+}
+
+.transparent-bg {
+    background-color: transparent;
+}
+
+/* Styling for individual elements (IDs) */
+#titlebar {
+    padding: 2em;
+    flex: 1;
+}
+
+#account-buttons {
+    display: flex;
+    gap: 1em;
+    margin-right: 2em;
+    font-size: 20px;
+    color: white;
+}
+
+#login, #signup {
+    width: auto;
+    padding: 0.5em;
+    border: 2px solid transparent;
+    border-radius: 10%;
+}
+
+#signup {
+    background-color: aliceblue;
+}
+
+#login:hover, #signup:hover {
+    cursor: pointer;
+    border-color: grey;
 }

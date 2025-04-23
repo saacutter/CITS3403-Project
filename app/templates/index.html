@@ -5,5 +5,19 @@ Homepage
 {% endblock %}
 
 {% block body %}
-<p>This is the homepage.</p>
+<div class="container-flex black-bg">
+    <div id="titlebar">
+        <h1 class="center transparent-bg">Tournament Manager</h1>
+    </div>
+    {% if signed_out %}
+        <div id="account-buttons">
+            <div id="login" class="center"><a href="/login">Log In</a></div>
+            <div id="signup" class="center"><a href="/login" style="color: black;">Sign Up</a></div>
+        </div>
+    {% else %}
+        <div class="profile-icon transparent-bg">
+            <img src="{{ image | default('https://i.pinimg.com/736x/0e/9c/97/0e9c97bf03f38383a58b5e6b0661301f.jpg')}}">
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
