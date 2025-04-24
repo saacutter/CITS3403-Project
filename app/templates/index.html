@@ -5,5 +5,45 @@ Homepage
 {% endblock %}
 
 {% block body %}
-<p>This is the homepage.</p>
+<div class="container-flex black-bg">
+    <div id="titlebar">
+        <h1 class="center transparent-bg">Tournament Manager</h1>
+    </div>
+    {% if signed_out %}
+        <div id="account-buttons">
+            <div id="login" class="center rounded-border-percent"><a href="/login">Log In</a></div>
+            <div id="signup" class="center rounded-border-percent"><a href="/login" style="color: black;">Sign Up</a></div>
+        </div>
+    {% else %}
+        <div class="profile-icon transparent-bg">
+            <img src="{{ image | default('https://i.pinimg.com/736x/0e/9c/97/0e9c97bf03f38383a58b5e6b0661301f.jpg')}}">
+        </div>
+    {% endif %}
+</div>
+<div class="container">
+    {% if signed_out %}
+        <div id="introduction" class="center white-bg rounded-border">
+            <h1>This is a temporary heading.</h1>
+            <p>A description of the application will be written here.</p>
+        </div>
+    {% endif %}
+    <div id="homepage-content" class="container-flex" style="gap: 1em;">
+        <div id="latest-runs" class="white-bg rounded-border">
+            <h3 class="center">LATEST RUNS</h4>
+            {% for run in runs %}
+                <div class="run">
+
+                </div>
+            {% endfor %}
+        </div>
+        <div id="trending-games" class="white-bg rounded-border">
+            <h3 class="center">TRENDING GAMES</h4>
+            {% for game in games %}
+                <div class="game">
+                    
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}
