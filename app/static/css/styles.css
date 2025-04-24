@@ -1,5 +1,5 @@
 :root {
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: Orbitron, Helvetica, Arial, sans-serif;
     color: whitesmoke;
     background-color: rgba(26, 26, 26, 0.975);
 }
@@ -26,6 +26,12 @@ a:visited {
 }
 
 /* Styling for reusable classes */
+.container {
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .container-flex {
     display: flex;
     flex-direction: row;
@@ -47,6 +53,21 @@ a:visited {
     background-color: transparent;
 }
 
+.white-bg {
+    background-color: white;
+    color: black;
+}
+
+.rounded-border {
+    border: 2px solid transparent;
+    border-radius: 1em;
+}
+
+.rounded-border-percent {
+    border: 2px solid transparent;
+    border-radius: 10%;
+}
+
 /* Styling for individual elements (IDs) */
 #titlebar {
     padding: 2em;
@@ -64,8 +85,6 @@ a:visited {
 #login, #signup {
     width: auto;
     padding: 0.5em;
-    border: 2px solid transparent;
-    border-radius: 10%;
 }
 
 #signup {
@@ -75,4 +94,28 @@ a:visited {
 #login:hover, #signup:hover {
     cursor: pointer;
     border-color: grey;
+}
+
+#introduction {
+    margin-top: 1em;
+    width: 95%;
+    height: 10em;
+    align-content: center;
+}
+
+#homepage-content {
+    justify-content: center;
+}
+
+#latest-runs, #trending-games {
+    width: 46.9%;
+    margin-top: 4em;
+    height: 10em;
+}
+
+/* Media Queries */
+@media screen and (max-width: 900px) {
+    .container {
+        width: 98%;
+    }
 }
