@@ -9,4 +9,4 @@ class Config:
     SECRET_KEY = os.getenv("SECRET_KEY")
 
     # Set the database URL
-    SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL") or "sqlite:///" + os.path.join(os.path.abspath(os.path.dirname(__file__)), "app.db")
