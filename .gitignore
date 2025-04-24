@@ -1,11 +1,8 @@
-# STOP COMITTING THE PYTHON CACHE FILES
+# Python cache files
 **/__pycache__
 
-# Don't track the virtual environment
+# Virtual environment files (this is huge otherwise)
 **/.venv
 
-# Don't track database
-database/database.db
-
-# Don't track the environment variables
+# Environment variables file
 .env
