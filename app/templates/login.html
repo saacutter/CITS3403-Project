@@ -2,9 +2,9 @@
 
 {% block title %}
 {% if login %}
-    Tournament Manager | Log In
+    Log In
 {% else %}
-    Tournament Manager | Sign Up
+    Sign Up
 {% endif %}
 {% endblock %}
 
@@ -14,10 +14,21 @@
         <div>
             <p class="center bold-text">Log In</p>
         </div>
-        <form action="/login" method="post">
-            <input type="text" name="username" placeholder="Username" autofocus required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit" class="center">Login</button>
+        <form action="{{ url_for('login') }}" method="post">
+            {{ loginForm.hidden_tag() }}
+            <div class="container">
+                {{ loginForm.username.label }}
+                {{ loginForm.username(placeholder="Username", class="rounded-border-px border-grey", autofocus="true") }}
+            </div>
+            <br>
+            <div class="container">
+                {{ loginForm.password.label }}
+                {{ loginForm.password(placeholder="Password", class="rounded-border-px border-grey") }}
+            </div>
+            <div class="container">
+                {{ loginForm.remember_user() }} {{ loginForm.remember_user.label }}
+            </div>
+            {{ loginForm.submit(class="center") }}
         </form>
         <hr>
         <div>
@@ -29,10 +40,25 @@
         <div>
             <p class="center bold-text">Sign Up</p>
         </div>
-        <form action="/signup" method="post">
-            <input type="text" name="username" placeholder="Username" autocomplete="off" autofocus required>
-            <input type="password" name="password" placeholder="Password" autocomplete="off" required>
-            <button type="submit" class="center">Sign Up</button>
+        <form action="{{ url_for('signup') }}" method="post">
+            {{ signupForm.hidden_tag() }}
+            <div class="container">
+                {{ signupForm.username.label }}
+                {{ signupForm.username(placeholder="Username", class="rounded-border-px border-grey", autofocus="true") }}
+            </div>
+            <br>
+            <div class="container">
+                {{ signupForm.email.label }}
+                {{ signupForm.email(placeholder="Email Address", class="rounded-border-px border-grey") }}
+            </div>
+            <br>
+            <div class="container">
+                {{ signupForm.password.label }}
+                {{ signupForm.password(placeholder="Password", class="rounded-border-px border-grey") }}
+                {{ signupForm.password_confirm.label }}
+                {{ signupForm.password_confirm(placeholder="Confirm Password", class="rounded-border-px border-grey") }}
+            </div>
+            {{ signupForm.submit(class="center") }}
         </form>
         <hr>
         <div class="login">
