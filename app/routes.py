@@ -11,4 +11,11 @@ def index():
 def login():
     if request.method == "POST":
         ... # TODO: Create the sign in logic
-    return render_template("login.html", login=True)
+    return render_template("login.html", login=True) # Display login page
+        
+# Signup route of the application
+@application.route("/signup", methods=["GET", "POST"])
+def signup():
+    if request.method == "POST":
+        ... # TODO: Create the sign up logic
+    return render_template("login.html", login=False) # Display sign up page
