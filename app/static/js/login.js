@@ -1,5 +1,8 @@
+const signup = document.querySelector('#signup-panel');
+const login = document.querySelector('#login-panel');
+
 // Identify the 'signup' button and listen for clicks
-let suButton = document.querySelector('#signup-btn');
+let suButton = document.querySelector('#signup-panel-btn');
 suButton.addEventListener('click', () => {
     // Hide the login panel
     disableInputs(login.querySelectorAll('button, input'));
@@ -13,7 +16,7 @@ suButton.addEventListener('click', () => {
     window.history.replaceState({}, "Tournament Manager | Sign Up", "/signup");
 });
 
-let liButton = document.querySelector('#login-btn');
+let liButton = document.querySelector('#login-panel-btn');
 liButton.addEventListener('click', () => {
     // Hide the signup panel
     disableInputs(signup.querySelectorAll('button, input'));
