@@ -25,6 +25,45 @@ a:visited {
     color: white;
 }
 
+hr {
+    width: 85%;
+    margin: auto;
+    margin-top: 1em;
+}
+
+button {
+    padding: 0.4em;
+    margin-top: 1rem;
+    background-color: rgb(16, 156, 238);
+    color: white;
+    border-radius: 6px;
+    border-color: transparent;
+    transition: 0.25s ease;
+    cursor: pointer;
+}
+
+button:hover {
+    border-color: black;
+    background-color: rgb(31, 162, 238);
+}
+
+input {
+    margin-top: 1em;
+    height: 3em;
+	border-radius: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    padding-left: 0.5em;
+	transition: 0.25s ease;
+}
+
+/* Styles for pseudo-classes */
+::placeholder {
+    font-family: Quantico, "Chakra Petch", Orbitron, Helvetica, Arial, sans-serif;
+}
+
 /* Styling for reusable classes */
 .container {
     width: 85%;
@@ -43,6 +82,8 @@ a:visited {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+    display: block;
+    justify-self: center;
 }
 
 .black-bg {
@@ -68,6 +109,21 @@ a:visited {
     border-radius: 10%;
 }
 
+.panel {
+    background-color: aliceblue;
+    color: black;
+    box-shadow: 2px 2px #ffffff6e;
+    height: auto;
+    width: 40%;
+    display: block;
+    margin: auto;
+    margin-top: 10vh;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
 /* Styling for individual elements (IDs) */
 #titlebar {
     padding: 2em;
@@ -82,16 +138,16 @@ a:visited {
     color: white;
 }
 
-#login, #signup {
+#login-btn, #signup-btn {
     width: auto;
     padding: 0.5em;
 }
 
-#signup {
+#signup-btn {
     background-color: aliceblue;
 }
 
-#login:hover, #signup:hover {
+#login-btn:hover, #signup-btn:hover {
     cursor: pointer;
     border-color: grey;
 }
@@ -116,6 +172,10 @@ a:visited {
 /* Media Queries */
 @media screen and (max-width: 900px) {
     .container {
+        width: 98%;
+    }
+
+    .panel {
         width: 98%;
     }
 }

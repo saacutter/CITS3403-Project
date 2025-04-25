@@ -10,34 +10,34 @@
 
 {% block body %}
     <div>
-        <div class="panel" id="login" {% if login %} style="display: block;" {% else %} style="display: none;" {% endif %}>
-            <div class="text">
-                <p class="main justify-center">Sign In</p>
+        <div class="panel rounded-border" id="login-panel" {% if login %} style="display: block;" {% else %} style="display: none;" {% endif %}>
+            <div>
+                <p class="center bold-text">Log In</p>
             </div>
             <form action="/login" method="post">
                 <input type="text" name="username" placeholder="Username" autofocus required>
                 <input type="password" name="password" placeholder="Password" required>
                 <button type="submit" class="center">Login</button>
             </form>
-            <div class="divider transparent-border btm-border"></div>
-            <div class="signup">
-                <p class="text-small justify-center">Don't have an account?</p>
-                <button id="signup-btn" class="btm-margin center">Sign Up</button>
+            <hr>
+            <div>
+                <p class="center">Don't have an account?</p>
+                <button id="signup-panel-btn" class="center">Sign Up</button>
             </div>
         </div>
-        <div class="panel" id="signup" {% if login %} style="display: none;" {% else %} style="display: block;" {% endif %}>
-            <div class="text">
-                <p class="main justify-center">Sign Up</p>
+        <div class="panel rounded-border" id="signup-panel" {% if login %} style="display: none;" {% else %} style="display: block;" {% endif %}>
+            <div>
+                <p class="center bold-text">Sign Up</p>
             </div>
             <form action="/signup" method="post">
-                <input type="text" name="username" placeholder="Username" autofocus required>
-                <input type="password" name="password" placeholder="Password" required>
-                <button type="submit" class="btm-margin center">Sign Up</button>
+                <input type="text" name="username" placeholder="Username" autocomplete="off" autofocus required>
+                <input type="password" name="password" placeholder="Password" autocomplete="off" required>
+                <button type="submit" class="center">Sign Up</button>
             </form>
-            <div class="divider btm-border"></div>
+            <hr>
             <div class="login">
-                <p class="text-small justify-center">Already have an account?</p>
-                <button id="login-btn" class="btm-margin center">Log In</button>
+                <p class="center">Already have an account?</p>
+                <button id="login-panel-btn" class="center justify-center">Log In</button>
             </div>
         </div>
     </div>
