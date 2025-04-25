@@ -12,7 +12,7 @@ def login():
     if request.method == "POST":
         ... # TODO: Create the sign in logic
         return redirect("/")
-    return render_template("login.html", login=True) # Display login page
+    return render_template("login.html", signed_out=True, login=True) # Display login page
         
 # Signup route of the application
 @application.route("/signup", methods=["GET", "POST"])
@@ -20,4 +20,4 @@ def signup():
     if request.method == "POST":
         ... # TODO: Create the sign up logic
         return redirect("/")
-    return render_template("login.html", login=False) # Display sign up page
+    return render_template("login.html", signed_out=True, login=False) # Display sign up page
