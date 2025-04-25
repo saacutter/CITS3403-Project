@@ -19,12 +19,12 @@
     <body>
         <div class="container-flex black-bg">
             <div id="titlebar">
-                <h1 class="center transparent-bg"><a href="/">Tournament Manager</a></h1>
+                <h1 class="center transparent-bg"><a href="{{ url_for('index') }}">Tournament Manager</a></h1>
             </div>
             {% if signed_out %}
                 <div id="account-buttons">
-                    <div id="login-btn" class="center rounded-border-percent"><a href="/login">Log In</a></div>
-                    <div id="signup-btn" class="center rounded-border-percent"><a href="/signup" style="color: black;">Sign Up</a></div>
+                    <div id="login-btn" class="center rounded-border-percent"><a href="{{ url_for('login') }}">Log In</a></div>
+                    <div id="signup-btn" class="center rounded-border-percent"><a href="{{ url_for('signup') }}" style="color: black;">Sign Up</a></div>
                 </div>
             {% else %}
                 <div class="profile-icon transparent-bg">
