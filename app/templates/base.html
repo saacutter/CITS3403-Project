@@ -27,8 +27,8 @@
                     <div id="signup-btn" class="center rounded-border-percent"><a href="{{ url_for('signup') }}" style="color: black;">Sign Up</a></div>
                 </div>
             {% else %}
-                <div class="profile-icon transparent-bg">
-                    <img src="{{ image | default('https://i.pinimg.com/736x/0e/9c/97/0e9c97bf03f38383a58b5e6b0661301f.jpg')}}">
+                <div id="profile-icon" class="transparent-bg">
+                    <img src="{{ user.image | default('https://i.pinimg.com/736x/0e/9c/97/0e9c97bf03f38383a58b5e6b0661301f.jpg')}}">
                 </div>
             {% endif %}
         </div>
