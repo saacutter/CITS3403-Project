@@ -9,8 +9,7 @@ from datetime import datetime, timezone
 @application.route("/")
 @application.route("/index")
 def index():
-    user = {'username': 'username', 'image': 'https://picsum.photos/200'} # This is just a temporary user where the image is a random image
-    return render_template("index.html", user=user) # TODO: signed_out can be assigned to the .is_authenticated method when we come to that
+    return render_template("index.html")
 
 # Login route of the application
 @application.route("/login", methods=["GET", "POST"])
