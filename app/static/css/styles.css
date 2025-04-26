@@ -1,3 +1,121 @@
-* {
-    font-family: Helvetica, Arial, sans-serif;
+:root {
+    font-family: Orbitron, Helvetica, Arial, sans-serif;
+    color: whitesmoke;
+    background-color: rgba(26, 26, 26, 0.975);
+}
+
+/* Styling for HTML elements */
+body {
+    margin: 0px;
+}
+
+img {
+    background-color: yellow;
+    width: 3em;
+    height: 3em;
+    border-radius: 50%;
+    padding: 10px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:visited {
+    color: white;
+}
+
+/* Styling for reusable classes */
+.container {
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.container-flex {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 8em;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.black-bg {
+    background-color: rgba(0, 0, 0, 1);
+}
+
+.transparent-bg {
+    background-color: transparent;
+}
+
+.white-bg {
+    background-color: white;
+    color: black;
+}
+
+.rounded-border {
+    border: 2px solid transparent;
+    border-radius: 1em;
+}
+
+.rounded-border-percent {
+    border: 2px solid transparent;
+    border-radius: 10%;
+}
+
+/* Styling for individual elements (IDs) */
+#titlebar {
+    padding: 2em;
+    flex: 1;
+}
+
+#account-buttons {
+    display: flex;
+    gap: 1em;
+    margin-right: 2em;
+    font-size: 20px;
+    color: white;
+}
+
+#login, #signup {
+    width: auto;
+    padding: 0.5em;
+}
+
+#signup {
+    background-color: aliceblue;
+}
+
+#login:hover, #signup:hover {
+    cursor: pointer;
+    border-color: grey;
+}
+
+#introduction {
+    margin-top: 1em;
+    width: 95%;
+    height: 10em;
+    align-content: center;
+}
+
+#homepage-content {
+    justify-content: center;
+}
+
+#latest-runs, #trending-games {
+    width: 46.9%;
+    margin-top: 4em;
+    height: 10em;
+}
+
+/* Media Queries */
+@media screen and (max-width: 900px) {
+    .container {
+        width: 98%;
+    }
 }

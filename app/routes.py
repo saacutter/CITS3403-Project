@@ -1,8 +1,14 @@
-from app import application
+from app import application, db, migrate, models
 from flask import render_template, request, redirect, url_for, session
-from flask_sqlalchemy import SQLAlchemy
 
 # Default route of the application
-@application.route("/", methods=["GET", "POST"])
+@application.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", signed_out=True)
+
+# Login route of the application
+@application.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        ... # TODO: Create the sign in logic
+    return render_template("login.html", login=True)
