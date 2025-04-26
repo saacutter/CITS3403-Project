@@ -10,3 +10,6 @@ class Config:
 
     # Set the database URL
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL") or "sqlite:///" + os.path.join(os.path.abspath(os.path.dirname(__file__)), "app.db")
+
+    # Ensure templates auto-reload as they are updated
+    TEMPLATES_AUTO_RELOAD = True

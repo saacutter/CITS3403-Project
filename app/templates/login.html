@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if login %}
+    Log In
+{% else %}
+    Sign Up
+{% endif %}
+{% endblock %}
+
+{% block body %}
+<div>
+    <div class="panel rounded-border" id="login-panel" {% if login %} style="display: block;" {% else %} style="display: none;" {% endif %}>
+        <div>
+            <p class="center bold-text">Log In</p>
+        </div>
+        <form action="{{ url_for('login') }}" method="post">
+            {{ loginForm.hidden_tag() }}
+            <div class="container">
+                {{ loginForm.username.label }}
+                {{ loginForm.username(placeholder="Username", class="rounded-border-px border-grey", autofocus="true") }}
+            </div>
+            <br>
+            <div class="container">
+                {{ loginForm.password.label }}
+                {{ loginForm.password(placeholder="Password", class="rounded-border-px border-grey") }}
+            </div>
+            <div class="container">
+                {{ loginForm.remember_user() }} {{ loginForm.remember_user.label }}
+            </div>
+            {{ loginForm.submit(class="center") }}
+        </form>
+        <hr>
+        <div>
+            <p class="center">Don't have an account?</p>
+            <button id="signup-panel-btn" class="center">Sign Up</button>
+        </div>
+    </div>
+    <div class="panel rounded-border" id="signup-panel" {% if login %} style="display: none;" {% else %} style="display: block;" {% endif %}>
+        <div>
+            <p class="center bold-text">Sign Up</p>
+        </div>
+        <form action="{{ url_for('signup') }}" method="post">
+            {{ signupForm.hidden_tag() }}
+            <div class="container">
+                {{ signupForm.username.label }}
+                {{ signupForm.username(placeholder="Username", class="rounded-border-px border-grey", autofocus="true") }}
+            </div>
+            <br>
+            <div class="container">
+                {{ signupForm.email.label }}
+                {{ signupForm.email(placeholder="Email Address", class="rounded-border-px border-grey") }}
+            </div>
+            <br>
+            <div class="container">
+                {{ signupForm.password.label }}
+                {{ signupForm.password(placeholder="Password", class="rounded-border-px border-grey") }}
+                {{ signupForm.password_confirm.label }}
+                {{ signupForm.password_confirm(placeholder="Confirm Password", class="rounded-border-px border-grey") }}
+            </div>
+            {{ signupForm.submit(class="center") }}
+        </form>
+        <hr>
+        <div class="login">
+            <p class="center">Already have an account?</p>
+            <button id="login-panel-btn" class="center justify-center">Log In</button>
+        </div>
+    </div>
+</div>
+<script src="static/js/login.js"></script>
+{% endblock %}
