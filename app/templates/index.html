@@ -11,6 +11,10 @@ Homepage
             <h1>This is a temporary heading.</h1>
             <p>A description of the application will be written here.</p>
         </div>
+    {% else %}
+        <div>
+            <h1 class="center">Hello, {{ user.username }}</h3>
+        </div>
     {% endif %}
     <div id="homepage-content" class="container-flex" style="gap: 1em;">
         <div id="latest-runs" class="white-bg rounded-border">

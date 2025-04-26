@@ -9,20 +9,29 @@ body {
     margin: 0px;
 }
 
-img {
-    background-color: white;
-    width: 3em;
-    height: 3em;
-    border-radius: 50%;
-    padding: 10px;
-}
-
 a {
     text-decoration: none;
 }
 
 a:visited {
     color: white;
+}
+
+img {
+    background-color: grey;
+    width: 3em;
+    height: 3em;
+    border-radius: 50%;
+    padding: 10px;
+    margin-right: 2em;
+    position: absolute;
+    z-index: 3;
+    right: 0px;
+    top: 4.5vh;
+}
+
+img:hover {
+    cursor: pointer;
 }
 
 hr {
