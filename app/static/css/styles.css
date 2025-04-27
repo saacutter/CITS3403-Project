@@ -18,20 +18,11 @@ a:visited {
 }
 
 img {
+    width: 4em;
+    height: 4em;
     background-color: grey;
-    width: 3em;
-    height: 3em;
+    padding: 5px;
     border-radius: 50%;
-    padding: 10px;
-    margin-right: 2em;
-    position: absolute;
-    z-index: 3;
-    right: 0px;
-    top: 4.5vh;
-}
-
-img:hover {
-    cursor: pointer;
 }
 
 hr {
@@ -166,6 +157,26 @@ input::placeholder {
     font-size: 24px;
 }
 
+div.search-user {
+    width: 50%;
+    height: 3em;
+    margin-bottom: 1em;
+    align-content: center;
+    display: flex;
+    gap: 1em;
+    padding-left: 1em;
+}
+
+.search-user > p {
+    font-size: 16px;
+}
+
+.search-user > img {
+    padding: 3px;
+    height: 2.5em;
+    width: 2.5em;
+}
+
 /* Styling for individual elements (IDs) */
 #titlebar {
     width: 100%;
@@ -213,6 +224,18 @@ input::placeholder {
     width: 46.9%;
     margin-top: 4em;
     height: 10em;
+}
+
+#profile-icon-picture {
+    margin-right: 2em;
+    position: absolute;
+    z-index: 3;
+    right: 0px;
+    top: 2em;
+}
+
+#profile-icon:hover {
+    cursor: pointer;
 }
 
 /* Media Queries */
