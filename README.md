@@ -26,33 +26,40 @@ pip install -r requirements.txt
 
 ### Setting Environment Variables
 1. Create a new file in the root directory with the filename `.env`.
-    - The program tree should look like the following:
-    <pre>
-    .
-    ├── README.md
-    ├── app
-    │   ├── __init__.py
-    │   ├── database
-    │   │   ├── create.sh
-    │   │   ├── database.db
-    │   │   └── schema.sql
-    │   ├── forms.py
-    │   ├── routes.py
-    │   ├── static
-    │   │   ├── css
-    │   │   │   └── styles.css
-    │   │   └── js
-    │   │       └── temp.js
-    │   ├── templates
-    │   │   ├── base.html
-    │   │   └── index.html
-    │   └── tests
-    │       └── test_app.py
-    ├── manager.py
-    ├── migrations
-    │   └── versions
-    └── requirements.txt
-    </pre>
+    - The directory tree should look like the following (excluding the virtual environment, which should be created as above):
+        <pre>
+        .
+        ├── .env
+        ├── .flaskenv
+        ├── README.md
+        ├── app
+        │   ├── __init__.py
+        │   ├── config.py
+        │   ├── forms.py
+        │   ├── models.py
+        │   ├── routes.py
+        │   ├── static
+        │   │   ├── css
+        │   │   │   └── styles.css
+        │   │   └── js
+        │   │       └── login.js
+        │   ├── templates
+        │   │   ├── base.html
+        │   │   ├── index.html
+        │   │   └── login.html
+        ├── instance
+        │   └── app.db
+        ├── manager.py
+        ├── migrations
+        │   ├── README
+        │   ├── alembic.ini
+        │   ├── env.py
+        │   ├── script.py.mako
+        │   └── versions
+        │       ├── 518c88c18d5f_updated_users.py
+        │       └── 5d3f9f639ef5_users_table.py
+        └── requirements.txt
+        </pre>
 
 2. Add the secret key to the file (the below is an example secret key):
 ```
@@ -61,15 +68,19 @@ SECRET_KEY="this-is-a-secret-key"
 
 3. Add the SQLAlchemy database to the file:
 ```
-SQLALCHEMY_DATABASE_URI = "sqlite:////database/database.db"
+DATABASE_URL = "sqlite:///app.db"
 ```
 
 
 ### Starting the Application
-1. Create the database using `sh database/create.sh`.
-    - This will create a file named `database.db` in the `database` directory.
+1. Initialise the database (if it hasn't already been) with the `flask db init` command.
+    - The database can then migrate the database using `flask db migrate`.
+    - Once the database has migrated the database schema, it can then be committed using `flask db upgrade`.
 
 2. Start the flask application using `flask run`.
+    - Note that the `.flaskenv` file sets the `FLASK_APP` environment variable. If this does not work, the following should be done:
+        - UNIX-based (Linux and MacOS): `export FLASK_APP=manager.py`
+        - Windows: `set FLASK_APP=manager.py`
 
 
 ## Running the Unit Tests

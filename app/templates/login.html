@@ -18,12 +18,12 @@
             {{ loginForm.hidden_tag() }}
             <div class="container">
                 {{ loginForm.username.label }}
-                {{ loginForm.username(placeholder="Username", class="rounded-border-px border-grey", autofocus="true") }}
+                {{ loginForm.username(placeholder="Username/Email Address", class="rounded-border-px border-grey", autofocus="true") }}
             </div>
             <br>
             <div class="container">
                 {{ loginForm.password.label }}
-                {{ loginForm.password(placeholder="Password", class="rounded-border-px border-grey") }}
+                {{ loginForm.password(placeholder="Password", minlength="8", class="rounded-border-px border-grey") }}
             </div>
             <div class="container">
                 {{ loginForm.remember_user() }} {{ loginForm.remember_user.label }}
@@ -54,9 +54,9 @@
             <br>
             <div class="container">
                 {{ signupForm.password.label }}
-                {{ signupForm.password(placeholder="Password", class="rounded-border-px border-grey") }}
+                {{ signupForm.password(placeholder="Password", minlength="8", class="rounded-border-px border-grey") }}
                 {{ signupForm.password_confirm.label }}
-                {{ signupForm.password_confirm(placeholder="Confirm Password", class="rounded-border-px border-grey") }}
+                {{ signupForm.password_confirm(placeholder="Confirm Password", minlength="8", class="rounded-border-px border-grey") }}
             </div>
 
             <div class="container">
