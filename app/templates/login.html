@@ -58,6 +58,13 @@
                 {{ signupForm.password_confirm.label }}
                 {{ signupForm.password_confirm(placeholder="Confirm Password", class="rounded-border-px border-grey") }}
             </div>
+
+            <div class="container">
+                {{ signupForm.privacy.label }}
+                {{ signupForm.privacy() }}
+            </div>
+            <br>
+            
             {{ signupForm.submit(class="center") }}
         </form>
         <hr>
