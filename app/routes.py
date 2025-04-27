@@ -1,9 +1,9 @@
-from app import application, db, migrate, models, forms
-from flask import render_template, request, redirect, url_for, session
-from flask_login import current_user, login_user, logout_user
+from app import application, db, models, forms
+from flask import render_template, request, redirect, url_for
+from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timezone
+from datetime import datetime, timezone, time
 
 # Default route of the application
 @application.route("/")
@@ -67,3 +67,32 @@ def signup():
 def signout():
     logout_user()
     return redirect(url_for('index'))
+
+@application.route('/upload', methods=["GET", "POST"])
+@login_required
+def upload():
+    if request.method == "POST" and forms.UploadDataForm().validate_on_submit():
+        form = forms.UploadDataForm()
+
+        # Extract the information from the request
+        file = request.files['file']
+        game = form.game.data
+        points = form.points.data
+        time_taken = form.time_taken.data
+        result = form.result.data
+
+        # Ensure that valid data was provided
+        if file == None or (game == "" and points == "" and time_taken == "" and result == ""):
+            return redirect(url_for('upload'))
+
+        if file:
+            # TODO: Process the file (requires the format of file to be specified)
+            ...
+        else:
+            # Create the tournament entry and add it to the database
+            data_entry = models.Tournaments(user_id=current_user.id, game=game, points=points, time_taken=time(0), result=result)
+            db.session.add(data_entry)
+            db.session.commit()
+
+        return redirect(url_for('index'))
+    return render_template("data.html", form=forms.UploadDataForm())

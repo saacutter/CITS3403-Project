@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+Upload Data
+{% endblock %}
+
+{% block body %}
+<div class="panel rounded-border">
+    <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="container center rounded-border file-upload">
+            <span class="material-symbols-outlined" style="font-size: 30px;">download</span>
+            {{ form.file(id="file", accept=".json, .csv") }}
+        </div>
+        <br>
+        <div class="container">
+            {{ form.game.label }}
+            {{ form.game(id="upload-input") }}
+        </div>
+        <br>
+        <div class="container">
+            {{ form.points.label }}
+            {{ form.points(id="upload-input") }}
+        </div>
+        <br>
+        <div class="container">
+            {{ form.time_taken.label }}
+            {{ form.time_taken(id="upload-input") }}
+        </div>
+        <br>
+        <div class="container">
+            {{ form.result.label }}
+            {{ form.result(id="upload-input") }}
+        </div>
+        {{ form.submit(class="center") }}
+    </form>
+</div>
+<script src="static/js/upload.js"></script>
+{% endblock %}
