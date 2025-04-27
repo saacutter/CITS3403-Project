@@ -1,6 +1,6 @@
 from app import application, db, migrate, models, forms
-from flask import render_template, request, redirect, url_for, session
-from flask_login import current_user, login_user, logout_user
+from flask import render_template, request, redirect, url_for, jsonify
+from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timezone
@@ -18,6 +18,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     
+    
     if request.method == "POST" and forms.LoginForm().validate_on_submit():
         form = forms.LoginForm()
 
@@ -32,9 +33,12 @@ def login():
         user.last_login = datetime.now(timezone.utc)
         db.session.commit()
 
-        # Log the user in and send them to the homepage
+        # Log the user in
         login_user(user, remember=form.remember_user.data)
-        return redirect(url_for('index'))
+
+        # Extract the next page from the URL and redirect them to that page
+        next_page = request.args.get('next', 'index')
+        return redirect(url_for(next_page))
     return render_template("login.html", login=True, loginForm=forms.LoginForm(), signupForm=forms.SignupForm()) # Display login page
         
 # Signup route of the application
@@ -58,12 +62,31 @@ def signup():
         db.session.add(user)
         db.session.commit()
 
-        # Log in the user and return them to the homepage
+        # Log in the user and redirect them to the homepage
         login_user(user, remember=True)
-        return redirect(url_for('index'))
+        return redirect('/')
     return render_template("login.html", login=False, loginForm=forms.LoginForm(), signupForm=forms.SignupForm()) # Display sign up page
 
 @application.route('/signout')
 def signout():
     logout_user()
     return redirect(url_for('index'))
+
+@application.route('/search')
+@login_required
+def search():
+    return render_template("search.html")
+
+@application.route('/get_like/<pattern>')
+def get_like(pattern):
+    # Extract the users from the database that begin with the requested pattern
+    users = db.session.scalars(sa.select(models.Users).where(models.Users.username.like(pattern + '%'))).all()
+
+    # Remove the signed in user from the list, if applicable
+    try:
+        users.remove(current_user)
+    except ValueError:
+        return jsonify([{"username": None}])
+
+    # Return a JSON object of the extracted users
+    return jsonify([user.serialise() for user in users]) # Adapted from: https://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
