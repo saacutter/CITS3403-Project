@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, BooleanField, PasswordField, SubmitField
+from wtforms import StringField, BooleanField, PasswordField, SubmitField, FileField
 from wtforms.validators import DataRequired, Email, EqualTo
+from flask_wtf.file import FileAllowed
 
 class LoginForm(FlaskForm):
     username      = StringField('Username or Email Address', validators=[DataRequired()])
@@ -14,3 +15,11 @@ class SignupForm(FlaskForm):
     password         = PasswordField('Password', validators=[DataRequired()])
     password_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit           = SubmitField('Sign Up')
+
+class UploadDataForm(FlaskForm):
+    file       = FileField('File Upload', validators=[FileAllowed(['json', 'csv'])])
+    game       = StringField('Game')
+    points     = StringField('Points')
+    time_taken = StringField('Time Taken')
+    result     = StringField('Result')
+    submit     = SubmitField('Add Game')
