@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block title %}
-Turnament Manager - Upload Data
+Tournament Manager - Add Match
 {% endblock %}
 
 {% block body %}
 <div class="panel rounded-border">
-    <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ url_for('tournament') }}" method="post" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <div class="container center rounded-border file-upload">
             <span class="material-symbols-outlined" style="font-size: 30px;">download</span>

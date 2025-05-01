@@ -23,7 +23,7 @@
     <body class="antialiased">
         <header class="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-900 text-white">
             <div id="titlebar" class="mb-4 md:mb-0">
-                <h1 class="text-2xl font-bold"><a href="{{ url_for('index') }}" class="hover:text-gray-300">Tournament Manager</a></h1>
+                <h1 class="text-3xl font-bold"><a href="{{ url_for('index') }}" class="hover:text-gray-300">Tournament Manager</a></h1>
             </div>
             {% if current_user.is_anonymous %}
                 <div id="account-buttons" class="flex space-x-4">
@@ -38,7 +38,7 @@
                 <div id="profile-icon" class="transparent-bg">
                     <img src="{{ current_user.profile_picture }}" id="profile-icon-picture">
                 </div>
-                <a href="{{ url_for('signout') }}" style="position: absolute; z-index: 4;">Sign Out</a>
+                <a href="{{ url_for('signout') }}" style="position: absolute; z-index: 4; right: 100px;">Sign Out</a>
                 <!-- TODO: Add a dropdown bar with choices like accessing the user's profile, settings, and signing out where the profile picture is -->
             {% endif %}
         </header>
