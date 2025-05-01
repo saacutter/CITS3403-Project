@@ -54,7 +54,12 @@ def signup():
             # TODO: Display error message because the passwords do not match
             return redirect(url_for('login'))
           
-        # TODO: Validate that the password is valid (should only consist of letters, numbers, and a specific set of special characters)
+        email = form.email.data.strip().lower()
+        username = form.username.data.strip()
+        
+        # Check if username or email already exists
+        existing_user = db.session.scalar(sa.select(models.Users).where((models.Users.username == username) | (models.Users.email == email)))
+        if existing_user: return redirect(url_for('signup')) 
         
         # Hash the password
         hashed_password = generate_password_hash(form.password.data)
@@ -65,9 +70,9 @@ def signup():
 
         # Create the user entry and add it to the database
         user = models.Users(
-          username=form.username.data, 
+          username=username, 
           password=hashed_password, 
-          email=form.email.data,
+          email=email,
           privacy=form.privacy.data)
         db.session.add(user)
         db.session.commit()
@@ -96,7 +101,7 @@ def get_like(pattern):
     try:
         users.remove(current_user)
     except ValueError:
-        return
+        return jsonify([{"username": None}]) 
     
     # Return an empty JSON object if no users match the specified pattern
     if len(users) == 0:
