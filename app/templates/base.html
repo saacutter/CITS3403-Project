@@ -14,44 +14,83 @@
         <!-- Font -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Orbitron:wght@400..900&family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600;1,700&family=Orbitron:wght@400..900&family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 
         <title>{% block title %}{% endblock %}</title>
     </head>
     <body>
         <header class="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-900 text-white">
-            <div id="titlebar" class="mb-4 md:mb-0">
+            <div id="titlebar" class="mb-4 md:mb-0 flex items-center justify-between w-full">
                 <h1 class="text-2xl font-bold"><a href="{{ url_for('index') }}" class="hover:text-gray-300">Tournament Manager</a></h1>
-            </div>
-            <div id="account-buttons" class="flex space-x-4">
-                {% if current_user.is_anonymous %}
-                    <div id="login-btn">
-                        <a href="{{ url_for('login') }}" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition">Log In</a>
-                    </div>
-                    <div id="signup-btn">
-                        <a href="{{ url_for('signup') }}" class="block px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition">Sign Up</a>
-                    </div>
-                {% else %}
-                    <div id="profile-icon" class="relative">
-                        <img src="{{ current_user.profile_picture }}" id="profile-icon-picture" class="cursor-pointer w-10 h-10 rounded-full" onclick="toggleDropdown()">
-                        <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                            <a href="{{ url_for('profile') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">User Profile</a>
-                            <a href="{{ url_for('settings') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a>
-                            <a href="{{ url_for('how_to_use') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">How to Use Guide</a>
-                            <a href="{{ url_for('signout') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Sign Out</a>
+                <div id="account-buttons" class="flex space-x-4 items-center">
+                    {% if current_user.is_authenticated %}
+                        <!-- Display profile image if user is logged in -->
+                        <div id="profile-icon" class="relative">
+                            <img src="{{ current_user.profile_picture }}" alt="Profile Picture" class="w-10 h-10 rounded-full">
                         </div>
-                    </div>
-                {% endif %}
+                    {% else %}
+                        <!-- Display Log In and Sign Up buttons if user is not authenticated -->
+                        <div id="login-btn">
+                            <a href="{{ url_for('login') }}" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition">Log In</a>
+                        </div>
+                        <div id="signup-btn">
+                            <a href="{{ url_for('signup') }}" class="block px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition">Sign Up</a>
+                        </div>
+                    {% endif %}
+                    <!-- Dropdown menu button -->
+                    <button id="dropdown-toggle" class="p-2 rounded-md bg-gray-700 hover:bg-gray-600 transition">
+                        <span class="block w-6 h-0.5 bg-white mb-1"></span>
+                        <span class="block w-6 h-0.5 bg-white mb-1"></span>
+                        <span class="block w-6 h-0.5 bg-white"></span>
+                    </button>
+                </div>
             </div>
         </header>
+        <!-- Dropdown menu -->
+        <div id="dropdown-menu" class="hidden absolute right-4 top-16 w-64 bg-white rounded-lg shadow-lg z-10 transform transition-transform duration-300 scale-95 opacity-0">
+            <ul class="py-4">
+                {% if current_user.is_authenticated %}
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-user-circle text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('profile') }}" class="text-gray-800">User Profile</a>
+                    </li>
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-cog text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('settings') }}" class="text-gray-800">Settings</a>
+                    </li>
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-question-circle text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('how_to_use') }}" class="text-gray-800">How to Use Guide</a>
+                    </li>
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-sign-out-alt text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('signout') }}" class="text-gray-800">Sign Out</a>
+                    </li>
+                {% else %}
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-sign-in-alt text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('login') }}" class="text-gray-800">Log In</a>
+                    </li>
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-user-plus text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('signup') }}" class="text-gray-800">Sign Up</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
 
         {% block body %}{% endblock %}
 
         <script>
-            function toggleDropdown() {
-                const dropdown = document.getElementById('dropdown-menu');
-                dropdown.classList.toggle('hidden');
-            }
+            // Toggle dropdown menu visibility with animation
+            const dropdownToggle = document.getElementById('dropdown-toggle');
+            const dropdownMenu = document.getElementById('dropdown-menu');
+
+            dropdownToggle.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('hidden');
+                dropdownMenu.classList.toggle('scale-95');
+                dropdownMenu.classList.toggle('opacity-0');
+            });
         </script>
     </body>
 </html>
