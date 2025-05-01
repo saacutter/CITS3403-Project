@@ -20,6 +20,7 @@ a {
 
 a:hover {
     text-decoration: underline;
+    cursor: pointer;
 }
 
 /* Ensure the background covers the full height */
@@ -55,8 +56,7 @@ hr {
     margin-top: 1em;
 }
 
-button,
-input[type="submit"] {
+button {
     font-family: "Chakra Petch", Quantico, Orbitron, Helvetica, Arial, sans-serif;
     padding: 0.4em;
     width: 10em;
@@ -68,8 +68,7 @@ input[type="submit"] {
     box-shadow: 0px 0px transparent;
 }
 
-button:hover,
-input[type="submit"]:hover {
+button:hover {
     background-color: grey;
     color: white;
     cursor: pointer;

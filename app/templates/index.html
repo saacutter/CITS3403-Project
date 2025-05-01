@@ -1,11 +1,43 @@
 {% extends "base.html" %}
 
 {% block title %}
-Homepage
+Tournament Manager - Home
 {% endblock %}
 
 {% block body %}
 <div class="container">
+    <main class="container mx-auto p-4 mt-8">
+        <section class="welcome-section bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+            <h2 class="text-xl font-semibold mb-2">Welcome back, Guest!</h2>
+            <p class="text-gray-400">Ready to manage your tournaments or find a new challenge?</p>
+        </section>
+
+        <section class="quick-actions mb-8">
+            <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+            <div class="action-buttons flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                <a href="#" class="btn primary-btn bg-blue-600 text-white px-6 py-3 rounded-md text-center hover:bg-blue-700 transition">Create New Tournament</a>
+                <a href="#" class="btn secondary-btn bg-gray-700 text-white px-6 py-3 rounded-md text-center hover:bg-gray-600 transition">Browse Tournaments</a>
+                <a href="#" class="btn secondary-btn bg-gray-700 text-white px-6 py-3 rounded-md text-center hover:bg-gray-600 transition">My Tournaments</a>
+            </div>
+        </section>
+
+        <section class="featured-tournaments mb-8">
+            <h3 class="text-lg font-semibold mb-4">Featured Tournaments</h3>
+            <div class="tournament-list grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="tournament-card bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <h4 class="text-md font-semibold mb-2">Tournament Name Example</h4>
+                    <p class="text-gray-400">Game: Super Smash Bros. Ultimate</p>
+                    <p class="text-gray-400 mb-4">Date: 15-05-2025</p>
+                    <a href="#" class="btn-details text-blue-400 hover:underline">View Details</a>
+                </div>
+                <div class="tournament-card bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <h4 class="text-md font-semibold mb-2">Another Tournament</h4>
+                    <p class="text-gray-400">Game: Chess</p>
+                    <p class="text-gray-400 mb-4">Date: 20-05-2025</p>
+                    <a href="#" class="btn-details text-blue-400 hover:underline">View Details</a>
+                </div>
+                </div>
+        </section>
     {% if current_user.is_anonymous %}
         <div id="introduction" class="center white-bg rounded-border">
             <h1>This is a temporary heading.</h1>
