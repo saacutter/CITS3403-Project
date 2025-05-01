@@ -11,7 +11,7 @@ Tournament Manager - Add Tournament
         <form action="{{ url_for('tournament') }}" method="post">
             {{ form.hidden_tag() }}
             <div class="mb-6">
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Upload file</label>
+                {{ form.file.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
                 {{ form.file(id="file", accept=".json, .csv", class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400") }}
             </div>
             <div class="mb-6">
