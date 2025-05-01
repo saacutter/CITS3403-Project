@@ -5,6 +5,8 @@
         <!-- Meta tags -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="utf-8">
+        
+        <script src="https://cdn.tailwindcss.com"></script>
 
         <!-- File links -->
         <link href="/static/css/styles.css" rel="stylesheet">
@@ -17,6 +19,20 @@
         <title>{% block title %}{% endblock %}</title>
     </head>
     <body>
+        <header class="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-900 text-white">
+            <div id="titlebar" class="mb-4 md:mb-0">
+                <h1 class="text-2xl font-bold"><a href="#" class="hover:text-gray-300">Tournament Manager</a></h1>
+            </div>
+            <div id="account-buttons" class="flex space-x-4">
+                <div id="login-btn">
+                    <a href="#" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition">Log In</a>
+                </div>
+                <div id="signup-btn">
+                    <a href="#" class="block px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition">Sign Up</a>
+                </div>
+            </div>
+        </header>
+
         <div class="container-flex black-bg">
             <div id="titlebar">
                 <h1 class="center transparent-bg"><a href="{{ url_for('index') }}">Tournament Manager</a></h1>
