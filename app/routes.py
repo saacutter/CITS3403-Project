@@ -131,7 +131,7 @@ def match():
             ...
         else:
             # Create the match entry and add it to the database
-            data_entry = models.Matches(user_id=current_user.id, game=game, points=points, time_taken=time(0), result=result)
+            data_entry = models.Matches(user_id=current_user.id, game=game, points=points, time_taken=time_taken, result=result)
             db.session.add(data_entry)
             db.session.commit()
 
@@ -159,7 +159,7 @@ def tournament():
             ...
         else:
             # Create the tournament entry and add it to the database
-            data_entry = models.Tournaments(name=name, game=game, time=time(0))
+            data_entry = models.Tournaments(name=name, game=game, time=time)
             db.session.add(data_entry)
             db.session.commit()
 
