@@ -43,11 +43,21 @@
                     <div id="signup-btn" class="center rounded-border-percent"><a href="{{ url_for('signup') }}" style="color: black;">Sign Up</a></div>
                 </div>
             {% else %}
-                <div id="profile-icon" class="transparent-bg">
-                    <img src="{{ current_user.profile_picture }}" id="profile-icon-picture">
+                <div id="profile-icon" class="transparent-bg relative">
+                    <img src="{{ current_user.profile_picture }}" id="profile-icon-picture" class="cursor-pointer" onclick="toggleDropdown()">
+                    <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                        <a href="{{ url_for('profile') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">User Profile</a>
+                        <a href="{{ url_for('settings') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a>
+                        <a href="{{ url_for('how_to_use') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">How to Use Guide</a>
+                        <a href="{{ url_for('signout') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Sign Out</a>
+                    </div>
                 </div>
-                <a href="{{ url_for('signout') }}" style="position: absolute; z-index: 4;">Sign Out</a>
-                <!-- TODO: Add a dropdown bar with choices like accessing the user's profile, settings, and signing out where the profile picture is -->
+                <script>
+                    function toggleDropdown() {
+                        const dropdown = document.getElementById('dropdown-menu');
+                        dropdown.classList.toggle('hidden');
+                    }
+                </script>
             {% endif %}
         </div>
         {% block body %}{% endblock %}
