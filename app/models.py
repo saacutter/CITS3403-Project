@@ -29,9 +29,22 @@ class Users(db.Model, UserMixin):
         }
     
 class Tournaments(db.Model):
+    id:         Mapped[int]      = mapped_column(Integer, primary_key=True)
+    name:       Mapped[str]      = mapped_column(Text, nullable=False, index=True)
+    game_title: Mapped[str]      = mapped_column(Text, nullable=False, index=True)
+    date:       Mapped[datetime] = mapped_column(nullable=False, index=True)
+
+    def serialise(self):
+        return {
+            "name": self.name,
+            "game_title": self.game_title,
+            "date": self.date
+        }
+
+class Matches(db.Model):
     id:         Mapped[int]  = mapped_column(Integer, primary_key=True)
     user_id:    Mapped[int]  = mapped_column(ForeignKey(Users.id), nullable=False, index=True)
     game:       Mapped[str]  = mapped_column(Text, nullable=False, index=True)
     points:     Mapped[int]  = mapped_column(Integer, nullable=False, index=True, default=0)
     time_taken: Mapped[time] = mapped_column(nullable=False, index=True)
-    result:     Mapped[Enum] = mapped_column(Enum(win="win", loss="loss", draw="draw"), nullable=False, index=True)
+    result:     Mapped[str] = mapped_column(Text, nullable=False, index=True)
