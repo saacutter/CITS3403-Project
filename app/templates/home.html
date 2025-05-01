@@ -16,23 +16,74 @@
     </head>
     <body class="antialiased">
         <header class="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-900 text-white">
-            <div id="titlebar" class="mb-4 md:mb-0">
+            <div id="titlebar" class="mb-4 md:mb-0 flex items-center justify-between w-full">
                 <h1 class="text-2xl font-bold"><a href="#" class="hover:text-gray-300">Tournament Manager</a></h1>
+                <div id="account-buttons" class="flex space-x-4 items-center">
+                    {% if current_user.is_authenticated %}
+                        <!-- Display profile image if user is logged in -->
+                        <div id="profile-icon" class="relative">
+                            <img src="{{ current_user.profile_picture }}" alt="Profile Picture" class="w-10 h-10 rounded-full">
+                        </div>
+                    {% else %}
+                        <!-- Display Log In and Sign Up buttons if user is not authenticated -->
+                        <div id="login-btn">
+                            <a href="{{ url_for('login') }}" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition">Log In</a>
+                        </div>
+                        <div id="signup-btn">
+                            <a href="{{ url_for('signup') }}" class="block px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition">Sign Up</a>
+                        </div>
+                    {% endif %}
+                    <!-- Dropdown menu button -->
+                    <button id="dropdown-toggle" class="p-2 rounded-md bg-gray-700 hover:bg-gray-600 transition">
+                        <span class="block w-6 h-0.5 bg-white mb-1"></span>
+                        <span class="block w-6 h-0.5 bg-white mb-1"></span>
+                        <span class="block w-6 h-0.5 bg-white"></span>
+                    </button>
+                </div>
             </div>
-            <div id="account-buttons" class="flex space-x-4">
-                <div id="login-btn">
-                    <a href="#" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition">Log In</a>
-                </div>
-                <div id="signup-btn">
-                    <a href="#" class="block px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition">Sign Up</a>
-                </div>
+            <!-- Dropdown menu -->
+            <div id="dropdown-menu" class="hidden absolute right-4 top-16 w-64 bg-white rounded-lg shadow-lg z-10 transform transition-transform duration-300 scale-95 opacity-0">
+                <ul class="py-4">
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-user-circle text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('profile') }}" class="text-gray-800">User Profile</a>
+                    </li>
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-cog text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('settings') }}" class="text-gray-800">Settings</a>
+                    </li>
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-question-circle text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('how_to_use') }}" class="text-gray-800">How to Use Guide</a>
+                    </li>
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-sign-out-alt text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('signout') }}" class="text-gray-800">Sign Out</a>
+                    </li>
+                </ul>
             </div>
         </header>
 
+        <script>
+            // Toggle dropdown menu visibility with animation
+            const dropdownToggle = document.getElementById('dropdown-toggle');
+            const dropdownMenu = document.getElementById('dropdown-menu');
+
+            dropdownToggle.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('hidden');
+                dropdownMenu.classList.toggle('scale-95');
+                dropdownMenu.classList.toggle('opacity-0');
+            });
+        </script>
+
         <main class="container mx-auto p-4 mt-8">
             <section class="welcome-section bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-                <h2 class="text-xl font-semibold mb-2">Welcome back, Guest!</h2>
-                <p class="text-gray-400">Ready to manage your tournaments or find a new challenge?</p>
+                <h2 class="text-xl font-semibold mb-2 text-white">Welcome back, Guest!</h2>
+                <p class="text-gray-300">
+                    Welcome to Tournament Manager! Here, you can create and manage your own tournaments, 
+                    browse exciting competitions, and challenge yourself to new heights. Whether you're a seasoned pro 
+                    or just starting out, there's something here for everyone.
+                </p>
             </section>
 
             <section class="quick-actions mb-8">
