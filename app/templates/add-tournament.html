@@ -8,7 +8,7 @@ Tournament Manager - Add Tournament
 <div class="flex-grow mx-auto p-4 mt-8 flex">
     <section class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-sm text-left center">
         <h2 class="text-2xl font-semibold mb-6 text-center">Add Tournament</h2>
-        <form action="{{ url_for('match') }}" method="post">
+        <form action="{{ url_for('tournament') }}" method="post">
             {{ form.hidden_tag() }}
             <div class="mb-6">
                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Upload file</label>
