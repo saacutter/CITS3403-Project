@@ -11,7 +11,8 @@ class LoginForm(FlaskForm):
 class SignupForm(FlaskForm):
     username         = StringField('Username', validators=[DataRequired(),Regexp(r'^[a-zA-Z0-9]+$', message="Username must only contain letters and numbers.")])
     email            = StringField('Email Address', validators=[DataRequired(), Email(message="Enter a valid email address.")])
-    password         = PasswordField('Password', validators=[DataRequired(), Regexp(r'^[a-zA-Z0-9!@#$%^&*()_+=-]{8,}$', message="Password must be at least 8 characters and contain only letters, numbers, and !@#$%^&*()_+=-")])
+    password         = PasswordField('Password', validators=[DataRequired(), Regexp(r'^[a-zA-Z0-9!"#$%&\'()*+,-./:;<=>?@\[\\\]^_`{|}~]+$', message="Password must be at least 8 characters and contain only letters, numbers, and !@#$%^&*()_+=-")])
     password_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password',message="Passwords must match.")])
     submit           = SubmitField('Sign Up')
+
 
