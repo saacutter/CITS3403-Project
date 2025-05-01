@@ -21,45 +21,37 @@
     <body>
         <header class="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-900 text-white">
             <div id="titlebar" class="mb-4 md:mb-0">
-                <h1 class="text-2xl font-bold"><a href="#" class="hover:text-gray-300">Tournament Manager</a></h1>
+                <h1 class="text-2xl font-bold"><a href="{{ url_for('index') }}" class="hover:text-gray-300">Tournament Manager</a></h1>
             </div>
             <div id="account-buttons" class="flex space-x-4">
-                <div id="login-btn">
-                    <a href="#" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition">Log In</a>
-                </div>
-                <div id="signup-btn">
-                    <a href="#" class="block px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition">Sign Up</a>
-                </div>
+                {% if current_user.is_anonymous %}
+                    <div id="login-btn">
+                        <a href="{{ url_for('login') }}" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition">Log In</a>
+                    </div>
+                    <div id="signup-btn">
+                        <a href="{{ url_for('signup') }}" class="block px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition">Sign Up</a>
+                    </div>
+                {% else %}
+                    <div id="profile-icon" class="relative">
+                        <img src="{{ current_user.profile_picture }}" id="profile-icon-picture" class="cursor-pointer w-10 h-10 rounded-full" onclick="toggleDropdown()">
+                        <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                            <a href="{{ url_for('profile') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">User Profile</a>
+                            <a href="{{ url_for('settings') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a>
+                            <a href="{{ url_for('how_to_use') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">How to Use Guide</a>
+                            <a href="{{ url_for('signout') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Sign Out</a>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </header>
 
-        <div class="container-flex black-bg">
-            <div id="titlebar">
-                <h1 class="center transparent-bg"><a href="{{ url_for('index') }}">Tournament Manager</a></h1>
-            </div>
-            {% if current_user.is_anonymous %}
-                <div id="account-buttons">
-                    <div id="login-btn" class="center rounded-border-percent"><a href="{{ url_for('login') }}">Log In</a></div>
-                    <div id="signup-btn" class="center rounded-border-percent"><a href="{{ url_for('signup') }}" style="color: black;">Sign Up</a></div>
-                </div>
-            {% else %}
-                <div id="profile-icon" class="transparent-bg relative">
-                    <img src="{{ current_user.profile_picture }}" id="profile-icon-picture" class="cursor-pointer" onclick="toggleDropdown()">
-                    <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                        <a href="{{ url_for('profile') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">User Profile</a>
-                        <a href="{{ url_for('settings') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a>
-                        <a href="{{ url_for('how_to_use') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">How to Use Guide</a>
-                        <a href="{{ url_for('signout') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Sign Out</a>
-                    </div>
-                </div>
-                <script>
-                    function toggleDropdown() {
-                        const dropdown = document.getElementById('dropdown-menu');
-                        dropdown.classList.toggle('hidden');
-                    }
-                </script>
-            {% endif %}
-        </div>
         {% block body %}{% endblock %}
+
+        <script>
+            function toggleDropdown() {
+                const dropdown = document.getElementById('dropdown-menu');
+                dropdown.classList.toggle('hidden');
+            }
+        </script>
     </body>
 </html>
