@@ -1,3 +1,33 @@
+body {
+    font-family: 'Chakra Petch', sans-serif;
+    line-height: 1.6;
+    color: #e2e8f0;
+    background-color: #1a202c;
+    margin: 0px;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: #4299e1;
+}
+
+a {
+    color: #63b3ed;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Ensure the background covers the full height */
+html,
+body {
+    min-height: 100vh;
+}
+
 :root {
     font-family: Orbitron, Helvetica, Arial, sans-serif;
     color: whitesmoke;
@@ -5,33 +35,16 @@
 }
 
 /* Styling for HTML elements */
-body {
-    margin: 0px;
-}
-
-a {
-    text-decoration: none;
-}
-
 a:visited {
     color: white;
 }
 
 img {
+    width: 4em;
+    height: 4em;
     background-color: grey;
-    width: 3em;
-    height: 3em;
+    padding: 5px;
     border-radius: 50%;
-    padding: 10px;
-    margin-right: 2em;
-    position: absolute;
-    z-index: 3;
-    right: 0px;
-    top: 4.5vh;
-}
-
-img:hover {
-    cursor: pointer;
 }
 
 hr {
@@ -42,8 +55,9 @@ hr {
     margin-top: 1em;
 }
 
-button, input[type="submit"] {
-    font-family: Quantico, "Chakra Petch", Orbitron, Helvetica, Arial, sans-serif;
+button,
+input[type="submit"] {
+    font-family: "Chakra Petch", Quantico, Orbitron, Helvetica, Arial, sans-serif;
     padding: 0.4em;
     width: 10em;
     margin-bottom: 1vh;
@@ -54,7 +68,8 @@ button, input[type="submit"] {
     box-shadow: 0px 0px transparent;
 }
 
-button:hover, input[type="submit"]:hover {
+button:hover,
+input[type="submit"]:hover {
     background-color: grey;
     color: white;
     cursor: pointer;
@@ -64,7 +79,8 @@ label {
     font-family: "Chakra Petch", Quantico, Orbitron, Helvetica, Arial, sans-serif;
 }
 
-input[type="password"], input[type="text"] {
+input[type="password"],
+input[type="text"] {
     border: 2px solid grey;
     margin-top: 1em;
     height: 3em;
@@ -76,7 +92,8 @@ input[type="password"], input[type="text"] {
     margin-bottom: 1em;
 }
 
-input[type="password"]:active, input[type="text"]:active {
+input[type="password"]:active,
+input[type="text"]:active {
     border: 2px solid black;
 }
 
@@ -179,53 +196,24 @@ input::placeholder {
     background-color: darkgray;
 }
 
-/* Styling for individual elements (IDs) */
-#titlebar {
-    width: 100%;
-    position: absolute;
-    z-index: 1;
-}
-
-#account-buttons {
+div.search-user {
+    width: 50%;
+    height: 3em;
+    margin-bottom: 1em;
+    align-content: center;
     display: flex;
     gap: 1em;
-    margin-right: 2em;
-    font-size: 20px;
-    position: absolute;
-    z-index: 2;
-    right: 0px;
+    padding-left: 1em;
 }
 
-#login-btn, #signup-btn {
-    width: auto;
-    padding: 0.5em;
-    font-family: "Chakra Petch", Quantico, Orbitron, Helvetica, Arial, sans-serif;
+.search-user > p {
+    font-size: 16px;
 }
 
-#signup-btn {
-    background-color: aliceblue;
-}
-
-#login-btn:hover, #signup-btn:hover {
-    cursor: pointer;
-    border-color: grey;
-}
-
-#introduction {
-    margin-top: 1em;
-    width: 95%;
-    height: 10em;
-    align-content: center;
-}
-
-#homepage-content {
-    justify-content: center;
-}
-
-#latest-runs, #trending-games {
-    width: 46.9%;
-    margin-top: 4em;
-    height: 10em;
+.search-user > img {
+    padding: 3px;
+    height: 2.5em;
+    width: 2.5em;
 }
 
 /* Media Queries */
@@ -238,18 +226,8 @@ input::placeholder {
         width: 98%;
     }
 
-    input[type="text"], input[type="password"] {
+    input[type="text"],
+    input[type="password"] {
         width: 98%;
-    }
-
-    #titlebar {
-        flex: 1;
-    }
-    
-    #account-buttons {
-        display: flex;
-        gap: 1em;
-        margin-right: 2em;
-        font-size: 20px;
     }
 }

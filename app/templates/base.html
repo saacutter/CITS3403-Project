@@ -31,7 +31,7 @@
                 </div>
             {% else %}
                 <div id="profile-icon" class="transparent-bg">
-                    <img src="https://i.pinimg.com/736x/0e/9c/97/0e9c97bf03f38383a58b5e6b0661301f.jpg">
+                    <img src="{{ current_user.profile_picture }}" id="profile-icon-picture">
                 </div>
                 <a href="{{ url_for('signout') }}" style="position: absolute; z-index: 4;">Sign Out</a>
                 <!-- TODO: Add a dropdown bar with choices like accessing the user's profile, settings, and signing out where the profile picture is -->

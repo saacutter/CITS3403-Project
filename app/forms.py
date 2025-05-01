@@ -14,6 +14,7 @@ class SignupForm(FlaskForm):
     email            = StringField('Email Address', validators=[DataRequired(), Email()])
     password         = PasswordField('Password', validators=[DataRequired()])
     password_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    privacy          = BooleanField('Make my profile private')
     submit           = SubmitField('Sign Up')
 
 class UploadDataForm(FlaskForm):
