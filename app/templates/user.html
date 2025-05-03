@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}
+Tournament Manager - {{ user.username }}
+{% endblock %}
+
+{% block body %}
+<!-- Add a hyperlink that allows the user if they are the current user to edit your username/email/password or whatever -->
+{% for message in get_flashed_messages() %}
+    <p class="center">{{ message }}</p>
+{% endfor %}
+<h1>{{ user.username }}</h2>
+<img src="{{ user.profile_picture }}">
+<p>This user was last seen: {{ user.last_login }}</p>
+<div>
+    <h3>Recent Tournaments</h3>
+</div>
+{% endblock %}

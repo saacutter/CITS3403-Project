@@ -33,7 +33,7 @@
                 </div>
             {% else %}
                 <div id="profile-icon" class="transparent-bg">
-                    <img src="{{ current_user.profile_picture }}" id="profile-icon-picture">
+                    <a href="{{ url_for('profile', username=current_user.username) }}"><img src="{{ current_user.profile_picture }}" id="profile-icon-picture"></a>
                 </div>
                 <a href="{{ url_for('signout') }}" style="position: absolute; z-index: 4; right: 100px;">Sign Out</a>
                 <!-- TODO: Add a dropdown bar with choices like accessing the user's profile, settings, and signing out where the profile picture is -->
