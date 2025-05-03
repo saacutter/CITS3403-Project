@@ -4,7 +4,14 @@ from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timezone
-import re
+from hashlib import md5
+
+# Update the last seen time of the user before each request
+@application.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_login = datetime.now(timezone.utc)
+        db.session.commit()
 
 # Default route of the application
 @application.route("/")
@@ -29,10 +36,6 @@ def login():
         if user is None or not check_password_hash(user.password, form.password.data):
             flash("The username and password do not match")
             return redirect(url_for('login'))
-        
-        # Update the user's last login time and commit it to the database
-        user.last_login = datetime.now(timezone.utc)
-        db.session.commit()
 
         # Log the user in
         login_user(user, remember=form.remember_user.data)
@@ -80,7 +83,8 @@ def signup():
             username=username, 
             password=hashed_password, 
             email=email,
-            privacy=form.privacy.data
+            private=form.privacy.data,
+            profile_picture='https://www.gravatar.com/avatar/' + md5(email.encode()).hexdigest() + '?d=identicon'
         )
         db.session.add(user)
         db.session.commit()
@@ -94,6 +98,12 @@ def signup():
 def signout():
     logout_user()
     return redirect(url_for('index'))
+
+@application.route('/user/<username>')
+def profile(username):
+    # Get the user with the specified ID
+    user = db.first_or_404(sa.select(models.Users).where(models.Users.username == username))
+    return render_template("user.html", user=user)
 
 @application.route('/search')
 @login_required
