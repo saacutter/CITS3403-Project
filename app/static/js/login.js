@@ -13,7 +13,7 @@ suButton.addEventListener('click', () => {
     enableInputs(signup.querySelectorAll('button, input'));
 
     // Update the route and title to reflect the current view
-    window.history.replaceState({}, "Tournament Manager - Sign Up", "/signup");
+    window.history.replaceState({}, "Tournament Manager - Sign Up", "/register");
 });
 
 let liButton = document.querySelector('#login-panel-btn');
