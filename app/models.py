@@ -43,7 +43,7 @@ class Tournaments(db.Model):
 
 class Matches(db.Model):
     id:         Mapped[int]  = mapped_column(Integer, primary_key=True)
-    user_id:    Mapped[int]  = mapped_column(ForeignKey(Users.id), nullable=False, index=True)
+    user_id:    Mapped[int]  = mapped_column(ForeignKey(Users.id, name="matches_user_id"), nullable=False, index=True)
     game:       Mapped[str]  = mapped_column(Text, nullable=False, index=True)
     points:     Mapped[int]  = mapped_column(Integer, nullable=False, index=True, default=0)
     time_taken: Mapped[time] = mapped_column(nullable=False, index=True)
