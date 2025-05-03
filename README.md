@@ -41,13 +41,17 @@ pip install -r requirements.txt
         │   ├── static
         │   │   ├── css
         │   │   │   └── styles.css
+        │   │   ├── html
+        │   │   │   ├── home.html
+        │   │   │   └── login-signup.html
         │   │   └── js
         │   │       ├── login.js
         │   │       ├── search_users.js
         │   │       └── upload.js
         │   ├── templates
+        │   │   ├── add-match.html
+        │   │   ├── add-tournament.html
         │   │   ├── base.html
-        │   │   ├── data.html
         │   │   ├── index.html
         │   │   ├── login.html
         │   │   └── search.html
@@ -61,13 +65,10 @@ pip install -r requirements.txt
         │   ├── script.py.mako
         │   └── versions
         │       ├── 518c88c18d5f_updated_users.py
+        │       ├── 56f705820311_recreated_database_to_fix_broken_.py
         │       ├── 5d3f9f639ef5_users_table.py
-        │       ├── 8435c2ba72a1_renamed_data_table_to_tournaments.py
-        │       ├── 8c590e2f34b2_.py
         │       ├── ac1c030fc5b9_added_profile_picture_section_to_users_.py
-        │       ├── b41b7621e32c_added_email_and_creation_date_field_to_.py
-        │       ├── c0e381d7ddbf_added_privacy_attribute_to_users_table.py
-        │       └── fd559f87d67d_added_data_table_to_database_to_store_.py
+        │       └── b41b7621e32c_added_email_and_creation_date_field_to_.py
         └── requirements.txt
         </pre>
 
