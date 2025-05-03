@@ -1,9 +1,10 @@
 from app import application, db, models, forms
-from flask import render_template, request, redirect, url_for, jsonify
+from flask import render_template, request, redirect, url_for, jsonify, flash
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timezone, time
+from datetime import datetime, timezone
+import re
 
 # Default route of the application
 @application.route("/")
@@ -17,15 +18,16 @@ def login():
     # Ensure that the user cannot access this route if they are already signed in
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-    if request.method == "POST" and forms.LoginForm().validate_on_submit():
-        form = forms.LoginForm()
-
+    
+    form = forms.LoginForm()
+    if request.method == "POST" and form.validate_on_submit():
         # Retrieve the user from the database based on the provided username/email address
-        user = db.session.scalar(sa.select(models.Users).where((models.Users.username == form.username.data) | (models.Users.email == form.username.data)))
+        username = form.username.data
+        user = db.session.scalar(sa.select(models.Users).where((models.Users.username == username) | (models.Users.email == username)))
 
         # Ensure that the user exists and that the password hash matches
         if user is None or not check_password_hash(user.password, form.password.data):
-            # TODO: Display error message for incorrect password/username
+            flash("The username and password do not match")
             return redirect(url_for('login'))
         
         # Update the user's last login time and commit it to the database
@@ -38,30 +40,36 @@ def login():
         # Extract the next page from the URL and redirect them to that page
         next_page = request.args.get('next', 'index')
         return redirect(url_for(next_page))
-    return render_template("login.html", login=True, loginForm=forms.LoginForm(), signupForm=forms.SignupForm()) # Display login page
-        
+    return render_template("login.html", login=True, loginForm=form, signupForm=forms.SignupForm()) # Display login page
+
 # Signup route of the application
-@application.route("/signup", methods=["GET", "POST"])
+@application.route("/register", methods=["GET", "POST"])
 def signup():
     # Ensure that the user cannot access this route if they are already signed in
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-
-    if request.method == "POST" and forms.SignupForm().validate_on_submit():
-        form = forms.SignupForm()
-
-        if form.password.data != form.password_confirm.data:
-            # TODO: Display error message because the passwords do not match
-            return redirect(url_for('login'))
-        
-        # Extract the username and email from the form
+    
+    form = forms.SignupForm()
+    if request.method == "POST" and form.validate_on_submit():
+        # Extract the information from the form
         username = form.username.data.strip()
         email = form.email.data.strip().lower()
+        password = form.password.data.strip()
+
+        # Check that the password is valid
+        if len(password) < 8:
+            flash("The password must be at least 8 characters long")
+            return redirect(url_for('signup'))
         
-        # Check if username or email already exists in the database
+        # Ensure that the passwords on the form match
+        if password != form.password_confirm.data:
+            flash("The passwords do not match")
+            return redirect(url_for('signup'))
+        
+        # Check if username or email already exists
         existing_user = db.session.scalar(sa.select(models.Users).where((models.Users.username == username) | (models.Users.email == email)))
         if existing_user:
-            # TODO: Display error message because that username already exists
+            flash("A user with this username or email address already exists!")
             return redirect(url_for('signup')) 
         
         # Hash the password
@@ -69,17 +77,18 @@ def signup():
 
         # Create the user entry and add it to the database
         user = models.Users(
-          username=username, 
-          password=hashed_password, 
-          email=email,
-          private=form.privacy.data)
+            username=username, 
+            password=hashed_password, 
+            email=email,
+            privacy=form.privacy.data
+        )
         db.session.add(user)
         db.session.commit()
 
         # Log in the user and redirect them to the homepage
         login_user(user, remember=True)
         return redirect('/')
-    return render_template("login.html", login=False, loginForm=forms.LoginForm(), signupForm=forms.SignupForm()) # Display sign up page
+    return render_template("login.html", login=False, loginForm=forms.LoginForm(), signupForm=form) # Display sign up page
 
 @application.route('/signout')
 def signout():

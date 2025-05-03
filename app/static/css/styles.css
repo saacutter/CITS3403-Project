@@ -215,7 +215,12 @@ div.search-user {
     width: 2.5em;
 }
 
-/* */
+.error {
+    background-color: red;
+    width: 20%;
+}
+
+/* Styling for individual elements */
 #profile-icon {
     cursor: pointer;
 }
