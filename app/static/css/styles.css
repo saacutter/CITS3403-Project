@@ -74,6 +74,10 @@ button:hover {
     cursor: pointer;
 }
 
+input[type="button"]:hover, input[type="submit"]:hover {
+    cursor: pointer;
+}
+
 label {
     font-family: "Chakra Petch", Quantico, Orbitron, Helvetica, Arial, sans-serif;
 }
@@ -225,18 +229,48 @@ div.search-user {
     cursor: pointer;
 }
 
+#user-background {
+    background-image: url("../img/user-profile-background.webp"); /* Retrieved from https://www.toptal.com/designers/subtlepatterns/fancy-cushion-pattern/ */
+    background-repeat: repeat;
+    height: 100vh;
+}
+
+#user-profile-panel {
+    width: 80%;
+    background-color: black;
+    height: 100%;
+}
+
+#user-profile-panel h1 {
+    font-size: 24px;
+}
+
+#user-heading {
+    gap: 3em;
+    margin-left: 5em;
+    margin-bottom: 2em;
+    padding-top: 3em;
+}
+
+#user-heading > img {
+    width: 8em;
+    height: auto;
+}
+
+#profile-picture-edit {
+    margin-top: 2em;
+    width: 10em;
+    height: auto;
+}
+
+#edit-profile-form {
+    width: 75%;
+    text-align: left;
+}
+
 /* Media Queries */
 @media screen and (max-width: 900px) {
-    .container {
-        width: 98%;
-    }
-
-    .panel {
-        width: 98%;
-    }
-
-    input[type="text"],
-    input[type="password"] {
-        width: 98%;
+    #user-profile-panel {
+        width: 95%;
     }
 }

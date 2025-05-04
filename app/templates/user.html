@@ -5,14 +5,34 @@ Tournament Manager - {{ user.username }}
 {% endblock %}
 
 {% block body %}
-<!-- Add a hyperlink that allows the user if they are the current user to edit your username/email/password or whatever -->
-{% for message in get_flashed_messages() %}
-    <p class="center">{{ message }}</p>
-{% endfor %}
-<h1>{{ user.username }}</h2>
-<img src="{{ user.profile_picture }}">
-<p>This user was last seen: {{ user.last_login }}</p>
-<div>
-    <h3>Recent Tournaments</h3>
+<div id="user-background">
+    <div id="user-profile-panel" class="center">
+        <div class="flex items-center gap-4" id="user-heading">
+            <img src="{{ url_for('upload', filename=current_user.profile_picture) }}" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover">
+            <div class="flex flex-col">
+                <h1 class="font-bold text-white" style="text-align: left;">{{ user.username }}</h1>
+                {% if user.private == 0 or user.username == current_user.username %}
+                    <p class="text-med text-gray-500">This user was last seen {{ moment(user.last_login).fromNow() }} ({{ moment(user.last_login).format('LLLL') }})</p>
+                {% endif %}
+                {% if user.username == current_user.username %}
+                    <a href="{{ url_for('edit_profile') }}" style="text-align: left;">Edit Profile</a>
+                {% endif %}
+            </div>
+        </div>
+        {% if user.private == 0 or user.username == current_user.username %}
+            <div>
+                <h1>Recent Tournaments</h1>
+                {% if tournaments %}
+                    {% for tournament in tournaments %}
+                    <!-- Display tournaments associated with user -->
+                    {% endfor %}
+                {% else %}
+                    <h3 class="text-white">This user has not competed in any tournaments yet.</h3>
+                {% endif %}
+            </div>
+        {% else %}
+            <h1>This user has their profile set to private!</h1>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
