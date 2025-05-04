@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_moment import Moment
+import os
 
 # Initialise the Flask server
 application = Flask(__name__)
@@ -12,6 +13,7 @@ db = SQLAlchemy(application)
 migrate = Migrate(application, db)
 login = LoginManager(application)
 login.login_view = 'login' # This sets the page that should be rendered when there is a page that requires a log in to view
-moment = Moment(application)
+moment = Moment(application) # This is used for converting the time to human readable time
+os.makedirs(application.config['UPLOAD_PATH'], exist_ok=True) # This is used to create the directory for user profile pictures
 
 from app import routes, models

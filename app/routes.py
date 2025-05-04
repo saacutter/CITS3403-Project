@@ -1,10 +1,12 @@
 from app import application, db, models, forms
-from flask import render_template, request, redirect, url_for, jsonify, flash
+from flask import render_template, request, redirect, url_for, jsonify, flash, send_from_directory
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from datetime import datetime, timezone
 from hashlib import md5
+import os
 
 # Update the last seen time of the user before each request
 @application.before_request
@@ -15,7 +17,6 @@ def before_request():
 
 # Default route of the application
 @application.route("/")
-@application.route("/index")
 def index():
     return render_template("index.html")
 
@@ -26,6 +27,10 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     
+    # Extract the next page from the URL and add it to the form
+    if request.method == "GET":
+        next_page = request.args.get('next', 'index')
+
     form = forms.LoginForm()
     if request.method == "POST" and form.validate_on_submit():
         # Retrieve the user from the database based on the provided username/email address
@@ -40,10 +45,10 @@ def login():
         # Log the user in
         login_user(user, remember=form.remember_user.data)
 
-        # Extract the next page from the URL and redirect them to that page
-        next_page = request.args.get('next', 'index')
-        return redirect(url_for(next_page))
-    return render_template("login.html", login=True, loginForm=form, signupForm=forms.SignupForm()) # Display login page
+        # Extract the next page from the form and redirect them to that page
+        next_page = request.form.get('next')
+        return redirect(next_page or url_for('index'))
+    return render_template("login.html", login=True, loginForm=form, signupForm=forms.RegistrationForm(), next=next_page) # Display login page
 
 # Signup route of the application
 @application.route("/register", methods=["GET", "POST"])
@@ -52,7 +57,7 @@ def signup():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     
-    form = forms.SignupForm()
+    form = forms.RegistrationForm()
     if request.method == "POST" and form.validate_on_submit():
         # Extract the information from the form
         username = form.username.data.strip()
@@ -76,7 +81,7 @@ def signup():
             return redirect(url_for('signup')) 
         
         # Hash the password
-        hashed_password = generate_password_hash(form.password.data)
+        hashed_password = generate_password_hash(password)
 
         # Create the user entry and add it to the database
         user = models.Users(
@@ -104,6 +109,59 @@ def profile(username):
     # Get the user with the specified ID
     user = db.first_or_404(sa.select(models.Users).where(models.Users.username == username))
     return render_template("user.html", user=user)
+
+@application.route('/edit_profile', methods=["GET", "POST"])
+@login_required
+def edit_profile():
+    form = forms.EditProfileForm(private=current_user.private)
+
+    if request.method == "POST" and form.validate_on_submit():
+        # Extract the information from the form
+        username = form.username.data.strip()
+        email = form.email.data.strip().lower()
+        password = form.password.data.strip()
+        image = request.files['profile_picture'] # Adapted from https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
+
+        # Check that the password is valid
+        if password and len(password) < 8:
+            flash("The password must be at least 8 characters long")
+            return redirect(url_for('edit_profile'))
+        
+        # Check if username or email already exists
+        existing_user = db.session.scalar(sa.select(models.Users).where((models.Users.username == username) | (models.Users.email == email)))
+        if existing_user and existing_user != current_user:
+            flash("A user with this username or email address already exists!")
+            return redirect(url_for('edit_profile'))
+        
+        # Save the uploaded image to the server if one was uploaded
+        img_filename = secure_filename(image.filename)
+        if img_filename != "":
+            # Ensure that the extension is a valid image extension
+            extension = os.path.splitext(img_filename)[1]
+            if extension not in application.config['UPLOAD_EXTENSIONS']:
+                flash("The profile image can only be in .png, .jpeg or .webp format")
+                return redirect(url_for('edit_profile'))
+
+            # Save the image to a known location on the server (no extension to not fill up the server)
+            image.save(os.path.join(application.config['UPLOAD_PATH'], str(current_user.id)))
+        
+        # Update the user information based on the provided information
+        user = models.Users.query.get(current_user.id)
+        user.username = username
+        user.email = email
+        user.private = form.private.data
+        if password: user.password = generate_password_hash(password)
+        if image: user.profile_picture = str(current_user.id)
+        
+        # Save the new information to the database
+        db.session.commit()
+
+        return redirect(url_for('profile', username=current_user.username))
+    return render_template("edit-profile.html", form=form)
+
+@application.route('/uploads/<filename>')
+def upload(filename):
+    return send_from_directory(application.config['UPLOAD_PATH'], filename)
 
 @application.route('/search')
 @login_required

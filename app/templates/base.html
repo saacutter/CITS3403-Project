@@ -34,7 +34,7 @@
                 </div>
             {% else %} <!-- Provides access for users to go to their profiles quickly and sign out -->
                 <div id="profile-icon" class="transparent-bg">
-                    <a href="{{ url_for('profile', username=current_user.username) }}"><img src="{{ current_user.profile_picture }}" alt="Profile Picture" id="profile-icon-picture"></a>
+                    <a href="{{ url_for('profile', username=current_user.username) }}"><img src="{{ url_for('upload', filename=current_user.profile_picture) }}" alt="Profile Picture" id="profile-icon-picture"></a>
                 </div>
                 <a href="{{ url_for('signout') }}" style="position: absolute; z-index: 4; right: 100px;">Sign Out</a>
             {% endif %}
