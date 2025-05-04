@@ -8,7 +8,6 @@ fileInput.addEventListener('change', () => {
     if (fileInput.files.length == 0) {
         profilePicture.src = oldFile; // Set the image so that cancelling an upload request reverts the source
     } else {
-        // Ensure that the 
         // Set the image source to be whatever is uploaded by the user
         fileReader.onload = (event) => {
             profilePicture.src = event.target.result;
