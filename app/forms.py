@@ -17,6 +17,14 @@ class RegistrationForm(FlaskForm):
     privacy          = BooleanField('Make my profile private')
     submit           = SubmitField('Sign Up')
 
+class EditProfileForm(FlaskForm):
+    username        = StringField('Username')
+    email           = StringField('Email Address')
+    password        = PasswordField('Password')
+    profile_picture = FileField('Profile Picture', validators=[FileAllowed(['jpeg', 'jpg', 'png', 'webp'])])
+    private         = BooleanField('Make my profile private')
+    submit          = SubmitField('Save Changes')
+
 class AddMatchForm(FlaskForm):
     file       = FileField('File Upload', validators=[FileAllowed(['json', 'csv'])])
     game       = StringField('Game')
@@ -31,11 +39,3 @@ class AddTournamentForm(FlaskForm):
     game   = StringField('Game')
     time   = DateTimeField('Date')
     submit = SubmitField('Add Game')
-
-class EditProfileForm(FlaskForm):
-    username        = StringField('Username')
-    email           = StringField('Email Address')
-    password        = PasswordField('Password')
-    profile_picture = FileField('Profile Picture', validators=[FileAllowed(['jpeg', 'jpg', 'png', 'webp'])])
-    private         = BooleanField('Make my profile private')
-    submit          = SubmitField('Save Changes')
