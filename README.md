@@ -44,17 +44,22 @@ pip install -r requirements.txt
         │   │   ├── html
         │   │   │   ├── home.html
         │   │   │   └── login-signup.html
-        │   │   └── js
-        │   │       ├── login.js
-        │   │       ├── search_users.js
-        │   │       └── upload.js
+        │   │   ├── img
+        │   │   │   └── user-profile-background.webp
+        │   │   ├── js
+        │   │   │   ├── login.js
+        │   │   │   ├── search_users.js
+        │   │   │   └── upload.js
+        │   │   └── profilepictures
         │   ├── templates
         │   │   ├── add-match.html
         │   │   ├── add-tournament.html
         │   │   ├── base.html
+        │   │   ├── edit-profile.html
         │   │   ├── index.html
         │   │   ├── login.html
-        │   │   └── search.html
+        │   │   ├── search.html
+        │   │   └── user.html
         ├── instance
         │   └── app.db
         ├── manager.py
