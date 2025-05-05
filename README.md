@@ -41,12 +41,20 @@ pip install -r requirements.txt
         │   ├── static
         │   │   ├── css
         │   │   │   └── styles.css
+        │   │   ├── html
+        │   │   │   ├── home.html
+        │   │   │   └── login-signup.html
         │   │   └── js
-        │   │       └── login.js
+        │   │       ├── login.js
+        │   │       ├── search_users.js
+        │   │       └── upload.js
         │   ├── templates
+        │   │   ├── add-match.html
+        │   │   ├── add-tournament.html
         │   │   ├── base.html
         │   │   ├── index.html
-        │   │   └── login.html
+        │   │   ├── login.html
+        │   │   └── search.html
         ├── instance
         │   └── app.db
         ├── manager.py
@@ -57,7 +65,10 @@ pip install -r requirements.txt
         │   ├── script.py.mako
         │   └── versions
         │       ├── 518c88c18d5f_updated_users.py
-        │       └── 5d3f9f639ef5_users_table.py
+        │       ├── 56f705820311_recreated_database_to_fix_broken_.py
+        │       ├── 5d3f9f639ef5_users_table.py
+        │       ├── ac1c030fc5b9_added_profile_picture_section_to_users_.py
+        │       └── b41b7621e32c_added_email_and_creation_date_field_to_.py
         └── requirements.txt
         </pre>
 

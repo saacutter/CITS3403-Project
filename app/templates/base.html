@@ -8,6 +8,7 @@
 
         <!-- File links -->
         <link href="/static/css/styles.css" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
 
         <!-- Font -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,24 +17,28 @@
 
         <title>{% block title %}{% endblock %}</title>
     </head>
-    <body>
-        <div class="container-flex black-bg">
-            <div id="titlebar">
-                <h1 class="center transparent-bg"><a href="{{ url_for('index') }}">Tournament Manager</a></h1>
+    <body class="antialiased">
+        <header class="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-900 text-white">
+            <div id="titlebar" class="mb-4 md:mb-0">
+                <h1 class="text-3xl font-bold"><a href="{{ url_for('index') }}" class="hover:text-gray-300">Tournament Manager</a></h1>
             </div>
             {% if current_user.is_anonymous %}
-                <div id="account-buttons">
-                    <div id="login-btn" class="center rounded-border-percent"><a href="{{ url_for('login') }}">Log In</a></div>
-                    <div id="signup-btn" class="center rounded-border-percent"><a href="{{ url_for('signup') }}" style="color: black;">Sign Up</a></div>
+                <div id="account-buttons" class="flex space-x-4">
+                    <div id="login-btn">
+                        <a href="{{ url_for('login') }}" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition">Log In</a>
+                    </div>
+                    <div id="signup-btn">
+                        <a href="{{ url_for('signup') }}" class="block px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition">Sign Up</a>
+                    </div>
                 </div>
             {% else %}
                 <div id="profile-icon" class="transparent-bg">
                     <img src="{{ current_user.profile_picture }}" id="profile-icon-picture">
                 </div>
-                <a href="{{ url_for('signout') }}" style="position: absolute; z-index: 4;">Sign Out</a>
+                <a href="{{ url_for('signout') }}" style="position: absolute; z-index: 4; right: 100px;">Sign Out</a>
                 <!-- TODO: Add a dropdown bar with choices like accessing the user's profile, settings, and signing out where the profile picture is -->
             {% endif %}
-        </div>
+        </header>
         {% block body %}{% endblock %}
     </body>
 </html>

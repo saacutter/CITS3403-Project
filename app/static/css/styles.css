@@ -20,6 +20,7 @@ a {
 
 a:hover {
     text-decoration: underline;
+    cursor: pointer;
 }
 
 /* Ensure the background covers the full height */
@@ -55,8 +56,7 @@ hr {
     margin-top: 1em;
 }
 
-button,
-input[type="submit"] {
+button {
     font-family: "Chakra Petch", Quantico, Orbitron, Helvetica, Arial, sans-serif;
     padding: 0.4em;
     width: 10em;
@@ -68,8 +68,7 @@ input[type="submit"] {
     box-shadow: 0px 0px transparent;
 }
 
-button:hover,
-input[type="submit"]:hover {
+button:hover {
     background-color: grey;
     color: white;
     cursor: pointer;
@@ -101,6 +100,10 @@ input[type="checkbox"] {
     transform: scale(1.5);
     accent-color: grey;
     margin-bottom: 2em;
+}
+
+input[type="file"]:hover, input[type="file"]::file-selector-button:hover {
+    cursor: pointer;
 }
 
 /* Styles for pseudo-classes */
@@ -183,6 +186,15 @@ input::placeholder {
     font-size: 24px;
 }
 
+.file-upload {
+    align-content: center;
+    height: 5em;
+    width: 85%;
+    margin-top: 1em;
+    border: 2px dotted grey;
+    background-color: darkgray;
+}
+
 div.search-user {
     width: 50%;
     height: 3em;
@@ -201,6 +213,16 @@ div.search-user {
     padding: 3px;
     height: 2.5em;
     width: 2.5em;
+}
+
+.error {
+    background-color: red;
+    width: 20%;
+}
+
+/* Styling for individual elements */
+#profile-icon {
+    cursor: pointer;
 }
 
 /* Media Queries */

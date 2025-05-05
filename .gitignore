@@ -6,3 +6,7 @@
 
 # Environment variables file
 .env
+
+# Database
+**/instance
+*.db
