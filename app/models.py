@@ -13,7 +13,7 @@ class Users(db.Model, UserMixin):
     username:        Mapped[str]      = mapped_column(Text, unique=True, nullable=False, index=True)
     email:           Mapped[str]      = mapped_column(Text, unique=True, nullable=False, index=True)
     password:        Mapped[str]      = mapped_column(Text, nullable=False, index=True)
-    profile_picture: Mapped[str]      = mapped_column(nullable=False, index=True, default=lambda: "https://picsum.photos/200")
+    profile_picture: Mapped[str]      = mapped_column(nullable=False, index=True)
     private:         Mapped[bool]     = mapped_column(nullable=False, index=True, default=True)
     creation_date:   Mapped[datetime] = mapped_column(nullable=False, index=True, default=lambda: datetime.now(timezone.utc))
     last_login:      Mapped[datetime] = mapped_column(nullable=False, index=True, default=lambda: datetime.now(timezone.utc))

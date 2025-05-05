@@ -15,6 +15,7 @@
             <h2 class="text-2xl font-semibold mb-6 text-center">Log In</h2>
             <form action="{{ url_for('login') }}" method="post">
                 {{ loginForm.hidden_tag() }}
+                <input name="next" value="{{ next }}" hidden>
                 <div class="mb-6">
                     {{ loginForm.username.label(class="block text-gray-400 font-bold mb-2") }}
                     {{ loginForm.username(placeholder="Enter your username or email address", class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white", autofocus="true") }}
@@ -71,29 +72,31 @@
             </p>
         </section>
     </div>
-    <div class="center error rounded-border-px">
-        {% if get_flashed_messages() %}
-            {% for message in get_flashed_messages() %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-
-        {% if signupForm.errors %}
-            {% for field, errors in signupForm.errors.items() %}
-                {% for error in errors %}
-                    <p>{{ error }}</p>
+    {% if get_flashed_messages() or signupForm.errors or loginForm.errors %}
+        <div class="center error rounded-border-px">
+            {% if get_flashed_messages() %}
+                {% for message in get_flashed_messages() %}
+                    <p>{{ message }}</p>
                 {% endfor %}
-            {% endfor %}
-        {% endif %}
+            {% endif %}
 
-        {% if loginForm.errors %}
-            {% for field, errors in loginForm.errors.items() %}
-                {% for error in errors %}
-                    <p>{{ error }}</p>
+            {% if signupForm.errors %}
+                {% for field, errors in signupForm.errors.items() %}
+                    {% for error in errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        {% endif %}
-    </div>
+            {% endif %}
+
+            {% if loginForm.errors %}
+                {% for field, errors in loginForm.errors.items() %}
+                    {% for error in errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endif %}
 </div>
 <script src="static/js/login.js"></script>
 {% endblock %}

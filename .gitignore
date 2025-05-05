@@ -10,3 +10,6 @@
 # Database
 **/instance
 *.db
+
+# Profile pictures directory
+**/profilepictures

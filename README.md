@@ -44,17 +44,22 @@ pip install -r requirements.txt
         │   │   ├── html
         │   │   │   ├── home.html
         │   │   │   └── login-signup.html
-        │   │   └── js
-        │   │       ├── login.js
-        │   │       ├── search_users.js
-        │   │       └── upload.js
+        │   │   ├── img
+        │   │   │   └── user-profile-background.webp
+        │   │   ├── js
+        │   │   │   ├── login.js
+        │   │   │   ├── search_users.js
+        │   │   │   └── upload.js
+        │   │   └── profilepictures
         │   ├── templates
         │   │   ├── add-match.html
         │   │   ├── add-tournament.html
         │   │   ├── base.html
+        │   │   ├── edit-profile.html
         │   │   ├── index.html
         │   │   ├── login.html
-        │   │   └── search.html
+        │   │   ├── search.html
+        │   │   └── user.html
         ├── instance
         │   └── app.db
         ├── manager.py
@@ -85,8 +90,7 @@ DATABASE_URL = "sqlite:///app.db"
 
 ### Starting the Application
 1. Initialise the database (if it hasn't already been) with the `flask db init` command.
-    - The database can then migrate the database using `flask db migrate`.
-    - Once the database has migrated the database schema, it can then be committed using `flask db upgrade`.
+    - The database can then be updated using the `flask db upgrade`.
 
 2. Start the flask application using `flask run`.
     - Note that the `.flaskenv` file sets the `FLASK_APP` environment variable. If this does not work, the following should be done:
