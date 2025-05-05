@@ -42,9 +42,10 @@ input.addEventListener('change', () => {
 });
 
 function addUserDiv(user) {
+    let src = user.profile_picture.startsWith('http') ? user.profile_picture : `/uploads/${user.profile_picture}`;
     usersDiv.insertAdjacentHTML('beforeend', `
         <div class="container-flex center white-bg rounded-border search-user">
-            <img src="${user.profile_picture}">
+            <img src="${src}" alt="Profile Picture">
             <p>${user.username}</p>
         </div>
     `); 
