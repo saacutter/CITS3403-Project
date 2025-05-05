@@ -26,10 +26,10 @@
             {% if current_user.is_anonymous %} <!-- Provides the sign in and log in buttons for users not signed in -->
                 <div id="account-buttons" class="flex space-x-4">
                     <div id="login-btn">
-                        <a href="{{ url_for('login') }}" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition">Log In</a>
+                        <a href="{{ url_for('login') }}" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition hover:no-underline">Log In</a>
                     </div>
                     <div id="signup-btn">
-                        <a href="{{ url_for('signup') }}" class="block px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition">Sign Up</a>
+                        <a href="{{ url_for('signup') }}" class="block px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition hover:no-underline">Sign Up</a>
                     </div>
                 </div>
             {% else %} <!-- Provides access for users to go to their profiles quickly and sign out -->
