@@ -268,6 +268,11 @@ div.search-user {
     text-align: left;
 }
 
+#heading-404 {
+    font-size: 80px;
+    padding-top: 2em;
+}
+
 /* Media Queries */
 @media screen and (max-width: 900px) {
     #user-profile-panel {

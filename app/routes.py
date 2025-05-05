@@ -16,6 +16,10 @@ def before_request():
         current_user.last_login = datetime.now(timezone.utc)
         db.session.commit()
 
+@application.errorhandler(404)
+def page_not_found(error_code):
+    return render_template("404.html"), 404
+
 # Default route of the application
 @application.route("/")
 def index():
