@@ -48,7 +48,7 @@ def login():
 
         # Extract the next page from the form and redirect them to that page
         next_page = request.form.get('next')
-        return redirect(next_page or url_for('index'))
+        return redirect(url_for(next_page))
     return render_template("login.html", login=True, loginForm=form, signupForm=forms.RegistrationForm(), next=next_page) # Display login page
 
 # Signup route of the application
@@ -184,11 +184,11 @@ def get_like(pattern):
     try:
         users.remove(current_user)
     except ValueError:
-        return jsonify([{"username": None}]) 
+        ...
     
     # Return an empty JSON object if no users match the specified pattern
     if len(users) == 0:
-      return jsonify({"username": None})
+      return jsonify([{"username": None}])
 
     # Return a JSON object of the extracted users
     return jsonify([user.serialise() for user in users]) # Adapted from: https://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
