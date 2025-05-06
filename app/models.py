@@ -1,5 +1,6 @@
 from app import db, login
-from sqlalchemy import Integer, Text, ForeignKey, Enum
+import sqlalchemy as sa
+from sqlalchemy import Integer, Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from flask_login import UserMixin
 from datetime import datetime, timezone, time
@@ -27,6 +28,13 @@ class Users(db.Model, UserMixin):
             "last_login": self.last_login,
             "profile_picture": self.profile_picture
         }
+
+class Friends(db.Model):
+    user_added:   Mapped[int] = mapped_column(Integer, db.ForeignKey('users.id'), primary_key=True)
+    user_request: Mapped[int] = mapped_column(Integer, db.ForeignKey('users.id'), primary_key=True)
+
+    def getUser(id):
+        db.session.scalar(sa.select(Users).where((Users.username == id)))
     
 class Tournaments(db.Model):
     id:         Mapped[int]      = mapped_column(Integer, primary_key=True)
