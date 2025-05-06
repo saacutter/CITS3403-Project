@@ -232,7 +232,7 @@ div.search-user {
 #user-background {
     background-image: url("../img/user-profile-background.webp"); /* Retrieved from https://www.toptal.com/designers/subtlepatterns/fancy-cushion-pattern/ */
     background-repeat: repeat;
-    height: 100vh;
+    height: 100%;
 }
 
 #user-profile-panel {
