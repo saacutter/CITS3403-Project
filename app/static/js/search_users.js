@@ -31,7 +31,6 @@ input.addEventListener('change', () => {
 
             // Add a div to represent each user retrieved
             for (let i = 0; i < users.length; i++) {
-                console.log(users[i]);
                 addUserDiv(users[i]);
             }
         } else {
@@ -44,13 +43,29 @@ input.addEventListener('change', () => {
 function addUserDiv(user) {
     let src = user.profile_picture.startsWith('http') ? user.profile_picture : `/uploads/${user.profile_picture}`;
     usersDiv.insertAdjacentHTML('beforeend', `
-        <div class="container-flex center white-bg rounded-border search-user">
+        <div id="${user.username}" class="container-flex w-1/2 items-center h-20 center white-bg rounded-border search-user">
             <img src="${src}" alt="Profile Picture">
             <p>${user.username}</p>
+            <button style="margin-left: auto; margin-right: 1em;" onclick="add_friend('${user.username}')">Add Friend</button>
         </div>
     `); 
     /* Adapted from: 
         https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro
         https://stackoverflow.com/questions/805107/how-can-i-assign-a-multiline-string-literal-to-a-variable
     */
+}
+
+function add_friend(username) {
+    // Make a request to the designated route
+    var request = new XMLHttpRequest();
+    request.open('POST', '/add_friend/' + username, true);
+    request.onload = () => {
+        // If the request status is 200, remove the "add friend" button from the div to prevent errors
+        if (request.status == 200) {
+            let user = document.querySelector(`#${user.username}`);
+            let button = user.querySelector('button');
+            user.removeChild(button); // TODO: This isn't working for some reason
+        }
+    };
+    request.send();
 }

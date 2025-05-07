@@ -112,7 +112,11 @@ def signout():
 def profile(username):
     # Get the user with the specified ID
     user = db.first_or_404(sa.select(models.Users).where(models.Users.username == username))
-    return render_template("user.html", user=user)
+    print(user)
+    # Get the user's friends
+    friends = list(db.session.scalars(sa.select(models.Users).join(models.Friends, models.Users.id == models.Friends.user_added).where(models.Friends.user_added_by == user.id)))
+    print(friends)
+    return render_template("user.html", user=user, friends=friends)
 
 @application.route('/edit_profile', methods=["GET", "POST"])
 @login_required
@@ -177,6 +181,8 @@ def get_like(pattern):
     # Extract the users from the database that begin with the requested pattern
     users = db.session.scalars(sa.select(models.Users).where(models.Users.username.like(pattern + '%'))).all()
 
+    # TODO: Remove all users from this list that the user is already friends with
+
     # Remove the signed in user from the list, if applicable
     try:
         users.remove(current_user)
@@ -189,6 +195,30 @@ def get_like(pattern):
 
     # Return a JSON object of the extracted users
     return jsonify([user.serialise() for user in users]) # Adapted from: https://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
+
+@application.route('/add_friend/<username>', methods=["POST"])
+def add_friend(username):
+    # Ensure that the user has not already added the user
+    relationship = db.session.scalar(sa.select(models.Friends).where(models.Friends.user_added_by == current_user.username))
+    if relationship:
+        flash("Cannot add the specified user")
+        return '', 400
+
+    # Retrieve the user ID of the user with the given username
+    user = db.session.scalar(sa.select(models.Users).where(username == username))
+    user_id = user.id
+
+    # Create an object that adds the user with the current user
+    friends = models.Friends(
+        user_added=user_id,
+        user_added_by=current_user.id
+    )
+
+    # Add this relationship to the database
+    db.session.add(friends)
+    db.session.commit()
+
+    return '', 200
 
 @application.route('/addMatch', methods=["GET", "POST"])
 @login_required
