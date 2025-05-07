@@ -28,10 +28,15 @@ class Users(db.Model, UserMixin):
             "last_login": self.last_login,
             "profile_picture": self.profile_picture
         }
+    
+    def friends_with(self, user):
+        # TODO: Return a boolean if the provided user is friends with the user
 
 class Friends(db.Model):
-    user_added:   Mapped[int] = mapped_column(Integer, db.ForeignKey('users.id'), primary_key=True)
-    user_request: Mapped[int] = mapped_column(Integer, db.ForeignKey('users.id'), primary_key=True)
+    id:            Mapped[int]      = mapped_column(Integer, primary_key=True)
+    user_added:    Mapped[int]      = mapped_column(Integer, db.ForeignKey('users.id'))
+    user_added_by: Mapped[int]      = mapped_column(Integer, db.ForeignKey('users.id'))
+    added_on:      Mapped[datetime] = mapped_column(nullable=False, default=lambda: datetime.now(timezone.utc))
 
     def getUser(id):
         db.session.scalar(sa.select(Users).where((Users.username == id)))
