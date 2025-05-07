@@ -200,10 +200,7 @@ input::placeholder {
 }
 
 div.search-user {
-    width: 50%;
-    height: 3em;
     margin-bottom: 1em;
-    align-content: center;
     display: flex;
     gap: 1em;
     padding-left: 1em;
@@ -222,6 +219,11 @@ div.search-user {
 .error {
     background-color: red;
     width: 20%;
+}
+
+.heading {
+    font-size: 30px;
+    margin-top: 1em;
 }
 
 /* Styling for individual elements */

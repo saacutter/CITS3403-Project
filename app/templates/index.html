@@ -42,7 +42,10 @@ Tournament Manager - Home
         </section>
 
         <section class="mb-16">
-            <h3 class="text-lg font-semibold mb-4">Latest Tournaments</h3>
+            <h3 class="text-lg font-semibold mb-4">Friends Tournaments</h3>
+            {% for tournament in tournament %}
+                <!-- TODO: Add the tournaments that friends played here-->
+            {% endfor %}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
                     <h4 class="text-md font-semibold mb-2">Tournament Name Example</h4>
