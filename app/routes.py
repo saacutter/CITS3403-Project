@@ -1,6 +1,7 @@
 from app import application, db, models, forms
 from flask import render_template, request, redirect, url_for, jsonify, flash, send_from_directory
 from flask_login import current_user, login_user, logout_user, login_required
+from flask import abort
 import sqlalchemy as sa
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -108,10 +109,66 @@ def signout():
     logout_user()
     return redirect(url_for('index'))
 
+@application.route('/send_friend_request/<int:user_id>', methods=["POST"]) 
+@login_required 
+def send_friend_request(user_id): 
+    if user_id == current_user.id:  
+        abort(400)  # Can't send friend request to self 
+    existing = db.session.scalar(sa.select(models.FriendRequest).where(  
+        models.FriendRequest.from_user_id == current_user.id,  
+        models.FriendRequest.to_user_id == user_id  
+    ))  
+    if existing:  # New addition
+        flash("Friend request already sent.")  
+        return redirect(request.referrer) 
+    new_request = models.FriendRequest(from_user_id=current_user.id, to_user_id=user_id) 
+    db.session.add(new_request) 
+    db.session.commit() 
+    flash("Friend request sent.")  
+    return redirect(request.referrer) 
+
+@application.route('/accept_friend_request/<int:request_id>', methods=["POST"]) 
+@login_required 
+def accept_friend_request(request_id): 
+    friend_request = db.session.get(models.FriendRequest, request_id) 
+    if not friend_request or friend_request.to_user_id != current_user.id:
+        abort(404) 
+    # Create reciprocal friend request (optional for bidirectional, skipped here)
+    db.session.delete(friend_request) 
+    db.session.commit() 
+    flash("Friend request accepted.")
+    return redirect(url_for('profile', username=current_user.username)) 
+
+@application.route('/friends/<int:user_id>') 
+def get_friends(user_id): 
+    # Get all accepted friends (simplified: only from_user_id entries exist after accepted) 
+    users = db.session.scalars(sa.select(models.Users).join(  
+        models.FriendRequest, models.Users.id == models.FriendRequest.from_user_id
+    ).where(models.FriendRequest.to_user_id == user_id)).all() 
+    return jsonify([u.serialise() for u in users]) 
+
+
 @application.route('/user/<username>')
 def profile(username):
     # Get the user with the specified ID
     user = db.first_or_404(sa.select(models.Users).where(models.Users.username == username))
+    friend_requests = db.session.scalars(
+        sa.select(models.FriendRequest)
+        .where(models.FriendRequest.to_user_id == current_user.id)
+    ).all() if user.id == current_user.id else []
+
+    is_friend = db.session.scalar(sa.select(models.FriendRequest).where(
+        models.FriendRequest.from_user_id == current_user.id,
+        models.FriendRequest.to_user_id == user.id
+    )) is not None 
+
+    return render_template("user.html", user=user, friend_requests=friend_requests, is_friend=is_friend)
+    
+    
+    
+    
+    
+    
     return render_template("user.html", user=user)
 
 @application.route('/edit_profile', methods=["GET", "POST"])
