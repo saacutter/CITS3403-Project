@@ -3,6 +3,8 @@ from sqlalchemy import Integer, Text, ForeignKey, Enum
 from sqlalchemy.orm import Mapped, mapped_column
 from flask_login import UserMixin
 from datetime import datetime, timezone, time
+import enum
+
 
 @login.user_loader
 def load_user(id):
@@ -48,3 +50,18 @@ class Matches(db.Model):
     points:     Mapped[int]  = mapped_column(Integer, nullable=False, index=True, default=0)
     time_taken: Mapped[time] = mapped_column(nullable=False, index=True)
     result:     Mapped[str] = mapped_column(Text, nullable=False, index=True)
+
+class FriendRequestStatus(enum.Enum):
+    pending = "pending"
+    accepted = "accepted"
+    declined = "declined"
+
+class FriendRequest(db.Model):
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    from_user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    to_user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    status: Mapped[FriendRequestStatus] = mapped_column(Enum(FriendRequestStatus), nullable=False, default=FriendRequestStatus.pending)
+    timestamp: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<FriendRequest from {self.from_user_id} to {self.to_user_id} - {self.status}>"
