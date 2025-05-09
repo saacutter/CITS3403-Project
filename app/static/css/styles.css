@@ -206,10 +206,6 @@ div.search-user {
     padding-left: 1em;
 }
 
-.search-user > p {
-    font-size: 16px;
-}
-
 .search-user > img {
     padding: 3px;
     height: 2.5em;

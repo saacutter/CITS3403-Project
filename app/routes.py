@@ -112,10 +112,10 @@ def signout():
 def profile(username):
     # Get the user with the specified ID
     user = db.first_or_404(sa.select(models.Users).where(models.Users.username == username))
-    print(user)
+
     # Get the user's friends
-    friends = list(db.session.scalars(sa.select(models.Users).join(models.Friends, models.Users.id == models.Friends.user_added).where(models.Friends.user_added_by == user.id)))
-    print(friends)
+    friends = list(db.session.scalars(sa.select(models.Users).join(models.Friends, models.Users.id == models.Friends.to_user).where(models.Friends.from_user == user.id)))
+
     return render_template("user.html", user=user, friends=friends)
 
 @application.route('/edit_profile', methods=["GET", "POST"])
@@ -181,44 +181,50 @@ def get_like(pattern):
     # Extract the users from the database that begin with the requested pattern
     users = db.session.scalars(sa.select(models.Users).where(models.Users.username.like(pattern + '%'))).all()
 
-    # TODO: Remove all users from this list that the user is already friends with
+    # Get the friends of the current user
+    friends = db.session.scalars(sa.select(models.Friends.to_user).where(models.Friends.from_user == current_user.id)).all()
 
-    # Remove the signed in user from the list, if applicable
-    try:
-        users.remove(current_user)
-    except ValueError:
-        ...
+    # Create a list of results that gets all users that match the pattern and aren't already friends with the current user
+    results = [user.serialise() for user in users if user.id != current_user.id and user.id not in friends]
+
+    # TODO: Create an attribute if the user is friends with a user and show that on the results by removing the button
     
     # Return an empty JSON object if no users match the specified pattern
-    if len(users) == 0:
+    if len(results) == 0:
       return jsonify([{"username": None}])
 
     # Return a JSON object of the extracted users
-    return jsonify([user.serialise() for user in users]) # Adapted from: https://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
+    return jsonify(results) # Adapted from: https://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
 
 @application.route('/add_friend/<username>', methods=["POST"])
 def add_friend(username):
+    # Retrieve the user with the given username
+    user = db.session.scalar(sa.select(models.Users).where(models.Users.username == username))
+
+    # Return an error message if the user is the current user
+    if user.id == current_user.id:
+        return '', 400
+    
     # Ensure that the user has not already added the user
-    relationship = db.session.scalar(sa.select(models.Friends).where(models.Friends.user_added_by == current_user.username))
+    relationship = db.session.scalar(sa.select(models.Friends).where((models.Friends.from_user == current_user.id) & (models.Friends.to_user == user.id)))
     if relationship:
-        flash("Cannot add the specified user")
         return '', 400
 
-    # Retrieve the user ID of the user with the given username
-    user = db.session.scalar(sa.select(models.Users).where(username == username))
-    user_id = user.id
-
     # Create an object that adds the user with the current user
-    friends = models.Friends(
-        user_added=user_id,
-        user_added_by=current_user.id
+    friend = models.Friends(
+        to_user=user.id,
+        from_user=current_user.id
     )
 
     # Add this relationship to the database
-    db.session.add(friends)
+    db.session.add(friend)
     db.session.commit()
 
     return '', 200
+
+@application.route('/add_friend/<username>', methods=["POST"])
+def remove_friend(username):
+    ... # TODO: Remove friend
 
 @application.route('/addMatch', methods=["GET", "POST"])
 @login_required
