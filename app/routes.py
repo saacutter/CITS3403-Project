@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime, timezone
 from hashlib import md5
 import os
+from PIL import Image
 
 # Update the last seen time of the user before each request
 @application.before_request
@@ -139,7 +140,14 @@ def edit_profile():
         
         # Save the uploaded image to the server if one was uploaded
         img_filename = secure_filename(image.filename)
-        if img_filename != "":
+        if img_filename != "": 
+            img = Image.open(image)  
+
+            # Check if image is square 
+            if abs(img.width - img.height) > 10:
+                flash("The profile image must be square")
+                return redirect(url_for('edit_profile')) 
+
             # Ensure that the extension is a valid image extension
             extension = os.path.splitext(img_filename)[1]
             if extension not in application.config['UPLOAD_EXTENSIONS']:
