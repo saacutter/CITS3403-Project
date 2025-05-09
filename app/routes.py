@@ -142,9 +142,10 @@ def edit_profile():
         img_filename = secure_filename(image.filename)
         if img_filename != "": 
             img = Image.open(image)  
-            max_width, max_height = 500, 500 
-            if img.width > max_width or img.height > max_height:  
-                flash(f"The image resolution is too large. Max allowed is {max_width}x{max_height}px.")  
+
+            # Check if image is square 
+            if abs(img.width - img.height) > 10:
+                flash("The profile image must be square")
                 return redirect(url_for('edit_profile')) 
 
             # Ensure that the extension is a valid image extension
