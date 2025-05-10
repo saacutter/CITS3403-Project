@@ -7,7 +7,12 @@ Tournament Manager - Home
 {% block body %}
 <div class="container">
     <main class="container mx-auto p-4 mt-8">
-        {% if not current_user.is_anonymous %}
+        {% if current_user.is_anonymous %}
+        <section class="welcome-section bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+            <h2 class="text-xl font-semibold mb-2">Welcome to Tournament Manager!</h2>
+            <p class="text-gray-400">Sign up or log in to manage your tournaments or find a new challenge!</p>
+        </section>
+        {% else %}
         <section class="welcome-section bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
             <h2 class="text-xl font-semibold mb-2">Welcome back, {{ current_user.username }}!</h2>
             <p class="text-gray-400">Ready to manage your tournaments or find a new challenge?</p>

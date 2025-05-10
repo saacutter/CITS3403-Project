@@ -328,3 +328,7 @@ def tournament():
         flash("Tournament added successfully!", "success")
         return redirect(url_for('index'))
     return render_template("add-tournament.html", form=form)
+
+@application.route('/privacy_policy')
+def privacy_policy():
+    return render_template('privacy_policy.html')
