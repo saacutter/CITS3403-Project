@@ -5,6 +5,8 @@
         <!-- Meta tags -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="utf-8">
+        
+        <script src="https://cdn.tailwindcss.com"></script>
 
         <!-- File links -->
         <link href="/static/css/styles.css" rel="stylesheet">
@@ -14,16 +16,16 @@
         <!-- Font -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Orbitron:wght@400..900&family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600;1,700&family=Orbitron:wght@400..900&family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 
         <title>{% block title %}{% endblock %}</title>
     </head>
-    <body class="antialiased">
+    <body>
         <header class="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-900 text-white">
-            <div id="titlebar" class="mb-4 md:mb-0">
-                <h1 class="text-3xl font-bold"><a href="{{ url_for('index') }}" class="hover:text-gray-300" style="text-decoration: none;">Tournament Manager</a></h1>
+            <div id="titlebar">
+                <h1 class="center transparent-bg"><a href="{{ url_for('index') }}">Tournament Manager</a></h1>
             </div>
-            {% if current_user.is_anonymous %} <!-- Provides the sign in and log in buttons for users not signed in -->
+            {% if current_user.is_anonymous %}
                 <div id="account-buttons" class="flex space-x-4">
                     <div id="login-btn">
                         <a href="{{ url_for('login') }}" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition hover:no-underline">Log In</a>
@@ -32,13 +34,57 @@
                         <a href="{{ url_for('signup') }}" class="block px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition hover:no-underline">Sign Up</a>
                     </div>
                 </div>
-            {% else %} <!-- Provides access for users to go to their profiles quickly and sign out -->
+            {% else %}
                 <div id="profile-icon" class="transparent-bg">
                     <a href="{{ url_for('profile', username=current_user.username) }}"><img src="{% if current_user.profile_picture.startswith('http') %} {{current_user.profile_picture}} {% else %} {{ url_for('upload', filename=current_user.profile_picture) }} {% endif %}" alt="Profile Picture" id="profile-icon-picture"></a>
                 </div>
-                <a href="{{ url_for('signout') }}" style="position: absolute; z-index: 4; right: 100px;">Sign Out</a>
+                <a href="{{ url_for('signout') }}" style="position: absolute; z-index: 4;">Sign Out</a>
             {% endif %}
         </header>
+        <!-- Dropdown menu -->
+        <div id="dropdown-menu" class="hidden absolute right-4 top-16 w-64 bg-white rounded-lg shadow-lg z-10 transform transition-transform duration-300 scale-95 opacity-0">
+            <ul class="py-4">
+                {% if current_user.is_authenticated %}
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-user-circle text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('profile') }}" class="text-gray-800">User Profile</a>
+                    </li>
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-cog text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('settings') }}" class="text-gray-800">Settings</a>
+                    </li>
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-question-circle text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('how_to_use') }}" class="text-gray-800">How to Use Guide</a>
+                    </li>
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-sign-out-alt text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('signout') }}" class="text-gray-800">Sign Out</a>
+                    </li>
+                {% else %}
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-sign-in-alt text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('login') }}" class="text-gray-800">Log In</a>
+                    </li>
+                    <li class="flex items-center px-4 py-2 hover:bg-gray-100">
+                        <i class="fas fa-user-plus text-gray-700 mr-3"></i>
+                        <a href="{{ url_for('signup') }}" class="text-gray-800">Sign Up</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
         {% block body %}{% endblock %}
+
+        <script>
+            // Toggle dropdown menu visibility with animation
+            const dropdownToggle = document.getElementById('dropdown-toggle');
+            const dropdownMenu = document.getElementById('dropdown-menu');
+
+            dropdownToggle.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('hidden');
+                dropdownMenu.classList.toggle('scale-95');
+                dropdownMenu.classList.toggle('opacity-0');
+            });
+        </script>
     </body>
 </html>

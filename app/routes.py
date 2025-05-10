@@ -26,6 +26,15 @@ def page_not_found(error_code):
 def index():
     return render_template("index.html")
 
+@application.route("/test")
+def test():
+    # return render_template("base.html")
+    return render_template("home.html")
+
+@application.route("/test2")
+def test2():
+    return render_template("base.html")
+
 # Login route of the application
 @application.route("/login", methods=["GET", "POST"])
 def login():
