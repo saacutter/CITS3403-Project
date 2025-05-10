@@ -17,6 +17,34 @@ Tournament Manager - {{ user.username }}
                 {% if user.username == current_user.username %}
                     <a href="{{ url_for('edit_profile') }}" style="text-align: left;">Edit Profile</a>
                 {% endif %}
+
+                {% if user.username != current_user.username %}
+                    {% if not is_friend %}
+                        <form method="POST" action="{{ url_for('send_friend_request', user_id=user.id) }}">
+                            <button type="submit">Send Friend Request</button>
+                        </form>
+                    {% else %}
+                        <p>You are friends with this user.</p>
+                    {% endif %}
+                {% endif %}
+
+                {% if user.username == current_user.username %}
+                    <h2>Friend Requests</h2>
+                    {% if friend_requests %}
+                        <ul>
+                        {% for fr in friend_requests %}
+                            <li>
+                                From User ID: {{ fr.from_user_id }}
+                                <form method="POST" action="{{ url_for('accept_friend_request', request_id=fr.id) }}">
+                                    <button type="submit">Accept</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No friend requests.</p>
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
         {% if user.private == 0 or user.username == current_user.username %}
