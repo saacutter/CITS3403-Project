@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}
+Tournament Manager - Edit Profile
+{% endblock %}
+
+{% block body %}
+<div id="user-background">
+    <div id="user-profile-panel" class="center">
+        <h1 class="font-bold pt-5" style="font-size: 30px;">Edit profile</h1>
+        {% if get_flashed_messages() or form.errors %}
+            <div class="center error rounded-border-px">
+                {% if get_flashed_messages %}
+                    {% for message in get_flashed_messages() %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+
+                {% if form.errors %}
+                    {% for field, errors in form.errors.items() %}
+                        {% for error in errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endif %}
+        <div id="edit-profile-form" class="center">
+            <form action="{{ url_for('edit_profile') }}" method="post" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="mb-6 flex relative group w-32 h-44 center">
+                    <label for="image-file">
+                        <img src="{% if current_user.profile_picture.startswith('http') %} {{current_user.profile_picture}} {% else %} {{ url_for('upload', filename=current_user.profile_picture) }} {% endif %}" alt="Profile Picture" id="profile-picture-edit" class="w-full h-full object-cover rounded-full cursor-pointer">
+                        <div class="absolute inset-0 bg-black bg-opacity-40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M4 13.5V19h5.5l9.207-9.207a1.5 1.5 0 00-2.121-2.121L4 13.5z"/>
+                            </svg>
+                        </div>
+                    </label>
+                    {{ form.profile_picture(id="image-file", accept="image/*", style="display: none;") }}
+                </div>
+                <div class="mb-6">
+                    {{ form.username.label(class="block text-gray-400 font-bold mb-2") }}
+                    {{ form.username(value=current_user.username, class="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
+                </div>
+                <div class="mb-6">
+                    {{ form.email.label(class="block text-gray-400 font-bold mb-2") }}
+                    {{ form.email(value=current_user.email, class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
+                </div>
+                <div class="mb-6">
+                    {{ form.password.label(class="block text-gray-400 font-bold mb-2") }}
+                    {{ form.password(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
+                </div>
+                <div class="mb-6">
+                    <label class="inline-flex items-center cursor-pointer">
+                        {{ form.private(class="sr-only peer", default=current_user.private) }}
+                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                        <span class="ms-3 text-med font-medium text-gray-900 dark:text-gray-300">{{ form.private.label(class="text-gray-400 font-bold mb-2") }}</span>
+                    </label>
+                </div>
+                <div class="flex-container items-center justify-between center">
+                    <a href="{{ url_for('profile', username=current_user.username) }}"><input type="button" value="Cancel" class="bg-transparent hover:bg-white hover:border-none hover:text-black border border-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition w-1/5"></a>
+                    {{ form.submit(class="bg-blue-600 hover:bg-blue-700 border border-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition w-1/5") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/static/js/profile_image.js"></script>
+{% endblock %}

@@ -41,12 +41,25 @@ pip install -r requirements.txt
         │   ├── static
         │   │   ├── css
         │   │   │   └── styles.css
-        │   │   └── js
-        │   │       └── login.js
+        │   │   ├── html
+        │   │   │   ├── home.html
+        │   │   │   └── login-signup.html
+        │   │   ├── img
+        │   │   │   └── user-profile-background.webp
+        │   │   ├── js
+        │   │   │   ├── login.js
+        │   │   │   ├── search_users.js
+        │   │   │   └── upload.js
+        │   │   └── profilepictures
         │   ├── templates
+        │   │   ├── add-match.html
+        │   │   ├── add-tournament.html
         │   │   ├── base.html
+        │   │   ├── edit-profile.html
         │   │   ├── index.html
-        │   │   └── login.html
+        │   │   ├── login.html
+        │   │   ├── search.html
+        │   │   └── user.html
         ├── instance
         │   └── app.db
         ├── manager.py
@@ -57,7 +70,10 @@ pip install -r requirements.txt
         │   ├── script.py.mako
         │   └── versions
         │       ├── 518c88c18d5f_updated_users.py
-        │       └── 5d3f9f639ef5_users_table.py
+        │       ├── 56f705820311_recreated_database_to_fix_broken_.py
+        │       ├── 5d3f9f639ef5_users_table.py
+        │       ├── ac1c030fc5b9_added_profile_picture_section_to_users_.py
+        │       └── b41b7621e32c_added_email_and_creation_date_field_to_.py
         └── requirements.txt
         </pre>
 
@@ -74,8 +90,7 @@ DATABASE_URL = "sqlite:///app.db"
 
 ### Starting the Application
 1. Initialise the database (if it hasn't already been) with the `flask db init` command.
-    - The database can then migrate the database using `flask db migrate`.
-    - Once the database has migrated the database schema, it can then be committed using `flask db upgrade`.
+    - The database can then be updated using the `flask db upgrade`.
 
 2. Start the flask application using `flask run`.
     - Note that the `.flaskenv` file sets the `FLASK_APP` environment variable. If this does not work, the following should be done:

@@ -20,6 +20,7 @@ a {
 
 a:hover {
     text-decoration: underline;
+    cursor: pointer;
 }
 
 /* Ensure the background covers the full height */
@@ -55,8 +56,7 @@ hr {
     margin-top: 1em;
 }
 
-button,
-input[type="submit"] {
+button {
     font-family: "Chakra Petch", Quantico, Orbitron, Helvetica, Arial, sans-serif;
     padding: 0.4em;
     width: 10em;
@@ -68,10 +68,13 @@ input[type="submit"] {
     box-shadow: 0px 0px transparent;
 }
 
-button:hover,
-input[type="submit"]:hover {
+button:hover {
     background-color: grey;
     color: white;
+    cursor: pointer;
+}
+
+input[type="button"]:hover, input[type="submit"]:hover {
     cursor: pointer;
 }
 
@@ -101,6 +104,10 @@ input[type="checkbox"] {
     transform: scale(1.5);
     accent-color: grey;
     margin-bottom: 2em;
+}
+
+input[type="file"]:hover, input[type="file"]::file-selector-button:hover {
+    cursor: pointer;
 }
 
 /* Styles for pseudo-classes */
@@ -183,6 +190,15 @@ input::placeholder {
     font-size: 24px;
 }
 
+.file-upload {
+    align-content: center;
+    height: 5em;
+    width: 85%;
+    margin-top: 1em;
+    border: 2px dotted grey;
+    background-color: darkgray;
+}
+
 div.search-user {
     width: 50%;
     height: 3em;
@@ -203,18 +219,63 @@ div.search-user {
     width: 2.5em;
 }
 
+.error {
+    background-color: red;
+    width: 20%;
+}
+
+/* Styling for individual elements */
+#profile-icon {
+    cursor: pointer;
+}
+
+#user-background {
+    background-image: url("../img/user-profile-background.webp"); /* Retrieved from https://www.toptal.com/designers/subtlepatterns/fancy-cushion-pattern/ */
+    background-repeat: repeat;
+    height: 100vh;
+}
+
+#user-profile-panel {
+    width: 80%;
+    background-color: black;
+    height: 100%;
+}
+
+#user-profile-panel h1 {
+    font-size: 24px;
+}
+
+#user-heading {
+    gap: 3em;
+    margin-left: 5em;
+    margin-bottom: 2em;
+    padding-top: 3em;
+}
+
+#user-heading > img {
+    width: 8em;
+    height: auto;
+}
+
+#profile-picture-edit {
+    margin-top: 2em;
+    width: 10em;
+    height: auto;
+}
+
+#edit-profile-form {
+    width: 75%;
+    text-align: left;
+}
+
+#heading-404 {
+    font-size: 80px;
+    padding-top: 2em;
+}
+
 /* Media Queries */
 @media screen and (max-width: 900px) {
-    .container {
-        width: 98%;
-    }
-
-    .panel {
-        width: 98%;
-    }
-
-    input[type="text"],
-    input[type="password"] {
-        width: 98%;
+    #user-profile-panel {
+        width: 95%;
     }
 }

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}
+Tournament Manager - Add Match
+{% endblock %}
+
+{% block body %}
+<div class="flex-grow mx-auto p-4 mt-8 flex">
+    <section class="bg-gray-800 p-8 rounded-lg shadow-lg w-3/4 text-left center">
+        <h2 class="text-2xl font-semibold mb-6 text-center">Add Tournament</h2>
+        <form action="{{ url_for('match') }}" method="post">
+            {{ form.hidden_tag() }}
+            <div class="mb-6">
+                {{ form.file.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                {{ form.file(id="file", accept=".json, .csv", class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400") }}
+            </div>
+            <div class="mb-6">
+                {{ form.game.label(class="block text-gray-400 font-bold mb-2") }}
+                {{ form.game(id="upload-input", class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
+            </div>
+            <div class="mb-6">
+                {{ form.points.label(class="block text-gray-400 font-bold mb-2") }}
+                {{ form.points(id="upload-input", class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
+            </div>
+            <div class="mb-6">
+                {{ form.time_taken.label(class="block text-gray-400 font-bold mb-2") }}
+                {{ form.time_taken(id="upload-input", class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
+            </div>
+            <div class="mb-6">
+                {{ form.result.label(class="block text-gray-400 font-bold mb-2") }}
+                {{ form.result(id="upload-input", class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
+            </div>
+            <div class="flex items-center justify-between">
+                {{ form.submit(class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition w-full") }}
+            </div>
+        </form>
+    </section>
+</div>
+<script src="static/js/upload.js"></script>
+{% endblock %}

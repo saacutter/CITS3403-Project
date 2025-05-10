@@ -13,7 +13,7 @@ suButton.addEventListener('click', () => {
     enableInputs(signup.querySelectorAll('button, input'));
 
     // Update the route and title to reflect the current view
-    window.history.replaceState({}, "Sign Up", "/signup");
+    window.history.replaceState({}, "Tournament Manager - Sign Up", "/register");
 });
 
 let liButton = document.querySelector('#login-panel-btn');
@@ -27,7 +27,7 @@ liButton.addEventListener('click', () => {
     enableInputs(login.querySelectorAll('button, input'));
 
     // Update the route and title to reflect the current view
-    window.history.replaceState({}, "Log In", "/login");
+    window.history.replaceState({}, "Tournament Manager - Login", "/login");
 });
 
 function disableInputs(elements) {

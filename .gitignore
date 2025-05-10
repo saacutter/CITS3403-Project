@@ -6,3 +6,10 @@
 
 # Environment variables file
 .env
+
+# Database
+**/instance
+*.db
+
+# Profile pictures directory
+**/profilepictures
