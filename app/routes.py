@@ -149,17 +149,18 @@ def edit_profile():
         # Check if username or email already exists
         existing_user = db.session.scalar(sa.select(models.Users).where((models.Users.username == username) | (models.Users.email == email)))
         if existing_user and existing_user != current_user:
-            flash("A user with this username or email address already exists!")
+            flash("A user with this username or email address already exists")
             return redirect(url_for('edit_profile'))
         
         # Save the uploaded image to the server if one was uploaded
         img_filename = secure_filename(image.filename)
         if img_filename != "":
-            # Check if image is square
+            # Ensure that the image is roughly square (with a 50px tolerance)
             img = Image.open(image)   
-            if abs(img.width - img.height) > 10:
+            if abs(img.width - img.height) > 50:
                 flash("The profile image must be square")
-                return redirect(url_for('edit_profile')) 
+                return redirect(url_for('edit_profile'))
+            image.seek(0)
             
             # Ensure that the extension is a valid image extension
             extension = os.path.splitext(img_filename)[1]

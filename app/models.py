@@ -56,4 +56,4 @@ class Matches(db.Model):
     game:       Mapped[str]  = mapped_column(Text, nullable=False, index=True)
     points:     Mapped[int]  = mapped_column(Integer, nullable=False, index=True, default=0)
     time_taken: Mapped[time] = mapped_column(nullable=False, index=True)
-    result:     Mapped[str] = mapped_column(Text, nullable=False, index=True)
+    result:     Mapped[str]  = mapped_column(Text, nullable=False, index=True)
