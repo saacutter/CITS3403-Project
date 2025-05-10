@@ -47,16 +47,27 @@ Tournament Manager - {{ user.username }}
                 {% endif %}
             </div>
         </div>
+
         {% if user.private == 0 or user.username == current_user.username %}
             <div>
                 <h1>Recent Tournaments</h1>
                 {% if tournaments %}
                     {% for tournament in tournaments %}
-                    <!-- Display tournaments associated with user -->
+                        <!-- Display tournaments associated with user -->
                     {% endfor %}
                 {% else %}
                     <h3 class="text-white">This user has not competed in any tournaments yet.</h3>
                 {% endif %}
+            </div>
+
+            <!-- Match Statistics Section -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-md mt-6 text-white">
+                <h2 class="text-xl font-bold mb-4">Match Statistics</h2>
+                <p>Total Games Played: {{ total_games }}</p>
+                <p>Wins: {{ wins }}</p>
+                <p>Losses: {{ losses }}</p>
+                <p>Draws: {{ draws }}</p>
+                <p>Win Percentage: {{ win_pct }}%</p>
             </div>
         {% else %}
             <h1>This user has their profile set to private!</h1>

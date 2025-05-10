@@ -173,14 +173,18 @@ def profile(username):
         models.FriendRequest.to_user_id == user.id
     )) is not None 
 
-    return render_template("user.html", user=user, friend_requests=friend_requests, is_friend=is_friend)
+    matches = models.Matches.query.filter_by(user_id=user.id).all()
+    total_games = len(matches)
+    wins = sum(1 for m in matches if m.result.lower() == 'win')
+    losses = sum(1 for m in matches if m.result.lower() == 'loss')
+    draws = sum(1 for m in matches if m.result.lower() == 'draw')
+    win_pct = round((wins / total_games) * 100, 2) if total_games > 0 else 0
+
+    return render_template("user.html",user=user,is_friend=is_friend,friend_requests=friend_requests,matches=matches,
+    total_games=total_games,wins=wins,losses=losses,draws=draws,win_pct=win_pct
+)
     
     
-    
-    
-    
-    
-    return render_template("user.html", user=user)
 
 @application.route('/edit_profile', methods=["GET", "POST"])
 @login_required
