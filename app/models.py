@@ -34,14 +34,9 @@ class Tournaments(db.Model):
     id:         Mapped[int]      = mapped_column(Integer, primary_key=True)
     name:       Mapped[str]      = mapped_column(Text, nullable=False, index=True)
     game_title: Mapped[str]      = mapped_column(Text, nullable=False, index=True)
-    date:       Mapped[datetime] = mapped_column(nullable=False, index=True)
-
-    def serialise(self):
-        return {
-            "name": self.name,
-            "game_title": self.game_title,
-            "date": self.date
-        }
+    date:       Mapped[str]      = mapped_column(Text, nullable=False, index=True)
+    image:      Mapped[str]      = mapped_column(Text, nullable=True)
+    data_file:  Mapped[str]      = mapped_column(Text, nullable=True)
 
 class Matches(db.Model):
     id:         Mapped[int]  = mapped_column(Integer, primary_key=True)

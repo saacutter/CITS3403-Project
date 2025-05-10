@@ -24,7 +24,8 @@ def page_not_found(error_code):
 # Default route of the application
 @application.route("/")
 def index():
-    return render_template("index.html")
+    tournaments = models.Tournaments.query.all()
+    return render_template("index.html", tournaments=tournaments)
 
 @application.route("/test")
 def test():
@@ -296,27 +297,34 @@ def match():
 @application.route('/addTournament', methods=["GET", "POST"])
 @login_required
 def tournament():
-    if request.method == "POST" and forms.AddTournamentForm().validate_on_submit():
-        form = forms.AddTournamentForm()
+    form = forms.AddTournamentForm()
+    if request.method == "POST" and form.validate_on_submit():
+        # Handle file uploads
+        data_file_path = None
+        image_path = None
 
-        # Extract the information from the request
-        file = request.files['file']
-        name = form.name.data
-        game = form.game.data
-        time = form.time.data
+        if form.file.data:
+            file = form.file.data
+            filename = secure_filename(file.filename)
+            data_file_path = os.path.join('uploads', filename)
+            file.save(os.path.join(application.config['UPLOAD_PATH'], filename))
 
-        # Ensure that valid data was provided
-        if file == None or (name == "" and game == "" and time == ""):
-            return redirect(url_for('tournament'))
+        if form.image.data:
+            image = form.image.data
+            image_filename = secure_filename(image.filename)
+            image_path = os.path.join('uploads', image_filename)
+            image.save(os.path.join(application.config['UPLOAD_PATH'], image_filename))
 
-        if file:
-            # TODO: Process the file (requires the format of file to be specified)
-            ...
-        else:
-            # Create the tournament entry and add it to the database
-            data_entry = models.Tournaments(name=name, game=game, time=time)
-            db.session.add(data_entry)
-            db.session.commit()
-
+        # Create and save tournament
+        tournament = models.Tournaments(
+            name=form.name.data,
+            game_title=form.game.data,
+            date=form.date.data.strftime('%Y-%m-%d'),
+            image=image_path,
+            data_file=data_file_path
+        )
+        db.session.add(tournament)
+        db.session.commit()
+        flash("Tournament added successfully!", "success")
         return redirect(url_for('index'))
-    return render_template("add-tournament.html", form=forms.AddTournamentForm())
+    return render_template("add-tournament.html", form=form)
