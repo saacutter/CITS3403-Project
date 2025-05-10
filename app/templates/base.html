@@ -19,11 +19,11 @@
         <title>{% block title %}{% endblock %}</title>
     </head>
     <body class="antialiased">
-        <header class="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-900 text-white">
+        <header class="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-900 text-white relative">
             <div id="titlebar" class="mb-4 md:mb-0">
                 <h1 class="text-3xl font-bold"><a href="{{ url_for('index') }}" class="hover:text-gray-300" style="text-decoration: none;">Tournament Manager</a></h1>
             </div>
-            {% if current_user.is_anonymous %} <!-- Provides the sign in and log in buttons for users not signed in -->
+            {% if current_user.is_anonymous %}
                 <div id="account-buttons" class="flex space-x-4">
                     <div id="login-btn">
                         <a href="{{ url_for('login') }}" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition hover:no-underline">Log In</a>
@@ -32,11 +32,57 @@
                         <a href="{{ url_for('signup') }}" class="block px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition hover:no-underline">Sign Up</a>
                     </div>
                 </div>
-            {% else %} <!-- Provides access for users to go to their profiles quickly and sign out -->
-                <div id="profile-icon" class="transparent-bg">
-                    <a href="{{ url_for('profile', username=current_user.username) }}"><img src="{% if current_user.profile_picture.startswith('http') %} {{current_user.profile_picture}} {% else %} {{ url_for('upload', filename=current_user.profile_picture) }} {% endif %}" alt="Profile Picture" id="profile-icon-picture"></a>
+            {% else %}
+                <div class="flex items-center space-x-4">
+                    <!-- Dropdown Menu for signed-in users -->
+                    <div class="relative">
+                        <button id="dropdownButton" type="button" class="inline-flex items-center px-2 py-1 rounded-md bg-gray-800 hover:bg-gray-700 focus:outline-none" aria-expanded="false" aria-haspopup="true" style="width: 40px;">
+                            <svg class="h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                        <div id="dropdownMenu" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-50">
+                            <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="dropdownButton">
+                                <a href="{{ url_for('index') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="Home" class="h-6 w-6 mr-2">
+                                    <span class="text-black">Home</span>
+                                </a>
+                                <a href="{{ url_for('search') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/149/149852.png" alt="Search" class="h-6 w-6 mr-2">
+                                    <span class="text-black">User Search</span>
+                                </a>
+                                <a href="{{ url_for('edit_profile') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Profile" class="h-6 w-6 mr-2">
+                                    <span class="text-black">Profile</span>
+                                </a>
+                                <a href="{{ url_for('privacy_policy') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                    <img src="https://cdn-icons-png.flaticon.com/128/11325/11325847.png" alt="Privacy" class="h-6 w-6 mr-2">
+                                    <span class="text-black">Privacy Policy</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="profile-icon" class="transparent-bg">
+                        <a href="{{ url_for('profile', username=current_user.username) }}"><img src="{% if current_user.profile_picture.startswith('http') %} {{current_user.profile_picture}} {% else %} {{ url_for('upload', filename=current_user.profile_picture) }} {% endif %}" alt="Profile Picture" id="profile-icon-picture"></a>
+                    </div>
+                    <a href="{{ url_for('signout') }}" class="ml-2">Sign Out</a>
                 </div>
-                <a href="{{ url_for('signout') }}" style="position: absolute; z-index: 4; right: 100px;">Sign Out</a>
+                <script>
+                // Dropdown menu toggle
+                document.addEventListener('DOMContentLoaded', function() {
+                    const btn = document.getElementById('dropdownButton');
+                    const menu = document.getElementById('dropdownMenu');
+                    if (btn && menu) {
+                        btn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            menu.classList.toggle('hidden');
+                        });
+                        document.addEventListener('click', function() {
+                            menu.classList.add('hidden');
+                        });
+                    }
+                });
+                </script>
             {% endif %}
         </header>
         {% block body %}{% endblock %}
