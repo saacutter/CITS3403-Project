@@ -10,6 +10,8 @@
 
         <!-- File links -->
         <link href="/static/css/styles.css" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
+        {{ moment.include_moment() }}
 
         <!-- Font -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,31 +22,24 @@
     </head>
     <body>
         <header class="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-900 text-white">
-            <div id="titlebar" class="mb-4 md:mb-0 flex items-center justify-between w-full">
-                <h1 class="text-2xl font-bold"><a href="{{ url_for('index') }}" class="hover:text-gray-300">Tournament Manager</a></h1>
-                <div id="account-buttons" class="flex space-x-4 items-center">
-                    {% if current_user.is_authenticated %}
-                        <!-- Display profile image if user is logged in -->
-                        <div id="profile-icon" class="relative">
-                            <img src="{{ current_user.profile_picture }}" alt="Profile Picture" class="w-10 h-10 rounded-full">
-                        </div>
-                    {% else %}
-                        <!-- Display Log In and Sign Up buttons if user is not authenticated -->
-                        <div id="login-btn">
-                            <a href="{{ url_for('login') }}" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition">Log In</a>
-                        </div>
-                        <div id="signup-btn">
-                            <a href="{{ url_for('signup') }}" class="block px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition">Sign Up</a>
-                        </div>
-                    {% endif %}
-                    <!-- Dropdown menu button -->
-                    <button id="dropdown-toggle" class="p-2 rounded-md bg-gray-700 hover:bg-gray-600 transition">
-                        <span class="block w-6 h-0.5 bg-white mb-1"></span>
-                        <span class="block w-6 h-0.5 bg-white mb-1"></span>
-                        <span class="block w-6 h-0.5 bg-white"></span>
-                    </button>
-                </div>
+            <div id="titlebar">
+                <h1 class="center transparent-bg"><a href="{{ url_for('index') }}">Tournament Manager</a></h1>
             </div>
+            {% if current_user.is_anonymous %}
+                <div id="account-buttons" class="flex space-x-4">
+                    <div id="login-btn">
+                        <a href="{{ url_for('login') }}" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition hover:no-underline">Log In</a>
+                    </div>
+                    <div id="signup-btn">
+                        <a href="{{ url_for('signup') }}" class="block px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition hover:no-underline">Sign Up</a>
+                    </div>
+                </div>
+            {% else %}
+                <div id="profile-icon" class="transparent-bg">
+                    <a href="{{ url_for('profile', username=current_user.username) }}"><img src="{% if current_user.profile_picture.startswith('http') %} {{current_user.profile_picture}} {% else %} {{ url_for('upload', filename=current_user.profile_picture) }} {% endif %}" alt="Profile Picture" id="profile-icon-picture"></a>
+                </div>
+                <a href="{{ url_for('signout') }}" style="position: absolute; z-index: 4;">Sign Out</a>
+            {% endif %}
         </header>
         <!-- Dropdown menu -->
         <div id="dropdown-menu" class="hidden absolute right-4 top-16 w-64 bg-white rounded-lg shadow-lg z-10 transform transition-transform duration-300 scale-95 opacity-0">
@@ -78,7 +73,6 @@
                 {% endif %}
             </ul>
         </div>
-
         {% block body %}{% endblock %}
 
         <script>
