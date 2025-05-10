@@ -18,7 +18,7 @@
 
         <title>{% block title %}{% endblock %}</title>
     </head>
-    <body class="antialiased">
+    <body class="antialiased flex flex-col min-h-screen">
         <header class="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-900 text-white relative">
             <div id="titlebar" class="mb-4 md:mb-0">
                 <h1 class="text-3xl font-bold"><a href="{{ url_for('index') }}" class="hover:text-gray-300" style="text-decoration: none;">Tournament Manager</a></h1>
@@ -85,6 +85,11 @@
                 </script>
             {% endif %}
         </header>
-        {% block body %}{% endblock %}
+        <main class="flex-grow">
+            {% block body %}{% endblock %}
+        </main>
+        <footer class="bg-gray-900 text-white text-center p-4 mt-auto">
+            Copyright © 2025 Tournament Manager Inc. All rights reserved. <a href="{{ url_for('privacy_policy') }}" class="text-blue-400 hover:underline">| Privacy Policy</a>
+        </footer>
     </body>
 </html>
