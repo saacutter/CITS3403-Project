@@ -5,60 +5,69 @@ Tournament Manager - {{ user.username }}
 {% endblock %}
 
 {% block body %}
-<div id="user-background">
-    <div id="user-profile-panel" class="center">
-        <div class="flex items-center gap-4" id="user-heading">
-            <img src="{% if user.profile_picture.startswith('http') %} {{ user.profile_picture}} {% else %} {{ url_for('upload', filename=user.profile_picture) }} {% endif %}" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover">
-            <div class="flex flex-col">
-                <h1 class="font-bold text-white" style="text-align: left;">{{ user.username }}</h1>
-                {% if user.private == 0 or user.username == current_user.username or current_user.is_friends_with(user) %}
-                    <p class="text-med text-gray-500">This user was last seen {{ moment(user.last_login).fromNow() }} ({{ moment(user.last_login).format('LLLL') }})</p>
-                {% endif %}
-                {% if user.username == current_user.username %}
-                    <a href="{{ url_for('edit_profile') }}" style="text-align: left;">Edit Profile</a>
-                {% endif %}
-            </div>
-        </div>
-        {% if user.private == 0 or user.username == current_user.username or current_user.is_friends_with(user) %}
-            <div class="container flex">
-                <div class="width-1/2 center">
-                    <h1>Recent Tournaments</h1>
-                    {% if tournaments %}
-                        {% for tournament in tournaments %}
-                        <!-- TODO: Display tournaments associated with user -->
-                        {% endfor %}
-                    {% else %}
-                        <p class="text-white text-med">This user has not competed in any tournaments yet.</h3>
-                    {% endif %}
-                </div>
-                <div class="w-1/2 center">
-                    <h1>Friends</h1>
-                    {% if friends %}
-                        {% for friend in friends %}
-                            <div class="flex w-3/5 items-center h-20 bg-gray-900 mt-2 pl-2 gap-4 rounded-border center">
-                                <a href="{{ url_for('profile', username=friend.username) }}"><img src="{% if friend.profile_picture.startswith('http') %} {{friend.profile_picture}} {% else %} {{ url_for('upload', filename=friend.profile_picture) }} {% endif %}" alt="Profile Picture" class="h-[4em]"></a>
-                                <div class="flex flex-col">
-                                    <p class="text-med font-bold" style="text-align: left;">{{ friend.username }}</p>
-                                    <p class="text-sm text-gray-500">Friends since {{ moment(friend.last_login).format('LL') }}</p>
-                                </div>
-                                {% if user.username == current_user.username %}
-                                    <!-- TODO: Add a remove friend button -->
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <p class="text-white text-med">This user has no friends.</h3>
+    <div id="user-background">
+        <div id="user-profile-panel" class="center">
+            <div class="flex items-center gap-4" id="user-heading">
+                <img src="{% if user.profile_picture.startswith('http') %} {{ user.profile_picture}} {% else %} {{ url_for('upload', filename=user.profile_picture) }} {% endif %}" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover">
+                <div class="flex flex-col">
+                    <h1 class="font-bold text-white text-left">{{ user.username }}</h1>
+                    {% if user.private == 0 or user.username == current_user.username or current_user.is_friends_with(user) %}
+                        <p class="text-med text-gray-500 text-left">This user was last seen {{ moment(user.last_login).fromNow() }} ({{ moment(user.last_login).format('LLLL') }})</p>
                     {% endif %}
                     {% if user.username == current_user.username %}
-                        <a href="{{ url_for('search') }}" class="block text-sm py-1 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Add Friends</a>
+                        <a href="{{ url_for('edit_profile') }}" style="text-align: left;">Edit Profile</a>
+                    {% endif %}
+                </div>
+                <div class="flex justify-center items-center">
+                    {% if user != current_user %}
+                        {% if user.is_friends_with(current_user) %}
+                            <button class="p-2 w-full text-lg font-bold border-none bg-red-500 hover:bg-red-700 transition m-auto" id="remove-friend">Remove Friend</button>
+                        {% else %}
+                            <button class="p-2 w-full text-lg font-bold border-none bg-gray-500 hover:bg-gray-600 transition m-auto" id="add-friend">Add Friend</button>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
-        {% else %}
-            <h1>This user has their profile set to private!</h1>
-            <!-- DOESNT WORK <button class="mt-2" onclick="add_friend('{{ user.username }}')">Add Friend</button> -->
-            <!-- TODO: Add 'Add Friend' button -->
-        {% endif %}
+            {% if user.private == 0 or user.username == current_user.username or current_user.is_friends_with(user) %}
+                <div class="container flex">
+                    <div class="width-1/2 center">
+                        <h1>Recent Tournaments</h1>
+                        {% if tournaments %}
+                            {% for tournament in tournaments %}
+                            <!-- TODO: Display tournaments associated with user -->
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-white text-med">This user has not competed in any tournaments yet.</h3>
+                        {% endif %}
+                    </div>
+                    <div class="w-1/2 center" id="friends">
+                        <h1>Friends</h1>
+                        {% if friends %}
+                            {% for friend in friends %}
+                                <div class="flex w-3/5 items-center h-20 bg-gray-900 mt-2 pl-2 gap-4 rounded-border center" id="{{ friend.username }}">
+                                    <a href="{{ url_for('profile', username=friend.username) }}"><img src="{% if friend.profile_picture.startswith('http') %} {{friend.profile_picture}} {% else %} {{ url_for('upload', filename=friend.profile_picture) }} {% endif %}" alt="Profile Picture" class="h-[4em]"></a>
+                                    <div class="flex flex-col">
+                                        <p class="text-med font-bold" style="text-align: left;">{{ friend.username }}</p>
+                                        <p class="text-sm text-gray-500">Friends since {{ moment(friend.last_login).format('LL') }}</p>
+                                    </div>
+                                    {% if user.username == current_user.username %}
+                                        <button class="bg-red-500 hover:bg-red-700 border-none p-1">Remove Friend</button>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-white text-med">This user has no friends.</p>
+                        {% endif %}
+                        {% if user.username == current_user.username %}
+                            <a href="{{ url_for('search') }}" class="block text-med py-1 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Add Friends</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <h1>This user has their profile set to private!</h1>
+            {% endif %}
+        </div>
     </div>
-</div>
+    <script src="../static/js/remove_friend.js"></script>
+    <script src="../static/js/profile_friend_requests.js"></script>
 {% endblock %}

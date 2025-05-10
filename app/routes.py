@@ -222,9 +222,25 @@ def add_friend(username):
 
     return '', 200
 
-@application.route('/add_friend/<username>', methods=["POST"])
+@application.route('/remove_friend/<username>', methods=["POST"])
 def remove_friend(username):
-    ... # TODO: Remove friend
+    # Retrieve the user with the given username
+    user = db.session.scalar(sa.select(models.Users).where(models.Users.username == username))
+
+    # Return an error message if the user is the current user
+    if user.id == current_user.id:
+        return '', 400
+    
+    # Ensure that the user is friends with the requested user
+    relationship = db.session.scalar(sa.select(models.Friends).where((models.Friends.from_user == current_user.id) & (models.Friends.to_user == user.id)))
+    if not relationship:
+        return '', 400
+
+    # Remove the relationship from the database
+    db.session.delete(relationship)
+    db.session.commit()
+
+    return '', 200
 
 @application.route('/addMatch', methods=["GET", "POST"])
 @login_required
