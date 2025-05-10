@@ -18,23 +18,31 @@ Tournament Manager - {{ user.username }}
                         <a href="{{ url_for('edit_profile') }}" style="text-align: left;">Edit Profile</a>
                     {% endif %}
                 </div>
-                <div class="flex justify-center items-center">
                     {% if user != current_user %}
-                        {% if user.is_friends_with(current_user) %}
-                            <button class="p-2 w-full text-lg font-bold border-none bg-red-500 hover:bg-red-700 transition m-auto" id="remove-friend">Remove Friend</button>
-                        {% else %}
-                            <button class="p-2 w-full text-lg font-bold border-none bg-gray-500 hover:bg-gray-600 transition m-auto" id="add-friend">Add Friend</button>
-                        {% endif %}
+                        <div class="flex justify-center items-center">
+                            {% if user.is_friends_with(current_user) %}
+                                <button class="p-2 w-full text-lg font-bold border-none bg-red-500 hover:bg-red-700 transition m-auto" id="remove-friend">Remove Friend</button>
+                            {% else %}
+                                <button class="p-2 w-full text-lg font-bold border-none bg-gray-500 hover:bg-gray-600 transition m-auto" id="add-friend">Add Friend</button>
+                            {% endif %}
+                        </div>
                     {% endif %}
-                </div>
             </div>
             {% if user.private == 0 or user.username == current_user.username or current_user.is_friends_with(user) %}
+                <div class="w-1/2 center bg-gray-800 p-6 rounded-lg shadow-md mt-6 mb-6 text-white">
+                    <h2 class="text-xl font-bold mb-4">Match Statistics</h2>
+                    <p>Total Games Played: {{ matches.total_games }}</p>
+                    <p>Wins: {{ matches.wins }}</p>
+                    <p>Losses: {{ matches.losses }}</p>
+                    <p>Draws: {{ matches.draws }}</p>
+                    <p>Win Percentage: {{ matches.win_pct }}%</p>
+                </div>
                 <div class="container flex">
-                    <div class="width-1/2 center">
+                    <div class="w-1/2 center">
                         <h1>Recent Tournaments</h1>
                         {% if tournaments %}
                             {% for tournament in tournaments %}
-                            <!-- TODO: Display tournaments associated with user -->
+                                <!-- TODO: Display tournaments associated with user -->
                             {% endfor %}
                         {% else %}
                             <p class="text-white text-med">This user has not competed in any tournaments yet.</h3>

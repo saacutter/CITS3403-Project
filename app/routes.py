@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime, timezone
 from hashlib import md5
 import os
+from PIL import Image
 
 # Update the last seen time of the user before each request
 @application.before_request
@@ -22,7 +23,8 @@ def page_not_found(error_code):
 # Default route of the application
 @application.route("/")
 def index():
-    return render_template("index.html")
+    tournaments = models.Tournaments.query.all()
+    return render_template("home.html")
 
 # Login route of the application
 @application.route("/login", methods=["GET", "POST"])
@@ -116,7 +118,16 @@ def profile(username):
     # Get the user's friends
     friends = list(db.session.scalars(sa.select(models.Users).join(models.Friends, models.Users.id == models.Friends.to_user).where(models.Friends.from_user == user.id)))
 
-    return render_template("user.html", user=user, friends=friends)
+    # Get a user's match data
+    matches = models.Matches.query.filter_by(user_id=user.id).all()
+    total_games = len(matches)
+    wins = sum(1 for m in matches if m.result.lower() == 'win')
+    losses = sum(1 for m in matches if m.result.lower() == 'loss')
+    draws = sum(1 for m in matches if m.result.lower() == 'draw')
+    win_pct = round((wins / total_games) * 100, 2) if total_games > 0 else 0
+    matches = {'matches': matches, 'total_games': total_games, 'wins': wins, 'losses': losses, 'draws': draws, 'win_pct': win_pct}
+
+    return render_template("user.html", user=user, friends=friends, matches=matches)
 
 @application.route('/edit_profile', methods=["GET", "POST"])
 @login_required
@@ -144,6 +155,12 @@ def edit_profile():
         # Save the uploaded image to the server if one was uploaded
         img_filename = secure_filename(image.filename)
         if img_filename != "":
+            # Check if image is square
+            img = Image.open(image)   
+            if abs(img.width - img.height) > 10:
+                flash("The profile image must be square")
+                return redirect(url_for('edit_profile')) 
+            
             # Ensure that the extension is a valid image extension
             extension = os.path.splitext(img_filename)[1]
             if extension not in application.config['UPLOAD_EXTENSIONS']:
@@ -191,7 +208,7 @@ def get_like(pattern):
     
     # Return an empty JSON object if no users match the specified pattern
     if len(results) == 0:
-      return jsonify([{"username": None}])
+      results = [{"username": None}]
 
     # Return a JSON object of the extracted users
     return jsonify(results) # Adapted from: https://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
@@ -274,27 +291,39 @@ def match():
 @application.route('/addTournament', methods=["GET", "POST"])
 @login_required
 def tournament():
-    if request.method == "POST" and forms.AddTournamentForm().validate_on_submit():
-        form = forms.AddTournamentForm()
+    form = forms.AddTournamentForm()
 
-        # Extract the information from the request
-        file = request.files['file']
-        name = form.name.data
-        game = form.game.data
-        time = form.time.data
+    if request.method == "POST" and form.validate_on_submit():
+        # Handle file uploads
+        data_file_path = None
+        image_path = None
 
-        # Ensure that valid data was provided
-        if file == None or (name == "" and game == "" and time == ""):
-            return redirect(url_for('tournament'))
+        if form.file.data:
+            file = form.file.data
+            filename = secure_filename(file.filename)
+            data_file_path = os.path.join('uploads', filename)
+            file.save(os.path.join(application.config['UPLOAD_PATH'], filename))
 
-        if file:
-            # TODO: Process the file (requires the format of file to be specified)
-            ...
-        else:
-            # Create the tournament entry and add it to the database
-            data_entry = models.Tournaments(name=name, game=game, time=time)
-            db.session.add(data_entry)
-            db.session.commit()
+        if form.image.data:
+            image = form.image.data
+            image_filename = secure_filename(image.filename)
+            image_path = os.path.join('uploads', image_filename)
+            image.save(os.path.join(application.config['UPLOAD_PATH'], image_filename))
+
+        # Create and save tournament
+        tournament = models.Tournaments(
+            name=form.name.data,
+            game_title=form.game.data,
+            date=form.date.data.strftime('%Y-%m-%d'),
+            image=image_path,
+            data_file=data_file_path
+        )
+        db.session.add(tournament)
+        db.session.commit()
 
         return redirect(url_for('index'))
-    return render_template("add-tournament.html", form=forms.AddTournamentForm())
+    return render_template("add-tournament.html", form=form)
+
+@application.route('/privacy_policy')
+def privacy_policy():
+    return render_template('privacy-policy.html')
