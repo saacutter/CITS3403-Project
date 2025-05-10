@@ -43,8 +43,8 @@ a:visited {
 img {
     width: 4em;
     height: 4em;
-    background-color: grey;
-    padding: 5px;
+    background-color: white;
+    padding: 3px;
     border-radius: 50%;
 }
 
@@ -219,7 +219,7 @@ div.search-user {
 
 .heading {
     font-size: 30px;
-    margin-top: 1em;
+    padding-top: 1em;
 }
 
 /* Styling for individual elements */
