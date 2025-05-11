@@ -21,16 +21,19 @@ Tournament Manager - Home
         <section class="quick-actions mb-8">
             <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
             <div class="action-buttons flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-                <a href="{{ url_for('tournament') }}" class="bg-blue-600 text-white px-6 py-3 rounded-md text-center hover:bg-blue-700 transition">Create New Tournament</a>
-                <a href="#" class="bg-gray-700 text-white px-6 py-3 rounded-md text-center hover:bg-gray-600 transition">Browse Tournaments</a>
-                <a href="#" class="bg-gray-700 text-white px-6 py-3 rounded-md text-center hover:bg-gray-600 transition">My Tournaments</a>
+                <a href="{{ url_for('tournament') }}" class="bg-blue-600 text-white px-6 py-3 rounded-md text-center hover:bg-blue-700 transition hover:no-underline">Create New Tournament</a>
+                <a href="#" class="bg-gray-700 text-white px-6 py-3 rounded-md text-center hover:bg-gray-600 transition hover:no-underline">Browse Tournaments</a>
+                <a href="{{ url_for('profile', username=current_user.username )}}" class="bg-gray-700 text-white px-6 py-3 rounded-md text-center hover:bg-gray-600 transition hover:no-underline">My Tournaments</a>
             </div>
         </section>
         {% endif %}
 
-        <section class="featured-tournaments mb-8">
+        <section class="mb-8">
             <h3 class="text-lg font-semibold mb-4 text-white">Featured Tournaments</h3>
-            <div class="tournament-list grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-80 overflow-y-auto">
+                {% for tournament in public_tournaments %}
+                    <!-- This should house all of the public tournaments -->
+                {% endfor %}
                 <!-- Tournament 1 -->
                 <div class="tournament-card bg-gray-800 p-6 rounded-lg shadow-lg flex items-center">
                     <div class="flex-grow">
@@ -125,19 +128,20 @@ Tournament Manager - Home
             <section class="mb-16">
                 <h3 class="text-lg font-semibold mb-4">Friends Tournaments</h3>
                 {% if tournaments %}
-                    {% for tournament in tournaments %}
-                        <div class="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center">
-                            <div class="flex-grow">
-                                <h4 class="text-md font-semibold mb-2 text-white">{{ tournament.name }}</h4>
-                                <p class="text-gray-400">Game: {{ tournament.game_title }}</p>
-                                <p class="text-gray-400 mb-4">Date: {{ tournament.date }}</p>
-                                <a href="#" class="text-blue-400 hover:underline">View Details</a>
+                    <div class="max-h-80 overflow-y-auto">
+                        {% for tournament in tournaments %}
+                            <div class="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center mb-4">
+                                <div class="flex-grow">
+                                    <h4 class="text-md font-semibold mb-2 text-white">{{ tournament.name }}</h4>
+                                    <p class="text-gray-400">Game: {{ tournament.game_title }}</p>
+                                    <p class="text-gray-400 mb-4">Date: {{ tournament.date }}</p>
+                                </div>
+                                {% if tournament.image %}
+                                    <img src="{{ tournament.image }}" alt="Game Preview" class="w-24 h-24 object-cover rounded-md ml-4">
+                                {% endif %}
                             </div>
-                            {% if tournament.image %}
-                                <img src="{{ url_for('upload', filename=tournament.image.split('/')[-1]) }}" alt="{{ tournament.name }}" class="w-24 h-24 object-cover rounded-md ml-4">
-                            {% endif %}
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 {% else %}
                     <div class="col-span-2 text-center text-gray-400">
                         <p>No community tournaments yet.</p>

@@ -12,12 +12,12 @@ function sendRequest(url) {
             if (addBtn) {
                 addBtn.remove();
                 btnDiv.insertAdjacentHTML('beforeend', `
-                    <button class="p-2 w-full text-lg font-bold border-none bg-red-500 hover:bg-red-700 transition m-auto" id="remove-friend">Remove Friend</button>
+                    <button class="p-2 w-full text-lg font-bold border-none bg-red-500 hover:bg-red-700 transition m-auto" id="remove-friend">Unfollow User</button>
                 `);
             } else {
                 removeBtn.remove();
                 btnDiv.insertAdjacentHTML('beforeend', `
-                    <button class="p-2 w-full text-lg font-bold border-none bg-gray-500 hover:bg-gray-600 transition m-auto" id="add-friend">Add Friend</button>
+                    <button class="p-2 w-full text-lg font-bold border-none bg-gray-500 hover:bg-gray-600 transition m-auto" id="add-friend">Follow User</button>
                 `);
             }
 
