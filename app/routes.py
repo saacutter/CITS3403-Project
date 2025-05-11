@@ -127,7 +127,10 @@ def profile(username):
     win_pct = round((wins / total_games) * 100, 2) if total_games > 0 else 0
     matches = {'matches': matches, 'total_games': total_games, 'wins': wins, 'losses': losses, 'draws': draws, 'win_pct': win_pct}
 
-    return render_template("user.html", user=user, friends=friends, matches=matches)
+    # Get the user's tournament data
+    tournaments = models.Tournaments.query.filter_by(user_id=user.id).all()
+
+    return render_template("user.html", user=user, friends=friends, matches=matches, tournaments=tournaments)
 
 @application.route('/edit_profile', methods=["GET", "POST"])
 @login_required
@@ -160,7 +163,7 @@ def edit_profile():
             if abs(img.width - img.height) > 50:
                 flash("The profile image must be square")
                 return redirect(url_for('edit_profile'))
-            image.seek(0)
+            image.seek(0) # Reset the file point to the start so that it can be saved to the server properly
             
             # Ensure that the extension is a valid image extension
             extension = os.path.splitext(img_filename)[1]
@@ -260,35 +263,6 @@ def remove_friend(username):
 
     return '', 200
 
-@application.route('/addMatch', methods=["GET", "POST"])
-@login_required
-def match():
-    if request.method == "POST" and forms.AddMatchForm().validate_on_submit():
-        form = forms.AddMatchForm()
-
-        # Extract the information from the request
-        file = request.files['file']
-        game = form.game.data
-        points = form.points.data
-        time_taken = form.time_taken.data
-        result = form.result.data
-
-        # Ensure that valid data was provided
-        if file == None or (game == "" and points == "" and time_taken == "" and result == ""):
-            return redirect(url_for('match'))
-
-        if file:
-            # TODO: Process the file (requires the format of file to be specified)
-            ...
-        else:
-            # Create the match entry and add it to the database
-            data_entry = models.Matches(user_id=current_user.id, game=game, points=points, time_taken=time_taken, result=result)
-            db.session.add(data_entry)
-            db.session.commit()
-
-        return redirect(url_for('index'))
-    return render_template("add-match.html", form=forms.AddMatchForm())
-
 @application.route('/addTournament', methods=["GET", "POST"])
 @login_required
 def tournament():
@@ -313,6 +287,7 @@ def tournament():
 
         # Create and save tournament
         tournament = models.Tournaments(
+            user_id=current_user.id,
             name=form.name.data,
             game_title=form.game.data,
             date=form.date.data.strftime('%Y-%m-%d'),
@@ -324,6 +299,35 @@ def tournament():
 
         return redirect(url_for('index'))
     return render_template("add-tournament.html", form=form)
+
+@application.route('/addMatch', methods=["GET", "POST"])
+@login_required
+def match():
+    form = forms.AddMatchForm()
+
+    if request.method == "POST" and form.validate_on_submit():
+        # Extract the information from the request
+        file = request.files['file']
+        game = form.game.data
+        points = form.points.data
+        time_taken = form.time_taken.data
+        result = form.result.data
+
+        # Ensure that valid data was provided
+        if file == None or (game == "" and points == "" and time_taken == "" and result == ""):
+            return redirect(url_for('match'))
+
+        if file:
+            # TODO: Process the file (requires the format of file to be specified)
+            ...
+        else:
+            # Create the match entry and add it to the database
+            data_entry = models.Matches(user_id=current_user.id, game=game, points=points, time_taken=time_taken, result=result)
+            db.session.add(data_entry)
+            db.session.commit()
+
+        return redirect(url_for('index'))
+    return render_template("add-match.html", form=form)
 
 @application.route('/privacy_policy')
 def privacy_policy():
