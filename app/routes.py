@@ -25,7 +25,7 @@ def page_not_found(error_code):
 @application.route("/")
 def index():
     tournaments = models.Tournaments.query.all()
-    return render_template("home.html")
+    return render_template("home.html", tournaments=tournaments)
 
 # Login route of the application
 @application.route("/login", methods=["GET", "POST"])
@@ -41,8 +41,8 @@ def login():
     form = forms.LoginForm()
     if request.method == "POST" and form.validate_on_submit():
         # Retrieve the user from the database based on the provided username/email address
-        username = form.username.data
-        user = db.session.scalar(sa.select(models.Users).where((models.Users.username == username) | (models.Users.email == username)))
+        username = form.username.data.lower()
+        user = db.session.scalar(sa.select(models.Users).where((sa.func.lower(models.Users.username) == username) | (models.Users.email == username)))
 
         # Ensure that the user exists and that the password hash matches
         if user is None or not check_password_hash(user.password, form.password.data):
@@ -111,45 +111,6 @@ def signout():
     logout_user()
     return redirect(url_for('index'))
 
-@application.route('/send_friend_request/<int:user_id>', methods=["POST"]) 
-@login_required 
-def send_friend_request(user_id): 
-    if user_id == current_user.id:  
-        abort(400)  # Can't send friend request to self 
-    existing = db.session.scalar(sa.select(models.FriendRequest).where(  
-        models.FriendRequest.from_user_id == current_user.id,  
-        models.FriendRequest.to_user_id == user_id  
-    ))  
-    if existing:  # New addition
-        flash("Friend request already sent.")  
-        return redirect(request.referrer) 
-    new_request = models.FriendRequest(from_user_id=current_user.id, to_user_id=user_id) 
-    db.session.add(new_request) 
-    db.session.commit() 
-    flash("Friend request sent.")  
-    return redirect(request.referrer) 
-
-@application.route('/accept_friend_request/<int:request_id>', methods=["POST"]) 
-@login_required 
-def accept_friend_request(request_id): 
-    friend_request = db.session.get(models.FriendRequest, request_id) 
-    if not friend_request or friend_request.to_user_id != current_user.id:
-        abort(404) 
-    # Create reciprocal friend request (optional for bidirectional, skipped here)
-    db.session.delete(friend_request) 
-    db.session.commit() 
-    flash("Friend request accepted.")
-    return redirect(url_for('profile', username=current_user.username)) 
-
-@application.route('/friends/<int:user_id>') 
-def get_friends(user_id): 
-    # Get all accepted friends (simplified: only from_user_id entries exist after accepted) 
-    users = db.session.scalars(sa.select(models.Users).join(  
-        models.FriendRequest, models.Users.id == models.FriendRequest.from_user_id
-    ).where(models.FriendRequest.to_user_id == user_id)).all() 
-    return jsonify([u.serialise() for u in users]) 
-
-
 @application.route('/user/<username>')
 def profile(username):
     # Get the user with the specified ID
@@ -159,7 +120,7 @@ def profile(username):
     friends = list(db.session.scalars(sa.select(models.Users).join(models.Friends, models.Users.id == models.Friends.to_user).where(models.Friends.from_user == user.id)))
 
     # Get a user's match data
-    matches = models.Matches.query.filter_by(user_id=user.id).all()
+    matches = models.Tournaments.query.filter_by(user_id=user.id).all()
     total_games = len(matches)
     wins = sum(1 for m in matches if m.result.lower() == 'win')
     losses = sum(1 for m in matches if m.result.lower() == 'loss')
@@ -309,65 +270,28 @@ def tournament():
     form = forms.AddTournamentForm()
 
     if request.method == "POST" and form.validate_on_submit():
-        # Handle file uploads
-        data_file_path = None
-        image_path = None
-
-        if form.file.data:
-            file = form.file.data
-            filename = secure_filename(file.filename)
-            data_file_path = os.path.join('uploads', filename)
-            file.save(os.path.join(application.config['UPLOAD_PATH'], filename))
-
+        image_filename = "https://static.vecteezy.com/system/resources/thumbnails/017/287/469/small_2x/joystick-for-game-console-computer-ps-line-icon-joypad-game-controller-for-videogame-pictogram-computer-gamepad-play-equipment-outline-symbol-editable-stroke-isolated-illustration-vector.jpg" # Retrieved from https://www.vecteezy.com/vector-art/17287469-joystick-for-game-console-computer-ps-line-icon-joypad-game-controller-for-videogame-pictogram-computer-gamepad-play-equipment-outline-symbol-editable-stroke-isolated-vector-illustration
         if form.image.data:
             image = form.image.data
             image_filename = secure_filename(image.filename)
-            image_path = os.path.join('uploads', image_filename)
             image.save(os.path.join(application.config['UPLOAD_PATH'], image_filename))
+            image_filename = os.path.join(application.config['UPLOAD_PATH'], image_filename)
 
-        # Create and save tournament
+        # Create and save tournament TODO: Validate each field
         tournament = models.Tournaments(
             user_id=current_user.id,
             name=form.name.data,
             game_title=form.game.data,
             date=form.date.data.strftime('%Y-%m-%d'),
-            image=image_path,
-            data_file=data_file_path
+            points=form.points.data,
+            result=form.result.data,
+            image=image_filename
         )
         db.session.add(tournament)
         db.session.commit()
 
         return redirect(url_for('index'))
     return render_template("add-tournament.html", form=form)
-
-@application.route('/addMatch', methods=["GET", "POST"])
-@login_required
-def match():
-    form = forms.AddMatchForm()
-
-    if request.method == "POST" and form.validate_on_submit():
-        # Extract the information from the request
-        file = request.files['file']
-        game = form.game.data
-        points = form.points.data
-        time_taken = form.time_taken.data
-        result = form.result.data
-
-        # Ensure that valid data was provided
-        if file == None or (game == "" and points == "" and time_taken == "" and result == ""):
-            return redirect(url_for('match'))
-
-        if file:
-            # TODO: Process the file (requires the format of file to be specified)
-            ...
-        else:
-            # Create the match entry and add it to the database
-            data_entry = models.Matches(user_id=current_user.id, game=game, points=points, time_taken=time_taken, result=result)
-            db.session.add(data_entry)
-            db.session.commit()
-
-        return redirect(url_for('index'))
-    return render_template("add-match.html", form=form)
 
 @application.route('/privacy_policy')
 def privacy_policy():
