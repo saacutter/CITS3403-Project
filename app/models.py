@@ -4,6 +4,8 @@ from sqlalchemy import Integer, Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from flask_login import UserMixin
 from datetime import datetime, timezone, time
+import enum
+
 
 @login.user_loader
 def load_user(id):
