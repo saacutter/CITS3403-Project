@@ -36,9 +36,11 @@ def upgrade():
         batch_op.create_index(batch_op.f('ix_matches_user_id'), ['user_id'], unique=False)
 
     op.create_table('tournaments',
+        sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('name', sa.Text(), nullable=False),
         sa.Column('game_title', sa.Text(), nullable=False),
-        sa.Column('date', sa.DateTime(), nullable=False)
+        sa.Column('date', sa.DateTime(), nullable=False),
+        sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('tournaments', schema=None) as batch_op:
         batch_op.create_index(batch_op.f('ix_tournaments_date'), ['date'], unique=False)

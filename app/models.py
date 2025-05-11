@@ -39,20 +39,24 @@ class Friends(db.Model):
     added_on:  Mapped[datetime] = mapped_column(nullable=False, default=lambda: datetime.now(timezone.utc))
 
     def getUser(id):
-        db.session.scalar(sa.select(Users).where((Users.username == id)))
+        return db.session.scalar(sa.select(Users).where((Users.id == id)))
 
     
 class Tournaments(db.Model):
-    id:         Mapped[int]      = mapped_column(Integer, primary_key=True)
-    name:       Mapped[str]      = mapped_column(Text, nullable=False, index=True)
-    game_title: Mapped[str]      = mapped_column(Text, nullable=False, index=True)
-    date:       Mapped[str]      = mapped_column(Text, nullable=False, index=True)
-    image:      Mapped[str]      = mapped_column(Text, nullable=True)
-    data_file:  Mapped[str]      = mapped_column(Text, nullable=True)
+    id:         Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id:    Mapped[int] = mapped_column(Integer, db.ForeignKey('users.id'))
+    name:       Mapped[str] = mapped_column(Text, nullable=False, index=True)
+    game_title: Mapped[str] = mapped_column(Text, nullable=False, index=True)
+    date:       Mapped[str] = mapped_column(Text, nullable=False, index=True)
+    image:      Mapped[str] = mapped_column(Text, nullable=True)
+    data_file:  Mapped[str] = mapped_column(Text, nullable=True)
+
+    def getTournaments(id):
+        return db.session.scalar(sa.select(Tournaments).where((Tournaments.user_id == id)))
 
 class Matches(db.Model):
     id:         Mapped[int]  = mapped_column(Integer, primary_key=True)
-    user_id:    Mapped[int]  = mapped_column(ForeignKey(Users.id, name="matches_user_id"), nullable=False, index=True)
+    user_id:    Mapped[int]  = mapped_column(Integer, db.ForeignKey('users.id'))
     game:       Mapped[str]  = mapped_column(Text, nullable=False, index=True)
     points:     Mapped[int]  = mapped_column(Integer, nullable=False, index=True, default=0)
     time_taken: Mapped[time] = mapped_column(nullable=False, index=True)
