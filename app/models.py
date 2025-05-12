@@ -1,10 +1,10 @@
 from app import db, login
 import sqlalchemy as sa
-from sqlalchemy import Integer, Text, ForeignKey
+from sqlalchemy import Integer, Text
 from sqlalchemy.orm import Mapped, mapped_column
 from flask_login import UserMixin
-from datetime import datetime, timezone, time
-import enum
+from datetime import datetime, timezone
+from typing import List
 
 
 @login.user_loader
@@ -20,6 +20,7 @@ class Users(db.Model, UserMixin):
     private:         Mapped[bool]     = mapped_column(nullable=False, index=True, default=True)
     creation_date:   Mapped[datetime] = mapped_column(nullable=False, index=True, default=lambda: datetime.now(timezone.utc))
     last_login:      Mapped[datetime] = mapped_column(nullable=False, index=True, default=lambda: datetime.now(timezone.utc))
+    tournaments:     Mapped[List["Tournaments"]] = db.relationship('Tournaments', backref='user')
 
     def __repr__(self):
          return f"{self.id}, {self.username}, {self.email}, {self.password}, {self.creation_date}, {self.last_login}"
