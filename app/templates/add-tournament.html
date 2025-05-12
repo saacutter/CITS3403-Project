@@ -5,18 +5,14 @@ Tournament Manager - Add Tournament
 {% endblock %}
 
 {% block body %}
-<div class="flex-grow mx-auto p-4 mt-8 flex">
+<div class="flex-grow mx-auto p-4 mt-8">
     <section class="bg-gray-800 p-8 rounded-lg shadow-lg w-3/4 text-left center">
         <h2 class="text-2xl font-semibold mb-6 text-center">Add Tournament</h2>
         <form action="{{ url_for('tournament') }}" method="post" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <div class="mb-6">
-                {{ form.file.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
-                {{ form.file(class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400") }}
-            </div>
-            <div class="mb-6">
-                {{ form.image.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
-                {{ form.image(class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400") }}
+                {{ form.preview.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                {{ form.preview(class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400") }}
             </div>
             <div class="mb-6">
                 {{ form.name.label(class="block text-gray-400 font-bold mb-2") }}
@@ -28,7 +24,20 @@ Tournament Manager - Add Tournament
             </div>
             <div class="mb-6">
                 {{ form.date.label(class="block text-gray-400 font-bold mb-2") }}
-                {{ form.date(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white", type="date", min=today) }}
+                {{ form.date(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
+            </div>
+            <div class="mb-6">
+                {{ form.points.label(class="block text-gray-400 font-bold mb-2") }}
+                {{ form.points(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white", type="number") }}
+            </div>   
+            <div class="mb-6">
+                {{ form.result.label(class="block text-gray-400 font-bold mb-2") }}
+                {{ form.result(id="upload-input", class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white", list="results") }}
+                <datalist id="results">
+                    <option value="win">
+                    <option value="loss">
+                    <option value="draw">
+                </datalist>
             </div>
             <div class="mb-6">
                 {{ form.details.label(class="block text-gray-400 font-bold mb-2", id="details-label") }}
@@ -39,9 +48,22 @@ Tournament Manager - Add Tournament
             </div>
         </form>
     </section>
+    {% if get_flashed_messages() or form.errors %}
+        <div class="center error rounded-border-px mt-4">
+            {% if get_flashed_messages() %}
+                {% for message in get_flashed_messages() %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.errors %}
+                {% for field, errors in form.errors.items() %}
+                    {% for error in errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endif %}
 </div>
-<script>
-    var today = new Date().toISOString().split('T')[0];
-    document.getElementsByName("date")[0].setAttribute('min', today);
-</script>
 {% endblock %}

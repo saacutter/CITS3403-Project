@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, PasswordField, SubmitField, FileField, DateTimeField, DateField, TextAreaField
+from wtforms import StringField, BooleanField, PasswordField, SubmitField, FileField, DateField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Regexp
 from flask_wtf.file import FileAllowed
+from datetime import datetime
 
 class LoginForm(FlaskForm):
     username      = StringField('Username or Email Address', validators=[DataRequired()])
@@ -25,19 +26,12 @@ class EditProfileForm(FlaskForm):
     private         = BooleanField('Make my profile private')
     submit          = SubmitField('Save Changes')
 
-class AddMatchForm(FlaskForm):
-    file       = FileField('File Upload', validators=[FileAllowed(['json', 'csv'])])
-    game       = StringField('Game')
-    points     = StringField('Points')
-    time_taken = DateTimeField('Time Taken')
-    result     = StringField('Result')
-    submit     = SubmitField('Add Match')
-
 class AddTournamentForm(FlaskForm):
-    file    = FileField('Upload Tournament Data (CSV/JSON)', validators=[FileAllowed(['json', 'csv'], 'JSON or CSV files only!')])
-    image   = FileField('Add Game Image', validators=[FileAllowed(['jpeg', 'jpg', 'png', 'webp'], 'Images only!')])
+    preview = FileField('Add Game Image', validators=[FileAllowed(['jpeg', 'jpg', 'png', 'webp'], "Images only!")])
     name    = StringField('Tournament Name', validators=[DataRequired()])
     game    = StringField('Game', validators=[DataRequired()])
-    date    = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
+    date    = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()], render_kw={"type": "date", "max": str(datetime.now().strftime("%Y-%m-%d"))})
+    points  = StringField('Points')
+    result  = StringField('Result', validators=[DataRequired()])
     details = TextAreaField('Tournament Details')
     submit  = SubmitField('Add Tournament')
