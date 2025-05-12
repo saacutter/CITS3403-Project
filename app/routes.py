@@ -332,6 +332,7 @@ def tournament():
             date=date,
             points=points,
             result=result,
+            details=form.details.data,
             image=img_filename or "https://static.vecteezy.com/system/resources/thumbnails/017/287/469/small_2x/joystick-for-game-console-computer-ps-line-icon-joypad-game-controller-for-videogame-pictogram-computer-gamepad-play-equipment-outline-symbol-editable-stroke-isolated-illustration-vector.jpg" # Retrieved from https://www.vecteezy.com/vector-art/17287469-joystick-for-game-console-computer-ps-line-icon-joypad-game-controller-for-videogame-pictogram-computer-gamepad-play-equipment-outline-symbol-editable-stroke-isolated-vector-illustration
         )
         db.session.add(tournament)

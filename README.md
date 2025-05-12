@@ -48,23 +48,20 @@ pip install -r requirements.txt
         │   │   │   └── user-profile-background.webp
         │   │   ├── js
         │   │   │   ├── login.js
-        │   │   │   ├── profile_friend_requests.js
-        │   │   │   ├── profile_image.js
-        │   │   │   ├── remove_friend.js
         │   │   │   ├── search_users.js
         │   │   │   └── upload.js
         │   │   └── profilepictures
-        │   └── templates
-        │       ├── 404.html
-        │       ├── add-match.html
-        │       ├── add-tournament.html
-        │       ├── base.html
-        │       ├── edit-profile.html
-        │       ├── home.html
-        │       ├── login.html
-        │       ├── privacy-policy.html
-        │       ├── search.html
-        │       └── user.html
+        │   ├── templates
+        │   │   ├── add-match.html
+        │   │   ├── add-tournament.html
+        │   │   ├── base.html
+        │   │   ├── edit-profile.html
+        │   │   ├── index.html
+        │   │   ├── login.html
+        │   │   ├── search.html
+        │   │   └── user.html
+        ├── instance
+        │   └── app.db
         ├── manager.py
         ├── migrations
         │   ├── README
@@ -72,12 +69,9 @@ pip install -r requirements.txt
         │   ├── env.py
         │   ├── script.py.mako
         │   └── versions
-        │       ├── 1a185a813ada_adjusted_tournaments_table_to_have_a_.py
         │       ├── 518c88c18d5f_updated_users.py
         │       ├── 56f705820311_recreated_database_to_fix_broken_.py
         │       ├── 5d3f9f639ef5_users_table.py
-        │       ├── 880d94870c32_added_image_attribute_to_tournaments_.py
-        │       ├── a823f3370236_added_friends_table.py
         │       ├── ac1c030fc5b9_added_profile_picture_section_to_users_.py
         │       └── b41b7621e32c_added_email_and_creation_date_field_to_.py
         └── requirements.txt

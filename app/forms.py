@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, PasswordField, SubmitField, FileField, DateField
+from wtforms import StringField, BooleanField, PasswordField, SubmitField, FileField, DateField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Regexp
 from flask_wtf.file import FileAllowed
 from datetime import datetime
@@ -33,4 +33,5 @@ class AddTournamentForm(FlaskForm):
     date    = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()], render_kw={"type": "date", "max": str(datetime.now().strftime("%Y-%m-%d"))})
     points  = StringField('Points')
     result  = StringField('Result', validators=[DataRequired()])
+    details = TextAreaField('Tournament Details')
     submit  = SubmitField('Add Tournament')
