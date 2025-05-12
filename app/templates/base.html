@@ -22,8 +22,17 @@
     </head>
     <body class="antialiased flex flex-col min-h-screen">
         <header class="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-900 text-white relative">
-            <div id="titlebar" class="mb-4 md:mb-0">
-                <h1 class="text-3xl font-bold"><a href="{{ url_for('index') }}" class="hover:text-gray-300 hover:no-underline">Tournament Manager</a></h1>
+            <div id="titlebar" class="mb-4 md:mb-0 flex items-center">
+                <h1 class="text-3xl font-bold flex items-center">
+                    <a href="{{ url_for('index') }}" class="hover:text-gray-300 hover:no-underline">Tournament Manager</a>
+                    <a href="{{ url_for('index') }}">
+                        <img src="https://pngimg.com/d/dice_PNG65.png"
+                             alt="Pixel Dice"
+                             class="ml-3"
+                             style="height: 75px; width: 75px; background: transparent; object-fit: contain;"
+                        >
+                    </a>
+                </h1>
             </div>
             {% if current_user.is_anonymous %}
                 <div id="account-buttons" class="flex space-x-4">
