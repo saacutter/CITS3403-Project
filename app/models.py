@@ -42,6 +42,7 @@ class Friends(db.Model):
 
     def getUser(id):
         return db.session.scalar(sa.select(Users).where((Users.id == id)))
+
     
 class Tournaments(db.Model):
     id:         Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -51,7 +52,7 @@ class Tournaments(db.Model):
     date:       Mapped[str] = mapped_column(Text, nullable=False, index=True)
     points:     Mapped[int] = mapped_column(Integer, nullable=False, index=True, default=0)
     result:     Mapped[str] = mapped_column(Text, nullable=False, index=True)
-    details:    Mapped[str]      = mapped_column(Text, nullable=True) 
+    details:    Mapped[str] = mapped_column(Text, nullable=True) 
     image:      Mapped[str] = mapped_column(Text, nullable=True)
 
     def getTournaments(id):

@@ -25,7 +25,7 @@ Tournament Manager - Edit Profile
                 {% endif %}
             </div>
         {% endif %}
-        <div id="edit-profile-form" class="center">
+        <div id="edit-profile-form" class="center pb-5">
             <form action="{{ url_for('edit_profile') }}" method="post" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
                 <div class="mb-6 flex relative group w-32 h-44 center">

@@ -322,7 +322,8 @@ def tournament():
                 return redirect(url_for('tournament'))
 
             # Save the image to a known location on the server (no extension to not fill up the server)
-            image.save(os.path.join(application.config['TP_UPLOAD_PATH'], name + '-' + date + '-' + current_user.id))
+            img_filename = name + '-' + date + '-' + current_user.id
+            image.save(os.path.join(application.config['TP_UPLOAD_PATH'], img_filename))
 
         # Create and save tournament
         tournament = models.Tournaments(

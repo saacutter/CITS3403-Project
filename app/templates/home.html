@@ -38,7 +38,7 @@ Tournament Manager - Home
                                 <h4 class="text-md font-semibold mb-2 text-white">{{ tournament.name }}</h4>
                                 <p class="text-gray-400">Game: {{ tournament.game_title }}</p>
                                 <p class="text-gray-400 mb-4">Date: {{ tournament.date }}</p>
-                                <a href="javascript:void(0);" onclick="showDetails('5')" class="btn-details text-blue-400 hover:underline">View Details</a>
+                                <a href="javascript:void(0);" onclick="showDetails('{{ tournament.id }}')" class="btn-details text-blue-400 hover:underline">View Details</a>
                             </div>
                             <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('upload', filename=tournament.image) }} {% endif %}" alt="Game Preview" class="w-24 h-24 object-cover rounded-md ml-4">
                         </div>
@@ -54,8 +54,7 @@ Tournament Manager - Home
                                 <p class="mb-2 text-gray-700"><strong>Details:</strong> {{ tournament.details or "No details provided." }}</p>
                                 <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('upload', filename=tournament.image) }} {% endif %}" alt="{{ tournament.name }}" class="w-32 h-32 object-cover rounded-md mt-2">
                             </div>
-                        <!-- Note: I am genuinely unsure why this works when one of the divs isn't closed properly but it breaks the formatting when it is, so I'm going to leave it -->
-                    </div>
+                        </div>
                     {% endfor %}
                 </div>
             {% endif %}
@@ -87,11 +86,11 @@ Tournament Manager - Home
     </main>
 </div>
 <script>
-function showDetails(id) {
-    document.getElementById('details-' + id).classList.remove('hidden');
-}
-function hideDetails(id) {
-    document.getElementById('details-' + id).classList.add('hidden');
-}
+    function showDetails(id) {
+        document.getElementById('details-' + id).classList.remove('hidden');
+    }
+    function hideDetails(id) {
+        document.getElementById('details-' + id).classList.add('hidden');
+    }
 </script>
 {% endblock %}

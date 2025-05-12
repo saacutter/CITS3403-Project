@@ -14,7 +14,8 @@ class Config:
     # Set configuration variables for file uploading
     MAX_CONTENT_LENGTH = 5242880 # Maximum filesize of 5MB
     UPLOAD_EXTENSIONS = ['.jpeg', '.jpg', '.png', '.webp', '.json', '.csv']
-    UPLOAD_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/profilepictures')
+    PFP_UPLOAD_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/profilepictures')
+    TP_UPLOAD_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/previews')
 
     # Ensure templates auto-reload as they are updated
     TEMPLATES_AUTO_RELOAD = True
