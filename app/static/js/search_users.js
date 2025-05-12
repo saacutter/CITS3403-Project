@@ -25,7 +25,7 @@ input.addEventListener('change', () => {
             
             // Display an error message if no users matching the name was found
             if (users[0].username == null) {
-                usersDiv.insertAdjacentHTML('beforeend', '<h3 class="center">No users were found!</h3>');
+                usersDiv.insertAdjacentHTML('beforeend', '<h3 class="center text-lg">No users were found!</h3>');
                 return;
             } 
 
@@ -46,11 +46,11 @@ function addUserDiv(user) {
     usersDiv.insertAdjacentHTML('beforeend', `
         <div id="${user.username}" class="container-flex w-1/2 items-center h-20 center white-bg rounded-border search-user">
             <a href="/user/${user.username}"><img src="${src}" alt="Profile Picture"></a>
-            <div class="container flex-col" style="text-align: left;">
+            <div class="container flex-col text-left">
                 <p class="text-xl font-bold">${user.username}</p>
                 <p class="text-sm text-gray-500">Last active ${timeFormatted}</p>
             </div>
-            <button style="margin-left: auto; margin-right: 1em;" onclick="add_friend('${user.username}')">Add Friend</button>
+            <button style="margin-left: auto; margin-right: 1em;" onclick="add_friend('${user.username}')">Follow User</button>
         </div>
     `); 
     /* Adapted from: 
@@ -73,7 +73,7 @@ function add_friend(username) {
             user.removeChild(button);
             
             // Add a paragraph to show that the friend request was sent
-            user.insertAdjacentHTML('beforeend', '<p style="margin-right: 1em; width: 10em;">Request Sent!</p>');
+            user.insertAdjacentHTML('beforeend', '<p style="margin-right: 1em; width: 10em;">Following</p>');
         } else if (request.status == 400) {
             // Return if there is already an error message
             let error = document.querySelector(`#${username}-error`);
@@ -85,7 +85,7 @@ function add_friend(username) {
             let header = document.querySelector('header');
             header.insertAdjacentHTML('afterend', `
                 <div class="center error rounded-border-px mt-5" id="${username}-error">
-                    <p>The user ${username} could not be added.</p>
+                    <p>The user ${username} could not be followed.</p>
                 </div>
             `);
 

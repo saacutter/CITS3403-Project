@@ -21,15 +21,15 @@ Tournament Manager - {{ user.username }}
                     {% if user != current_user %}
                         <div class="flex justify-center items-center">
                             {% if user.is_friends_with(current_user) %}
-                                <button class="p-2 w-full text-lg font-bold border-none bg-red-500 hover:bg-red-700 transition m-auto" id="remove-friend">Remove Friend</button>
+                                <button class="p-2 w-full text-lg font-bold border-none bg-red-500 hover:bg-red-700 transition m-auto" id="remove-friend">Unfollow User</button>
                             {% else %}
-                                <button class="p-2 w-full text-lg font-bold border-none bg-gray-500 hover:bg-gray-600 transition m-auto" id="add-friend">Add Friend</button>
+                                <button class="p-2 w-full text-lg font-bold border-none bg-gray-500 hover:bg-gray-600 transition m-auto" id="add-friend">Follow User</button>
                             {% endif %}
                         </div>
                     {% endif %}
             </div>
             {% if user.private == 0 or user.username == current_user.username or current_user.is_friends_with(user) %}
-                <div class="w-1/2 center bg-gray-800 p-6 rounded-lg shadow-md mt-6 mb-6 text-white">
+                <div class="w-1/2 center bg-gray-800 p-6 rounded-lg shadow-md mt-10 mb-6 text-white">
                     <h2 class="text-xl font-bold mb-4">Match Statistics</h2>
                     <p>Total Games Played: {{ matches.total_games }}</p>
                     <p>Wins: {{ matches.wins }}</p>
@@ -37,40 +37,70 @@ Tournament Manager - {{ user.username }}
                     <p>Draws: {{ matches.draws }}</p>
                     <p>Win Percentage: {{ matches.win_pct }}%</p>
                 </div>
-                <div class="container flex">
+                <div class="container flex mt-20 pb-5">
                     <div class="w-1/2 center">
-                        <h1>Recent Tournaments</h1>
+                        <h1 class="font-bold text-3xl">Tournaments</h1>
                         {% if tournaments %}
+                            <div class="w-4/5 p-2 flex-grow h-screen overflow-y-auto center">
                             {% for tournament in tournaments %}
-                                <!-- TODO: Display tournaments associated with user -->
-                                <p>{{tournament}}</p>
+                                <div class="tournament-card bg-gray-800 p-6 rounded-lg shadow-lg flex items-center mb-4">
+                                    <div class="flex-grow">
+                                        <h4 class="text-md font-semibold mb-2 text-white">{{ tournament.name }}</h4>
+                                        <p class="text-gray-300">Game: {{ tournament.game_title }}</p>
+                                        <p class="text-gray-300">Date: {{ tournament.date }}</p>
+                                        <p class="text-gray-300">Result: {{ tournament.result }} ({{ tournament.points }} point(s))</p>
+                                    </div>
+                                    <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('upload', filename=tournament.image) }} {% endif %}" alt="Game Preview" class="w-24 h-24 object-cover rounded-md ml-4">
+                                </div>
                             {% endfor %}
+                            </div>
                         {% else %}
                             <p class="text-white text-med">This user has not competed in any tournaments yet.</h3>
                         {% endif %}
                     </div>
-                    <div class="w-1/2 center" id="friends">
-                        <h1>Friends</h1>
-                        {% if friends %}
-                            {% for friend in friends %}
-                                <div class="flex w-3/5 items-center h-20 bg-gray-900 mt-2 pl-2 gap-4 rounded-border center" id="{{ friend.username }}">
-                                    <a href="{{ url_for('profile', username=friend.username) }}"><img src="{% if friend.profile_picture.startswith('http') %} {{friend.profile_picture}} {% else %} {{ url_for('upload', filename=friend.profile_picture) }} {% endif %}" alt="Profile Picture" class="h-[4em]"></a>
-                                    <div class="flex flex-col">
-                                        <p class="text-med font-bold" style="text-align: left;">{{ friend.username }}</p>
-                                        <p class="text-sm text-gray-500">Friends since {{ moment(friend.last_login).format('LL') }}</p>
+                    <div class="flex flex-col w-1/2 center">
+                        <div class="mb-4" id="friends">
+                            <h1 class="font-bold text-3xl">Following</h1>
+                            {% if following %}
+                                <div class="w-4/5 p-2 max-h-80 overflow-y-auto center">
+                                {% for follow in following %}
+                                    <div class="flex items-center h-20 bg-gray-900 mt-2 pl-2 gap-4 rounded-border" id="{{ follow.username }}">
+                                        <a href="{{ url_for('profile', username=follow.username) }}"><img src="{% if follow.profile_picture.startswith('http') %} {{ follow.profile_picture }} {% else %} {{ url_for('upload', filename=follow.profile_picture) }} {% endif %}" alt="Profile Picture" class="h-[4em]"></a>
+                                        <div class="flex flex-col">
+                                            <p class="text-med font-bold text-left">{{ follow.username }}</p>
+                                            <p class="text-sm text-gray-500 text-left">Following since {{ moment(follow.last_login).format('LL') }}</p>
+                                        </div>
+                                        {% if user.username == current_user.username %}
+                                            <button class="bg-red-500 hover:bg-red-700 border-none p-1 ml-auto mr-2">Unfollow User</button>
+                                        {% endif %}
                                     </div>
-                                    <!-- Add style for overflow on the y-axis once it reaches a certain height -->
-                                    {% if user.username == current_user.username %}
-                                        <button class="bg-red-500 hover:bg-red-700 border-none p-1">Remove Friend</button>
-                                    {% endif %}
+                                {% endfor %}
                                 </div>
-                            {% endfor %}
-                        {% else %}
-                            <p class="text-white text-med">This user has no friends.</p>
-                        {% endif %}
-                        {% if user.username == current_user.username %}
-                            <a href="{{ url_for('search') }}" class="block text-med py-1 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Add Friends</a>
-                        {% endif %}
+                            {% else %}
+                                <p class="text-white text-med">This user isn't following anyone.</p>
+                            {% endif %}
+                            {% if user.username == current_user.username %}
+                                <a href="{{ url_for('search') }}" class="block text-med py-1 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Find Users</a>
+                            {% endif %}
+                        </div>
+                        <div class="mt-4">
+                            <h1 class="font-bold text-3xl">Followers</h1>
+                            {% if followers %}
+                                <div class="w-4/5 p-2 max-h-80 overflow-y-auto center">
+                                {% for follow in followers %}
+                                    <div class="flex items-center h-20 bg-gray-900 mt-2 pl-2 gap-4 rounded-border" id="{{ follow.username }}">
+                                        <a href="{{ url_for('profile', username=follow.username) }}"><img src="{% if follow.profile_picture.startswith('http') %} {{ follow.profile_picture }} {% else %} {{ url_for('upload', filename=follow.profile_picture) }} {% endif %}" alt="Profile Picture" class="h-[4em]"></a>
+                                        <div class="flex flex-col">
+                                            <p class="text-med font-bold text-left">{{ follow.username }}</p>
+                                            <p class="text-sm text-gray-500 text-left">Followed since {{ moment(follow.last_login).format('LL') }}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-white text-med">This user isn't being followed by anyone.</p>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             {% else %}
