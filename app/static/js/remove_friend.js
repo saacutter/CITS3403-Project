@@ -1,4 +1,4 @@
-const friendsDiv = document.querySelector('#friends');
+const friendsDiv = document.querySelector('#friends > div');
 const buttons = friendsDiv.querySelectorAll('button');
 
 for (let i = 0; i < buttons.length; i++) {
