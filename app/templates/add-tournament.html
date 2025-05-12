@@ -11,8 +11,8 @@ Tournament Manager - Add Tournament
         <form action="{{ url_for('tournament') }}" method="post" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <div class="mb-6">
-                {{ form.image.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
-                {{ form.image(class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400") }}
+                {{ form.preview.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                {{ form.preview(class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400") }}
             </div>
             <div class="mb-6">
                 {{ form.name.label(class="block text-gray-400 font-bold mb-2") }}
@@ -24,11 +24,11 @@ Tournament Manager - Add Tournament
             </div>
             <div class="mb-6">
                 {{ form.date.label(class="block text-gray-400 font-bold mb-2") }}
-                {{ form.date(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white", type="date") }}
+                {{ form.date(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
             </div>
             <div class="mb-6">
                 {{ form.points.label(class="block text-gray-400 font-bold mb-2") }}
-                {{ form.points(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
+                {{ form.points(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white", type="number") }}
             </div>   
             <div class="mb-6">
                 {{ form.result.label(class="block text-gray-400 font-bold mb-2") }}
@@ -63,8 +63,4 @@ Tournament Manager - Add Tournament
     {% endif %}
 </div>
 <script src="static/js/upload.js"></script>
-<script>
-    var today = new Date().toISOString().split('T')[0];
-    document.getElementsByName("date")[0].setAttribute('min', today);
-</script>
 {% endblock %}
