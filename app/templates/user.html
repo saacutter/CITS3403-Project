@@ -5,73 +5,79 @@ Tournament Manager - {{ user.username }}
 {% endblock %}
 
 {% block body %}
-<div id="user-background">
-    <div id="user-profile-panel" class="center">
-        <div class="flex items-center gap-4" id="user-heading">
-            <img src="{% if current_user.profile_picture.startswith('http') %} {{current_user.profile_picture}} {% else %} {{ url_for('upload', filename=current_user.profile_picture) }} {% endif %}" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover">
-            <div class="flex flex-col">
-                <h1 class="font-bold text-white" style="text-align: left;">{{ user.username }}</h1>
-                {% if user.private == 0 or user.username == current_user.username %}
-                    <p class="text-med text-gray-500">This user was last seen {{ moment(user.last_login).fromNow() }} ({{ moment(user.last_login).format('LLLL') }})</p>
-                {% endif %}
-                {% if user.username == current_user.username %}
-                    <a href="{{ url_for('edit_profile') }}" style="text-align: left;">Edit Profile</a>
-                {% endif %}
-
-                {% if user.username != current_user.username %}
-                    {% if not is_friend %}
-                        <form method="POST" action="{{ url_for('send_friend_request', user_id=user.id) }}">
-                            <button type="submit">Send Friend Request</button>
-                        </form>
-                    {% else %}
-                        <p>You are friends with this user.</p>
+    <div id="user-background">
+        <div id="user-profile-panel" class="center">
+            <div class="flex items-center gap-4" id="user-heading">
+                <img src="{% if user.profile_picture.startswith('http') %} {{ user.profile_picture}} {% else %} {{ url_for('upload', filename=user.profile_picture) }} {% endif %}" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover">
+                <div class="flex flex-col">
+                    <h1 class="font-bold text-white text-left">{{ user.username }}</h1>
+                    {% if user.private == 0 or user.username == current_user.username or current_user.is_friends_with(user) %}
+                        <p class="text-med text-gray-500 text-left">This user was last seen {{ moment(user.last_login).fromNow() }} ({{ moment(user.last_login).format('LLLL') }})</p>
                     {% endif %}
-                {% endif %}
-
-                {% if user.username == current_user.username %}
-                    <h2>Friend Requests</h2>
-                    {% if friend_requests %}
-                        <ul>
-                        {% for fr in friend_requests %}
-                            <li>
-                                From User ID: {{ fr.from_user_id }}
-                                <form method="POST" action="{{ url_for('accept_friend_request', request_id=fr.id) }}">
-                                    <button type="submit">Accept</button>
-                                </form>
-                            </li>
-                        {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p>No friend requests.</p>
+                    {% if user.username == current_user.username %}
+                        <a href="{{ url_for('edit_profile') }}" style="text-align: left;">Edit Profile</a>
                     {% endif %}
-                {% endif %}
+                </div>
+                    {% if user != current_user %}
+                        <div class="flex justify-center items-center">
+                            {% if user.is_friends_with(current_user) %}
+                                <button class="p-2 w-full text-lg font-bold border-none bg-red-500 hover:bg-red-700 transition m-auto" id="remove-friend">Remove Friend</button>
+                            {% else %}
+                                <button class="p-2 w-full text-lg font-bold border-none bg-gray-500 hover:bg-gray-600 transition m-auto" id="add-friend">Add Friend</button>
+                            {% endif %}
+                        </div>
+                    {% endif %}
             </div>
+            {% if user.private == 0 or user.username == current_user.username or current_user.is_friends_with(user) %}
+                <div class="w-1/2 center bg-gray-800 p-6 rounded-lg shadow-md mt-6 mb-6 text-white">
+                    <h2 class="text-xl font-bold mb-4">Match Statistics</h2>
+                    <p>Total Games Played: {{ matches.total_games }}</p>
+                    <p>Wins: {{ matches.wins }}</p>
+                    <p>Losses: {{ matches.losses }}</p>
+                    <p>Draws: {{ matches.draws }}</p>
+                    <p>Win Percentage: {{ matches.win_pct }}%</p>
+                </div>
+                <div class="container flex">
+                    <div class="w-1/2 center">
+                        <h1>Recent Tournaments</h1>
+                        {% if tournaments %}
+                            {% for tournament in tournaments %}
+                                <!-- TODO: Display tournaments associated with user -->
+                                <p>{{tournament}}</p>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-white text-med">This user has not competed in any tournaments yet.</h3>
+                        {% endif %}
+                    </div>
+                    <div class="w-1/2 center" id="friends">
+                        <h1>Friends</h1>
+                        {% if friends %}
+                            {% for friend in friends %}
+                                <div class="flex w-3/5 items-center h-20 bg-gray-900 mt-2 pl-2 gap-4 rounded-border center" id="{{ friend.username }}">
+                                    <a href="{{ url_for('profile', username=friend.username) }}"><img src="{% if friend.profile_picture.startswith('http') %} {{friend.profile_picture}} {% else %} {{ url_for('upload', filename=friend.profile_picture) }} {% endif %}" alt="Profile Picture" class="h-[4em]"></a>
+                                    <div class="flex flex-col">
+                                        <p class="text-med font-bold" style="text-align: left;">{{ friend.username }}</p>
+                                        <p class="text-sm text-gray-500">Friends since {{ moment(friend.last_login).format('LL') }}</p>
+                                    </div>
+                                    <!-- Add style for overflow on the y-axis once it reaches a certain height -->
+                                    {% if user.username == current_user.username %}
+                                        <button class="bg-red-500 hover:bg-red-700 border-none p-1">Remove Friend</button>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-white text-med">This user has no friends.</p>
+                        {% endif %}
+                        {% if user.username == current_user.username %}
+                            <a href="{{ url_for('search') }}" class="block text-med py-1 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Add Friends</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <h1>This user has their profile set to private!</h1>
+            {% endif %}
         </div>
-
-        {% if user.private == 0 or user.username == current_user.username %}
-            <div>
-                <h1>Recent Tournaments</h1>
-                {% if tournaments %}
-                    {% for tournament in tournaments %}
-                        <!-- Display tournaments associated with user -->
-                    {% endfor %}
-                {% else %}
-                    <h3 class="text-white">This user has not competed in any tournaments yet.</h3>
-                {% endif %}
-            </div>
-
-            <!-- Match Statistics Section -->
-            <div class="bg-gray-800 p-6 rounded-lg shadow-md mt-6 text-white">
-                <h2 class="text-xl font-bold mb-4">Match Statistics</h2>
-                <p>Total Games Played: {{ total_games }}</p>
-                <p>Wins: {{ wins }}</p>
-                <p>Losses: {{ losses }}</p>
-                <p>Draws: {{ draws }}</p>
-                <p>Win Percentage: {{ win_pct }}%</p>
-            </div>
-        {% else %}
-            <h1>This user has their profile set to private!</h1>
-        {% endif %}
     </div>
-</div>
+    <script src="../static/js/remove_friend.js"></script>
+    <script src="../static/js/profile_friend_requests.js"></script>
 {% endblock %}

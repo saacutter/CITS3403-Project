@@ -43,8 +43,8 @@ a:visited {
 img {
     width: 4em;
     height: 4em;
-    background-color: grey;
-    padding: 5px;
+    background-color: white;
+    padding: 3px;
     border-radius: 50%;
 }
 
@@ -200,17 +200,10 @@ input::placeholder {
 }
 
 div.search-user {
-    width: 50%;
-    height: 3em;
     margin-bottom: 1em;
-    align-content: center;
     display: flex;
     gap: 1em;
     padding-left: 1em;
-}
-
-.search-user > p {
-    font-size: 16px;
 }
 
 .search-user > img {
@@ -224,6 +217,11 @@ div.search-user {
     width: 20%;
 }
 
+.heading {
+    font-size: 30px;
+    padding-top: 1em;
+}
+
 /* Styling for individual elements */
 #profile-icon {
     cursor: pointer;
@@ -232,12 +230,14 @@ div.search-user {
 #user-background {
     background-image: url("../img/user-profile-background.webp"); /* Retrieved from https://www.toptal.com/designers/subtlepatterns/fancy-cushion-pattern/ */
     background-repeat: repeat;
-    height: 100vh;
+    min-height: 100vh;
+    height: 100%;
 }
 
 #user-profile-panel {
     width: 80%;
     background-color: black;
+    min-height: 100vh;
     height: 100%;
 }
 
@@ -270,7 +270,7 @@ div.search-user {
 
 #heading-404 {
     font-size: 80px;
-    padding-top: 2em;
+    padding-top: 5%;
 }
 
 /* Media Queries */

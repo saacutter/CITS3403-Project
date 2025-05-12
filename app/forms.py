@@ -25,6 +25,14 @@ class EditProfileForm(FlaskForm):
     private         = BooleanField('Make my profile private')
     submit          = SubmitField('Save Changes')
 
+class AddTournamentForm(FlaskForm):
+    file   = FileField('Upload Tournament Data (CSV/JSON)', validators=[FileAllowed(['json', 'csv'], "JSON or CSV files only!")])
+    image  = FileField('Add Game Image', validators=[FileAllowed(['jpeg', 'jpg', 'png', 'webp'], "Images only!")])
+    name   = StringField('Tournament Name', validators=[DataRequired()])
+    game   = StringField('Game', validators=[DataRequired()])
+    date   = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
+    submit = SubmitField('Add Tournament')
+
 class AddMatchForm(FlaskForm):
     file       = FileField('File Upload', validators=[FileAllowed(['json', 'csv'])])
     game       = StringField('Game')
@@ -32,11 +40,3 @@ class AddMatchForm(FlaskForm):
     time_taken = DateTimeField('Time Taken')
     result     = StringField('Result')
     submit     = SubmitField('Add Match')
-
-class AddTournamentForm(FlaskForm):
-    file   = FileField('Upload Tournament Data (CSV/JSON)', validators=[FileAllowed(['json', 'csv'], 'JSON or CSV files only!')])
-    image  = FileField('Add Game Image', validators=[FileAllowed(['jpeg', 'jpg', 'png', 'webp'], 'Images only!')])
-    name   = StringField('Tournament Name', validators=[DataRequired()])
-    game   = StringField('Game', validators=[DataRequired()])
-    date   = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    submit = SubmitField('Add Tournament')

@@ -25,16 +25,7 @@ def page_not_found(error_code):
 @application.route("/")
 def index():
     tournaments = models.Tournaments.query.all()
-    return render_template("index.html", tournaments=tournaments)
-
-@application.route("/test")
-def test():
-    # return render_template("base.html")
     return render_template("home.html")
-
-@application.route("/test2")
-def test2():
-    return render_template("base.html")
 
 # Login route of the application
 @application.route("/login", methods=["GET", "POST"])
@@ -163,28 +154,23 @@ def get_friends(user_id):
 def profile(username):
     # Get the user with the specified ID
     user = db.first_or_404(sa.select(models.Users).where(models.Users.username == username))
-    friend_requests = db.session.scalars(
-        sa.select(models.FriendRequest)
-        .where(models.FriendRequest.to_user_id == current_user.id)
-    ).all() if user.id == current_user.id else []
 
-    is_friend = db.session.scalar(sa.select(models.FriendRequest).where(
-        models.FriendRequest.from_user_id == current_user.id,
-        models.FriendRequest.to_user_id == user.id
-    )) is not None 
+    # Get the user's friends
+    friends = list(db.session.scalars(sa.select(models.Users).join(models.Friends, models.Users.id == models.Friends.to_user).where(models.Friends.from_user == user.id)))
 
+    # Get a user's match data
     matches = models.Matches.query.filter_by(user_id=user.id).all()
     total_games = len(matches)
     wins = sum(1 for m in matches if m.result.lower() == 'win')
     losses = sum(1 for m in matches if m.result.lower() == 'loss')
     draws = sum(1 for m in matches if m.result.lower() == 'draw')
     win_pct = round((wins / total_games) * 100, 2) if total_games > 0 else 0
+    matches = {'matches': matches, 'total_games': total_games, 'wins': wins, 'losses': losses, 'draws': draws, 'win_pct': win_pct}
 
-    return render_template("user.html",user=user,is_friend=is_friend,friend_requests=friend_requests,matches=matches,
-    total_games=total_games,wins=wins,losses=losses,draws=draws,win_pct=win_pct
-)
-    
-    
+    # Get the user's tournament data
+    tournaments = models.Tournaments.query.filter_by(user_id=user.id).all()
+
+    return render_template("user.html", user=user, friends=friends, matches=matches, tournaments=tournaments)
 
 @application.route('/edit_profile', methods=["GET", "POST"])
 @login_required
@@ -206,19 +192,19 @@ def edit_profile():
         # Check if username or email already exists
         existing_user = db.session.scalar(sa.select(models.Users).where((models.Users.username == username) | (models.Users.email == email)))
         if existing_user and existing_user != current_user:
-            flash("A user with this username or email address already exists!")
+            flash("A user with this username or email address already exists")
             return redirect(url_for('edit_profile'))
         
         # Save the uploaded image to the server if one was uploaded
         img_filename = secure_filename(image.filename)
-        if img_filename != "": 
-            img = Image.open(image)  
-
-            # Check if image is square 
-            if abs(img.width - img.height) > 10:
+        if img_filename != "":
+            # Ensure that the image is roughly square (with a 50px tolerance)
+            img = Image.open(image)   
+            if abs(img.width - img.height) > 50:
                 flash("The profile image must be square")
-                return redirect(url_for('edit_profile')) 
-
+                return redirect(url_for('edit_profile'))
+            image.seek(0) # Reset the file point to the start so that it can be saved to the server properly
+            
             # Ensure that the extension is a valid image extension
             extension = os.path.splitext(img_filename)[1]
             if extension not in application.config['UPLOAD_EXTENSIONS']:
@@ -256,25 +242,110 @@ def get_like(pattern):
     # Extract the users from the database that begin with the requested pattern
     users = db.session.scalars(sa.select(models.Users).where(models.Users.username.like(pattern + '%'))).all()
 
-    # Remove the signed in user from the list, if applicable
-    try:
-        users.remove(current_user)
-    except ValueError:
-        ...
+    # Get the friends of the current user
+    friends = db.session.scalars(sa.select(models.Friends.to_user).where(models.Friends.from_user == current_user.id)).all()
+
+    # Create a list of results that gets all users that match the pattern and aren't already friends with the current user
+    results = [user.serialise() for user in users if user.id != current_user.id and user.id not in friends]
+
+    # TODO: Create an attribute if the user is friends with a user and show that on the results by removing the button
     
     # Return an empty JSON object if no users match the specified pattern
-    if len(users) == 0:
-      return jsonify([{"username": None}])
+    if len(results) == 0:
+      results = [{"username": None}]
 
     # Return a JSON object of the extracted users
-    return jsonify([user.serialise() for user in users]) # Adapted from: https://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
+    return jsonify(results) # Adapted from: https://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
+
+@application.route('/add_friend/<username>', methods=["POST"])
+def add_friend(username):
+    # Retrieve the user with the given username
+    user = db.session.scalar(sa.select(models.Users).where(models.Users.username == username))
+
+    # Return an error message if the user is the current user
+    if user.id == current_user.id:
+        return '', 400
+    
+    # Ensure that the user has not already added the user
+    relationship = db.session.scalar(sa.select(models.Friends).where((models.Friends.from_user == current_user.id) & (models.Friends.to_user == user.id)))
+    if relationship:
+        return '', 400
+
+    # Create an object that adds the user with the current user
+    friend = models.Friends(
+        to_user=user.id,
+        from_user=current_user.id
+    )
+
+    # Add this relationship to the database
+    db.session.add(friend)
+    db.session.commit()
+
+    return '', 200
+
+@application.route('/remove_friend/<username>', methods=["POST"])
+def remove_friend(username):
+    # Retrieve the user with the given username
+    user = db.session.scalar(sa.select(models.Users).where(models.Users.username == username))
+
+    # Return an error message if the user is the current user
+    if user.id == current_user.id:
+        return '', 400
+    
+    # Ensure that the user is friends with the requested user
+    relationship = db.session.scalar(sa.select(models.Friends).where((models.Friends.from_user == current_user.id) & (models.Friends.to_user == user.id)))
+    if not relationship:
+        return '', 400
+
+    # Remove the relationship from the database
+    db.session.delete(relationship)
+    db.session.commit()
+
+    return '', 200
+
+@application.route('/addTournament', methods=["GET", "POST"])
+@login_required
+def tournament():
+    form = forms.AddTournamentForm()
+
+    if request.method == "POST" and form.validate_on_submit():
+        # Handle file uploads
+        data_file_path = None
+        image_path = None
+
+        if form.file.data:
+            file = form.file.data
+            filename = secure_filename(file.filename)
+            data_file_path = os.path.join('uploads', filename)
+            file.save(os.path.join(application.config['UPLOAD_PATH'], filename))
+
+        if form.image.data:
+            image = form.image.data
+            image_filename = secure_filename(image.filename)
+            image_path = os.path.join('uploads', image_filename)
+            image.save(os.path.join(application.config['UPLOAD_PATH'], image_filename))
+
+        # Create and save tournament
+        tournament = models.Tournaments(
+            user_id=current_user.id,
+            name=form.name.data,
+            game_title=form.game.data,
+            date=form.date.data.strftime('%Y-%m-%d'),
+            image=image_path,
+            data_file=data_file_path
+        )
+        db.session.add(tournament)
+        db.session.commit()
+
+        return redirect(url_for('index'))
+    return render_template("add-tournament.html", form=form)
 
 @application.route('/addMatch', methods=["GET", "POST"])
 @login_required
 def match():
-    if request.method == "POST" and forms.AddMatchForm().validate_on_submit():
-        form = forms.AddMatchForm()
+    form = forms.AddMatchForm()
 
+    if request.method == "POST" and form.validate_on_submit():
         # Extract the information from the request
         file = request.files['file']
         game = form.game.data
@@ -296,43 +367,8 @@ def match():
             db.session.commit()
 
         return redirect(url_for('index'))
-    return render_template("add-match.html", form=forms.AddMatchForm())
-
-@application.route('/addTournament', methods=["GET", "POST"])
-@login_required
-def tournament():
-    form = forms.AddTournamentForm()
-    if request.method == "POST" and form.validate_on_submit():
-        # Handle file uploads
-        data_file_path = None
-        image_path = None
-
-        if form.file.data:
-            file = form.file.data
-            filename = secure_filename(file.filename)
-            data_file_path = os.path.join('uploads', filename)
-            file.save(os.path.join(application.config['UPLOAD_PATH'], filename))
-
-        if form.image.data:
-            image = form.image.data
-            image_filename = secure_filename(image.filename)
-            image_path = os.path.join('uploads', image_filename)
-            image.save(os.path.join(application.config['UPLOAD_PATH'], image_filename))
-
-        # Create and save tournament
-        tournament = models.Tournaments(
-            name=form.name.data,
-            game_title=form.game.data,
-            date=form.date.data.strftime('%Y-%m-%d'),
-            image=image_path,
-            data_file=data_file_path
-        )
-        db.session.add(tournament)
-        db.session.commit()
-        flash("Tournament added successfully!", "success")
-        return redirect(url_for('index'))
-    return render_template("add-tournament.html", form=form)
+    return render_template("add-match.html", form=form)
 
 @application.route('/privacy_policy')
 def privacy_policy():
-    return render_template('privacy_policy.html')
+    return render_template('privacy-policy.html')
