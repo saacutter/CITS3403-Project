@@ -52,6 +52,7 @@ class Tournaments(db.Model):
     date:       Mapped[str] = mapped_column(Text, nullable=False, index=True)
     points:     Mapped[int] = mapped_column(Integer, nullable=False, index=True, default=0)
     result:     Mapped[str] = mapped_column(Text, nullable=False, index=True)
+    details:    Mapped[str] = mapped_column(Text, nullable=True) 
     image:      Mapped[str] = mapped_column(Text, nullable=True)
 
     def getTournaments(id):

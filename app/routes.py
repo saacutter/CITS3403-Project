@@ -322,7 +322,8 @@ def tournament():
                 return redirect(url_for('tournament'))
 
             # Save the image to a known location on the server (no extension to not fill up the server)
-            image.save(os.path.join(application.config['TP_UPLOAD_PATH'], name + '-' + date + '-' + current_user.id))
+            img_filename = name + '-' + date + '-' + current_user.id
+            image.save(os.path.join(application.config['TP_UPLOAD_PATH'], img_filename))
 
         # Create and save tournament
         tournament = models.Tournaments(
@@ -332,6 +333,7 @@ def tournament():
             date=date,
             points=points,
             result=result,
+            details=form.details.data,
             image=img_filename or "https://static.vecteezy.com/system/resources/thumbnails/017/287/469/small_2x/joystick-for-game-console-computer-ps-line-icon-joypad-game-controller-for-videogame-pictogram-computer-gamepad-play-equipment-outline-symbol-editable-stroke-isolated-illustration-vector.jpg" # Retrieved from https://www.vecteezy.com/vector-art/17287469-joystick-for-game-console-computer-ps-line-icon-joypad-game-controller-for-videogame-pictogram-computer-gamepad-play-equipment-outline-symbol-editable-stroke-isolated-vector-illustration
         )
         db.session.add(tournament)
