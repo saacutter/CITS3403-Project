@@ -325,7 +325,8 @@ def tournament():
             game_title=form.game.data,
             date=form.date.data.strftime('%Y-%m-%d'),
             image=image_path,
-            data_file=data_file_path
+            data_file=data_file_path,
+            details=form.details.data  # <-- Add this line
         )
         db.session.add(tournament)
         db.session.commit()

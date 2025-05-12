@@ -30,6 +30,10 @@ Tournament Manager - Add Tournament
                 {{ form.date.label(class="block text-gray-400 font-bold mb-2") }}
                 {{ form.date(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white", type="date", min=today) }}
             </div>
+            <div class="mb-6">
+                {{ form.details.label(class="block text-gray-400 font-bold mb-2", id="details-label") }}
+                {{ form.details(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white", id="details") }}
+            </div>
             <div class="flex items-center justify-between">
                 {{ form.submit(class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition w-full") }}
             </div>

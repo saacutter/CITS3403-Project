@@ -37,6 +37,7 @@ class Tournaments(db.Model):
     date:       Mapped[str]      = mapped_column(Text, nullable=False, index=True)
     image:      Mapped[str]      = mapped_column(Text, nullable=True)
     data_file:  Mapped[str]      = mapped_column(Text, nullable=True)
+    details:    Mapped[str]      = mapped_column(Text, nullable=True)  # <-- Add this line
 
 class Matches(db.Model):
     id:         Mapped[int]  = mapped_column(Integer, primary_key=True)
