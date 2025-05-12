@@ -5,7 +5,7 @@ from flask import abort
 import sqlalchemy as sa
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date
 from hashlib import md5
 import os
 from PIL import Image
@@ -24,8 +24,11 @@ def page_not_found(error_code):
 # Default route of the application
 @application.route("/")
 def index():
-    tournaments = models.Tournaments.query.all()
-    return render_template("home.html", tournaments=tournaments)
+    public = models.Tournaments.query.join(models.Users, models.Tournaments.user_id == models.Users.id).filter(models.Users.private == False).limit(8).all()
+
+    friends = models.Tournaments.query.join(models.Friends, models.Tournaments.user_id == models.Friends.to_user).filter(models.Friends.to_user == current_user.id).limit(8).all() if current_user.is_authenticated else []
+    
+    return render_template("home.html", public_tournaments=public, friend_tournaments=friends)
 
 # Login route of the application
 @application.route("/login", methods=["GET", "POST"])
@@ -116,8 +119,11 @@ def profile(username):
     # Get the user with the specified ID
     user = db.first_or_404(sa.select(models.Users).where(models.Users.username == username))
 
-    # Get the user's friends
-    friends = list(db.session.scalars(sa.select(models.Users).join(models.Friends, models.Users.id == models.Friends.to_user).where(models.Friends.from_user == user.id)))
+    # Get the users that the current user is following
+    users_followed = list(db.session.scalars(sa.select(models.Users).join(models.Friends, models.Users.id == models.Friends.to_user).where(models.Friends.from_user == user.id)))
+
+    # Get the user's following the current user
+    users_following = list(db.session.scalars(sa.select(models.Users).join(models.Friends, models.Users.id == models.Friends.from_user).where(models.Friends.to_user == user.id)))
 
     # Get a user's match data
     matches = models.Tournaments.query.filter_by(user_id=user.id).all()
@@ -131,7 +137,7 @@ def profile(username):
     # Get the user's tournament data
     tournaments = models.Tournaments.query.filter_by(user_id=user.id).all()
 
-    return render_template("user.html", user=user, friends=friends, matches=matches, tournaments=tournaments)
+    return render_template("user.html", user=user, following=users_followed, followers=users_following, matches=matches, tournaments=tournaments)
 
 @application.route('/edit_profile', methods=["GET", "POST"])
 @login_required
@@ -173,7 +179,7 @@ def edit_profile():
                 return redirect(url_for('edit_profile'))
 
             # Save the image to a known location on the server (no extension to not fill up the server)
-            image.save(os.path.join(application.config['UPLOAD_PATH'], str(current_user.id)))
+            image.save(os.path.join(application.config['PFP_UPLOAD_PATH'], str(current_user.id)))
         
         # Update the user information based on the provided information
         user = models.Users.query.get(current_user.id)
@@ -191,7 +197,13 @@ def edit_profile():
 
 @application.route('/uploads/<filename>')
 def upload(filename):
-    return send_from_directory(application.config['UPLOAD_PATH'], filename)
+    if os.path.exists(os.path.join(application.config['PFP_UPLOAD_PATH'], filename)): # Check for profile images
+        return send_from_directory(application.config['PFP_UPLOAD_PATH'], filename)
+    elif os.path.exists(os.path.join(application.config['TP_UPLOAD_PATH'], filename)): # Check for tournament images
+        return send_from_directory(application.config['TP_UPLOAD_PATH'], filename)
+    else:
+        return send_from_directory(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/img/'), 'default.png') # Send a file not found image if nothing is found
+        # Retrieved from https://en.m.wikipedia.org/wiki/File:No_photo_available.svg
 
 @application.route('/search')
 @login_required
@@ -270,22 +282,57 @@ def tournament():
     form = forms.AddTournamentForm()
 
     if request.method == "POST" and form.validate_on_submit():
-        image_filename = "https://static.vecteezy.com/system/resources/thumbnails/017/287/469/small_2x/joystick-for-game-console-computer-ps-line-icon-joypad-game-controller-for-videogame-pictogram-computer-gamepad-play-equipment-outline-symbol-editable-stroke-isolated-illustration-vector.jpg" # Retrieved from https://www.vecteezy.com/vector-art/17287469-joystick-for-game-console-computer-ps-line-icon-joypad-game-controller-for-videogame-pictogram-computer-gamepad-play-equipment-outline-symbol-editable-stroke-isolated-vector-illustration
-        if form.image.data:
-            image = form.image.data
-            image_filename = secure_filename(image.filename)
-            image.save(os.path.join(application.config['UPLOAD_PATH'], image_filename))
-            image_filename = os.path.join(application.config['UPLOAD_PATH'], image_filename)
+        name = form.name.data
+        date = form.date.data.strftime('%Y-%m-%d')
+        points = form.points.data
+        result = form.result.data.lower().strip()
+        image = request.files['preview']
 
-        # Create and save tournament TODO: Validate each field
+        # Ensure that the date is earlier than the current day
+        if date > str(datetime.now().strftime("%Y-%m-%d")):
+            flash("The tournament cannot be after today's date (" + str(datetime.now().strftime("%Y-%m-%d")) + ")")
+            return redirect(url_for('tournament'))
+        
+        # Ensure that the points is a numeric value
+        try:
+            points = int(points)
+        except ValueError:
+            flash("The points must be a numeric value")
+            return redirect(url_for('tournament'))
+
+        # Check that the result is valid
+        if result not in ["win", "loss", "draw"]:
+            flash("The result can only be a 'win', 'loss', or 'draw'")
+            return redirect(url_for('tournament'))
+
+        # Save the uploaded image to the server if one was uploaded
+        img_filename = secure_filename(image.filename)
+        if img_filename != "":
+            # Ensure that the image is roughly square (with a 50px tolerance)
+            img = Image.open(image)   
+            if abs(img.width - img.height) > 50:
+                flash("The profile image must be square")
+                return redirect(url_for('tournament'))
+            image.seek(0) # Reset the file point to the start so that it can be saved to the server properly
+            
+            # Ensure that the extension is a valid image extension
+            extension = os.path.splitext(img_filename)[1]
+            if extension not in application.config['UPLOAD_EXTENSIONS']:
+                flash("The profile image can only be in .png, .jpeg or .webp format")
+                return redirect(url_for('tournament'))
+
+            # Save the image to a known location on the server (no extension to not fill up the server)
+            image.save(os.path.join(application.config['TP_UPLOAD_PATH'], name + '-' + date + '-' + current_user.id))
+
+        # Create and save tournament
         tournament = models.Tournaments(
             user_id=current_user.id,
-            name=form.name.data,
-            game_title=form.game.data,
-            date=form.date.data.strftime('%Y-%m-%d'),
-            points=form.points.data,
-            result=form.result.data,
-            image=image_filename
+            name=name,
+            game_title=form.game.data.lower().strip(),
+            date=date,
+            points=points,
+            result=result,
+            image=img_filename or "https://static.vecteezy.com/system/resources/thumbnails/017/287/469/small_2x/joystick-for-game-console-computer-ps-line-icon-joypad-game-controller-for-videogame-pictogram-computer-gamepad-play-equipment-outline-symbol-editable-stroke-isolated-illustration-vector.jpg" # Retrieved from https://www.vecteezy.com/vector-art/17287469-joystick-for-game-console-computer-ps-line-icon-joypad-game-controller-for-videogame-pictogram-computer-gamepad-play-equipment-outline-symbol-editable-stroke-isolated-vector-illustration
         )
         db.session.add(tournament)
         db.session.commit()
