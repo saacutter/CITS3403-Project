@@ -269,6 +269,13 @@ div.search-user {
     padding-top: 5%;
 }
 
+#preview-edit {
+    margin-top: 2em;
+    width: 15em;
+    height: auto;
+    border-radius: 0px;
+}
+
 /* Media Queries */
 @media screen and (max-width: 900px) {
     #user-profile-panel {
