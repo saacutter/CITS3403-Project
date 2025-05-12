@@ -41,7 +41,7 @@ Tournament Manager - {{ user.username }}
                     <div class="w-1/2 center">
                         <h1 class="font-bold text-3xl">Tournaments</h1>
                         {% if tournaments %}
-                            <div class="w-4/5 p-2 flex-grow h-screen overflow-y-auto center">
+                            <div class="w-4/5 p-2 flex-grow overflow-y-auto center">
                             {% for tournament in tournaments %}
                                 <div class="tournament-card bg-gray-800 p-6 rounded-lg shadow-lg flex items-center mb-4">
                                     <div class="flex-grow">
@@ -61,8 +61,8 @@ Tournament Manager - {{ user.username }}
                     <div class="flex flex-col w-1/2 center">
                         <div class="mb-4" id="friends">
                             <h1 class="font-bold text-3xl">Following</h1>
+                            <div class="w-4/5 p-2 max-h-80 overflow-y-auto center">
                             {% if following %}
-                                <div class="w-4/5 p-2 max-h-80 overflow-y-auto center">
                                 {% for follow in following %}
                                     <div class="flex items-center h-20 bg-gray-900 mt-2 pl-2 gap-4 rounded-border" id="{{ follow.username }}">
                                         <a href="{{ url_for('profile', username=follow.username) }}"><img src="{% if follow.profile_picture.startswith('http') %} {{ follow.profile_picture }} {% else %} {{ url_for('upload', filename=follow.profile_picture) }} {% endif %}" alt="Profile Picture" class="h-[4em]"></a>
@@ -75,10 +75,10 @@ Tournament Manager - {{ user.username }}
                                         {% endif %}
                                     </div>
                                 {% endfor %}
-                                </div>
                             {% else %}
                                 <p class="text-white text-med">This user isn't following anyone.</p>
                             {% endif %}
+                            </div>
                             {% if user.username == current_user.username %}
                                 <a href="{{ url_for('search') }}" class="block text-med py-1 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Find Users</a>
                             {% endif %}
