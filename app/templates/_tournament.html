@@ -25,6 +25,7 @@
         <p class="mb-2 text-gray-700"><strong>Game:</strong> {{ tournament.game_title }}</p>
         <p class="mb-2 text-gray-700"><strong>Date:</strong> {{ tournament.date }}</p>
         <p class="mb-2 text-gray-700"><strong>Details:</strong> {{ tournament.details or "No details provided." }}</p>
+        <p class="mb-2 text-gray-700"><strong>Outcome: </strong> {{ tournament.result }} ({{ tournament.points }} points)</p>
         <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('upload', filename=tournament.image) }} {% endif %}" alt="{{ tournament.name }}" class="w-32 h-32 object-cover rounded-md mt-2 center">
     </div>
 </div>

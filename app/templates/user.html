@@ -31,12 +31,12 @@ Tournament Manager - {{ user.username }}
         {% if user.private == 0 or user.username == current_user.username or current_user.is_friends_with(user) %}
             <div class="w-1/2 center bg-gray-800 p-6 rounded-lg shadow-md mt-10 mb-6 text-white">
                 <h2 class="text-xl font-bold mb-4">Match Statistics</h2>
-                <p><strong>Total Games Played: </strong>{{ matches.total_games }}</p>
-                <p><strong>Wins: </strong>{{ matches.wins }}</p>
-                <p><strong>Losses: </strong>{{ matches.losses }}</p>
-                <p><strong>Draws: </strong>{{ matches.draws }}</p>
-                <p><strong>Average Points: </strong>{{ matches.avg_points }}</p>
-                <p><strong>Win Percentage: </strong>{{ matches.win_pct }}%</p>
+                <p><strong>Total Games Played: </strong>{{ statistics.total_games }}</p>
+                <p><strong>Wins: </strong>{{ statistics.wins }}</p>
+                <p><strong>Losses: </strong>{{ statistics.losses }}</p>
+                <p><strong>Draws: </strong>{{ statistics.draws }}</p>
+                <p><strong>Average Points: </strong>{{ statistics.avg_points }}</p>
+                <p><strong>Win Percentage: </strong>{{ statistics.win_pct }}%</p>
             </div>
             <div class="container flex mt-20 p-5 gap-5 center">
                 <div class="w-1/2" id="friends">
@@ -85,21 +85,40 @@ Tournament Manager - {{ user.username }}
             <div class="container w-4/5 p-5 center">
                 <h1 class="font-bold text-3xl">Tournaments</h1>
                 {% if tournaments %}
-                    <div class="w-4/5 p-2 flex-grow max-h-80 overflow-y-auto center">
+                    <div class="w-4/5 p-2 flex-grow max-h-80 overflow-y-auto center" id="tournaments">
                     {% for tournament in tournaments %}
-                        <div class="tournament-card bg-gray-800 p-6 rounded-lg shadow-lg flex items-center mb-4">
-                            <div class="flex-grow">
-                                <h4 class="text-md font-semibold mb-2 text-white">{{ tournament.name }}</h4>
-                                <p class="text-gray-300">Game: {{ tournament.game_title }}</p>
-                                <p class="text-gray-300">Date: {{ tournament.date }}</p>
-                                <p class="text-gray-300">Result: {{ tournament.result }} ({{ tournament.points }} point(s))</p>
+                        <div id="tournament">
+                            <div class="tournament-card bg-gray-800 p-6 rounded-lg shadow-lg flex items-center mb-4">
+                                <div class="flex-grow" id="{{ tournament.id }}">
+                                    <h4 class="text-md font-semibold mb-2 text-white">{{ tournament.name }}</h4>
+                                    <p class="text-gray-300">Game: {{ tournament.game_title }}</p>
+                                    <p class="text-gray-300">Date: {{ tournament.date }}</p>
+                                    <p class="text-gray-300">Result: {{ tournament.result }} ({{ tournament.points }} point(s))</p>
+                                    <a href="javascript:void(0);" onclick="showDetails('{{ tournament.id }}')" class="btn-details text-blue-400 hover:underline">View Details</a>
+                                    {% if user.username == current_user.username %}
+                                        <button class="bg-red-500 hover:bg-red-700 border-none p-1 mt-5">Delete Tournament</button>
+                                    {% endif %}
+                                </div>
+                                <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('upload', filename=tournament.image) }} {% endif %}" alt="Game Preview" class="w-24 h-24 object-cover rounded-md ml-4">
                             </div>
-                            <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('upload', filename=tournament.image) }} {% endif %}" alt="Game Preview" class="w-24 h-24 object-cover rounded-md ml-4">
+                            <div id="details-{{ tournament.id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                <div class="bg-white rounded-lg p-6 max-w-lg w-full relative">
+                                    <button onclick="hideDetails('{{ tournament.id }}')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 flex items-center justify-center px-2 py-1 rounded-full border border-gray-400 bg-white/80" style="width:auto; min-width:0;">
+                                        <span class="text-2xl mr-1">&times;</span>
+                                        <span class="text-base font-medium">Close</span>
+                                    </button>
+                                    <h4 class="text-xl font-bold mb-2 text-black">{{ tournament.name }}</h4>
+                                    <p class="mb-2 text-gray-700"><strong>Game:</strong> {{ tournament.game_title }}</p>
+                                    <p class="mb-2 text-gray-700"><strong>Date:</strong> {{ tournament.date }}</p>
+                                    <p class="mb-2 text-gray-700"><strong>Details:</strong> {{ tournament.details or "No details provided." }}</p>
+                                    <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('upload', filename=tournament.image) }} {% endif %}" alt="{{ tournament.name }}" class="w-32 h-32 object-cover rounded-md mt-2 center">
+                                </div>
+                            </div>
                         </div>
                     {% endfor %}
                     </div>
                 {% else %}
-                    <p class="text-white text-med">This user has not competed in any tournaments yet.</h3>
+                    <p class="text-white text-med">This user has not competed in any tournaments yet.</p>
                 {% endif %}
                 {% if user.username == current_user.username %}
                     <a href="{{ url_for('tournament') }}" class="block text-med py-1 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Add Tournament</a>
@@ -110,7 +129,8 @@ Tournament Manager - {{ user.username }}
         {% endif %}
     </div>
 </div>
+<script src="../static/js/details.js"></script>
+<script src="../static/js/delete_tournaments.js"></script>
 <script src="../static/js/remove_friend.js"></script>
 <script src="../static/js/profile_friend_requests.js"></script>
-<script src="../static/js/details.js"></script>
 {% endblock %}
