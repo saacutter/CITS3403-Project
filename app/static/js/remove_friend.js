@@ -19,7 +19,7 @@ for (let i = 0; i < buttons.length; i++) {
                 if (friendsDiv.querySelectorAll('div').length == 0) {
                     let heading = document.querySelector('#friends h1');
                     heading.insertAdjacentHTML('afterend', `
-                        <p class="text-white text-med">This user has no friends.</p>
+                        <p class="text-white text-med">This user isn't following anyone.</p>
                     `);
                 }
             }
