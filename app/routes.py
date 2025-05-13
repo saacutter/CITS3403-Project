@@ -143,7 +143,7 @@ def profile(username):
     avg_points = round(sum(m.points for m in tournaments) / total_games, 2) if total_games > 0 else 0.00
     statistics = {'total_games': total_games, 'wins': wins, 'losses': losses, 'draws': draws, 'win_pct': win_pct, "avg_points": avg_points}
 
-    return render_template("user.html", user=user, following=users_followed, followers=users_following, tournaments=tournaments, statistics=statistics)
+    return render_template("user.html", user=user, following=users_followed, followers=users_following, statistics=statistics)
 
 @application.route('/edit_profile', methods=["GET", "POST"])
 @login_required
@@ -355,7 +355,7 @@ def remove_tournament(id):
     if not tournament:
         return '', 400
 
-    # Remove the relationship from the database
+    # Remove the tournament from the database
     db.session.delete(tournament)
     db.session.commit()
 

@@ -4,7 +4,7 @@ const oldFile = image.src; // Keep a copy of the original source for later use
 const fileReader = new FileReader(); // Adapted from https://stackoverflow.com/questions/69595046/how-to-set-image-source-as-input-file-using-javascript
 
 fileInput.addEventListener('change', () => {
-    // Change the profile icon dynamically based on if the image has been removed or added
+    // Change the tournament preview dynamically based on if the image has been removed or added
     if (fileInput.files.length == 0) {
         image.src = oldFile; // Set the image so that cancelling an upload request reverts the source
     } else {
