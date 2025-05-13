@@ -75,22 +75,12 @@ def signup():
         username = form.username.data.strip()
         email = form.email.data.strip().lower()
         password = form.password.data.strip()
-
-        # Check that the password is valid
-        if len(password) < 8:
-            flash("The password must be at least 8 characters long")
-            return redirect(url_for('signup'))
-        
-        # Ensure that the passwords on the form match
-        if password != form.password_confirm.data:
-            flash("The passwords do not match")
-            return redirect(url_for('signup'))
         
         # Check if username or email already exists
         existing_user = db.session.scalar(sa.select(models.Users).where((models.Users.username == username) | (models.Users.email == email)))
         if existing_user:
             flash("A user with this username or email address already exists!")
-            return redirect(url_for('signup')) 
+            return redirect(url_for('signup'))
         
         # Hash the password
         hashed_password = generate_password_hash(password)
@@ -177,12 +167,6 @@ def edit_profile():
                 flash("The profile image must be square")
                 return redirect(url_for('edit_profile'))
             image.seek(0) # Reset the file point to the start so that it can be saved to the server properly
-            
-            # Ensure that the extension is a valid image extension
-            extension = os.path.splitext(img_filename)[1]
-            if extension not in application.config['UPLOAD_EXTENSIONS']:
-                flash("The profile image can only be in .png, .jpeg or .webp format")
-                return redirect(url_for('edit_profile'))
 
             # Save the image to a known location on the server (no extension to not fill up the server)
             image.save(os.path.join(application.config['PFP_UPLOAD_PATH'], str(current_user.id)))

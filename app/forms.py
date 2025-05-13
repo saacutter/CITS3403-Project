@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, PasswordField, SubmitField, FileField, DateField, TextAreaField
-from wtforms.validators import DataRequired, Email, EqualTo, Regexp
+from wtforms.validators import DataRequired, Email, EqualTo, Regexp, Length
 from flask_wtf.file import FileAllowed
 from datetime import datetime
 
@@ -13,7 +13,7 @@ class LoginForm(FlaskForm):
 class RegistrationForm(FlaskForm):
     username         = StringField('Username', validators=[DataRequired(),Regexp(r'^[a-zA-Z0-9]+$', message="Username must contain only letters and numbers.")])
     email            = StringField('Email Address', validators=[DataRequired(), Email(message="The email address must be a valid email address")])
-    password         = PasswordField('Password', validators=[DataRequired(), Regexp(r'^[a-zA-Z0-9!"#$%&\'()*+,-./:;<=>?@\[\\\]^_`{|}~]+$', message="The password must contain only letters, numbers, and !@#$%^&*()_+=-")])
+    password         = PasswordField('Password', validators=[DataRequired(), Length(min=8, message="The password must be at least 8 characters long"), Regexp(r'^[a-zA-Z0-9!"#$%&\'()*+,-./:;<=>?@\[\\\]^_`{|}~]+$', message="The password must contain only letters, numbers, and !@#$%^&*()_+=-")])
     password_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password', message="The passwords do not match")])
     privacy          = BooleanField('Make my profile private')
     submit           = SubmitField('Sign Up')
@@ -22,12 +22,12 @@ class EditProfileForm(FlaskForm):
     username        = StringField('Username')
     email           = StringField('Email Address')
     password        = PasswordField('Password')
-    profile_picture = FileField('Profile Picture', validators=[FileAllowed(['jpeg', 'jpg', 'png', 'webp'])])
+    profile_picture = FileField('Profile Picture', validators=[FileAllowed(['jpeg', 'jpg', 'png', 'webp'], message="The profile image can only be in .png, .jpeg or .webp format")])
     private         = BooleanField('Make my profile private')
     submit          = SubmitField('Save Changes')
 
 class AddTournamentForm(FlaskForm):
-    preview = FileField('Add Game Image', validators=[FileAllowed(['jpeg', 'jpg', 'png', 'webp'], "Images only!")])
+    preview = FileField('Add Game Image', validators=[FileAllowed(['jpeg', 'jpg', 'png', 'webp'], message="The profile image can only be in .png, .jpeg or .webp format")])
     name    = StringField('Tournament Name', validators=[DataRequired()])
     game    = StringField('Game', validators=[DataRequired()])
     date    = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()], render_kw={"type": "date", "max": str(datetime.now().strftime("%Y-%m-%d"))})
