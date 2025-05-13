@@ -12,10 +12,10 @@ for (let i = 0; i < buttons.length; i++) {
         request.onload = () => {
             // Ensure that the request was successful
             if (request.status == 200) {
-                // Remove the friend from the page
+                // Remove the followed user from the page
                 friendsDiv.removeChild(friend);
 
-                // Check if the user has any friends left and render the appropriate text
+                // Check if the user has any followed users left and render the appropriate text
                 if (friendsDiv.querySelectorAll('div').length == 0) {
                     let heading = document.querySelector('#friends h1');
                     heading.insertAdjacentHTML('afterend', `
