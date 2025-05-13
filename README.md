@@ -45,26 +45,32 @@ pip install -r requirements.txt
         │   │   │   ├── home.html
         │   │   │   └── login-signup.html
         │   │   ├── img
+        │   │   │   ├── default.png
         │   │   │   └── user-profile-background.webp
         │   │   ├── js
+        │   │   │   ├── delete_tournaments.js
+        │   │   │   ├── details.js
         │   │   │   ├── login.js
         │   │   │   ├── profile_friend_requests.js
-        │   │   │   ├── profile_image.js
         │   │   │   ├── remove_friend.js
-        │   │   │   ├── search_users.js
-        │   │   │   └── upload.js
+        │   │   │   ├── render_image.js
+        │   │   │   └── search_users.js
+        │   │   ├── previews
         │   │   └── profilepictures
         │   └── templates
-        │       ├── 404.html
-        │       ├── add-match.html
-        │       ├── add-tournament.html
-        │       ├── base.html
-        │       ├── edit-profile.html
-        │       ├── home.html
-        │       ├── login.html
-        │       ├── privacy-policy.html
-        │       ├── search.html
-        │       └── user.html
+        │   │   ├── 404.html
+        │   │   ├── _tournament.html
+        │   │   ├── _tournament_profile.html
+        │   │   ├── add-tournament.html
+        │   │   ├── base.html
+        │   │   ├── edit-profile.html
+        │   │   ├── home.html
+        │   │   ├── login.html
+        │   │   ├── privacy-policy.html
+        │   │   ├── search.html
+        │   │   ├── tournaments.html
+        │   │   └── user.html
+        │   └── tests
         ├── manager.py
         ├── migrations
         │   ├── README
@@ -76,7 +82,9 @@ pip install -r requirements.txt
         │       ├── 518c88c18d5f_updated_users.py
         │       ├── 56f705820311_recreated_database_to_fix_broken_.py
         │       ├── 5d3f9f639ef5_users_table.py
+        │       ├── 7406e470d526_added_detail_attribute_to_tournaments_.py
         │       ├── 880d94870c32_added_image_attribute_to_tournaments_.py
+        │       ├── 8ce13cf5e121_merged_the_tournaments_and_matches_.py
         │       ├── a823f3370236_added_friends_table.py
         │       ├── ac1c030fc5b9_added_profile_picture_section_to_users_.py
         │       └── b41b7621e32c_added_email_and_creation_date_field_to_.py

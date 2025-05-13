@@ -24,9 +24,11 @@ def page_not_found(error_code):
 # Default route of the application
 @application.route("/")
 def index():
-    public = models.Tournaments.query.join(models.Users, models.Tournaments.user_id == models.Users.id).filter(models.Users.private == False).limit(8).all()
+    # Get the 8 most recent public tournaments
+    public = models.Tournaments.query.join(models.Users, models.Tournaments.user_id == models.Users.id).filter(models.Users.private == False).order_by(models.Tournaments.date.desc()).limit(8).all()
 
-    friends = models.Tournaments.query.join(models.Friends, models.Tournaments.user_id == models.Friends.to_user).filter(models.Friends.to_user == current_user.id).limit(8).all() if current_user.is_authenticated else []
+    # Get the 8 most recent tournaments from followed users
+    friends = models.Tournaments.query.join(models.Friends, models.Tournaments.user_id == models.Friends.from_user).filter(models.Friends.to_user == current_user.id).order_by(models.Tournaments.date.desc()).limit(8).all() if current_user.is_authenticated else []
     
     return render_template("home.html", public_tournaments=public, friend_tournaments=friends)
 
@@ -114,6 +116,12 @@ def signout():
     logout_user()
     return redirect(url_for('index'))
 
+@application.route('/tournaments')
+def browse():
+    # Retrieve all of the tournaments in the database and order by descending date order (newest first)
+    tournaments = models.Tournaments.query.join(models.Users, models.Tournaments.user_id == models.Users.id).filter(models.Users.private == False).order_by(models.Tournaments.date.desc()).all()
+    return render_template("tournaments.html", tournaments=tournaments)
+
 @application.route('/user/<username>')
 def profile(username):
     # Get the user with the specified ID
@@ -125,19 +133,17 @@ def profile(username):
     # Get the user's following the current user
     users_following = list(db.session.scalars(sa.select(models.Users).join(models.Friends, models.Users.id == models.Friends.from_user).where(models.Friends.to_user == user.id)))
 
-    # Get a user's match data
-    matches = models.Tournaments.query.filter_by(user_id=user.id).all()
-    total_games = len(matches)
-    wins = sum(1 for m in matches if m.result.lower() == 'win')
-    losses = sum(1 for m in matches if m.result.lower() == 'loss')
-    draws = sum(1 for m in matches if m.result.lower() == 'draw')
-    win_pct = round((wins / total_games) * 100, 2) if total_games > 0 else 0
-    matches = {'matches': matches, 'total_games': total_games, 'wins': wins, 'losses': losses, 'draws': draws, 'win_pct': win_pct}
+    # Get the user's tournament data and calculate statistics
+    tournaments =  models.Tournaments.query.filter_by(user_id=user.id).all()
+    total_games = len(tournaments)
+    wins = sum(1 for m in tournaments if m.result.lower() == 'win')
+    losses = sum(1 for m in tournaments if m.result.lower() == 'loss')
+    draws = sum(1 for m in tournaments if m.result.lower() == 'draw')
+    win_pct = round((wins / total_games) * 100, 2) if total_games > 0 else 0.00
+    avg_points = round(sum(m.points for m in tournaments) / total_games, 2) if total_games > 0 else 0.00
+    statistics = {'total_games': total_games, 'wins': wins, 'losses': losses, 'draws': draws, 'win_pct': win_pct, "avg_points": avg_points}
 
-    # Get the user's tournament data
-    tournaments = models.Tournaments.query.filter_by(user_id=user.id).all()
-
-    return render_template("user.html", user=user, following=users_followed, followers=users_following, matches=matches, tournaments=tournaments)
+    return render_template("user.html", user=user, following=users_followed, followers=users_following, statistics=statistics)
 
 @application.route('/edit_profile', methods=["GET", "POST"])
 @login_required
@@ -322,14 +328,14 @@ def tournament():
                 return redirect(url_for('tournament'))
 
             # Save the image to a known location on the server (no extension to not fill up the server)
-            img_filename = name + '-' + date + '-' + current_user.id
+            img_filename = name + '-' + date + '-' + str(current_user.id)
             image.save(os.path.join(application.config['TP_UPLOAD_PATH'], img_filename))
 
         # Create and save tournament
         tournament = models.Tournaments(
             user_id=current_user.id,
             name=name,
-            game_title=form.game.data.lower().strip(),
+            game_title=form.game.data.strip(),
             date=date,
             points=points,
             result=result,
@@ -341,6 +347,19 @@ def tournament():
 
         return redirect(url_for('index'))
     return render_template("add-tournament.html", form=form)
+
+@application.route('/delete_tournament/<id>', methods=["POST"])
+def remove_tournament(id):
+    # Retrieve the tournament with the given ID and ensure it belongs to the current user
+    tournament = db.session.scalar(sa.select(models.Tournaments).where((models.Tournaments.id == id) & (models.Tournaments.user_id == current_user.id)))
+    if not tournament:
+        return '', 400
+
+    # Remove the tournament from the database
+    db.session.delete(tournament)
+    db.session.commit()
+
+    return '', 200
 
 @application.route('/privacy_policy')
 def privacy_policy():

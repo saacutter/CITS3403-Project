@@ -5,14 +5,21 @@ Tournament Manager - Add Tournament
 {% endblock %}
 
 {% block body %}
-<div class="flex-grow mx-auto p-4 mt-8">
+<div class="flex-grow mx-auto p-6">
     <section class="bg-gray-800 p-8 rounded-lg shadow-lg w-3/4 text-left center">
         <h2 class="text-2xl font-semibold mb-6 text-center">Add Tournament</h2>
         <form action="{{ url_for('tournament') }}" method="post" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
-            <div class="mb-6">
-                {{ form.preview.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
-                {{ form.preview(class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400") }}
+            <div class="mb-6 flex relative group w-44 h-44 center">
+                <label for="preview-file">
+                    <img src="https://static.vecteezy.com/system/resources/thumbnails/017/287/469/small_2x/joystick-for-game-console-computer-ps-line-icon-joypad-game-controller-for-videogame-pictogram-computer-gamepad-play-equipment-outline-symbol-editable-stroke-isolated-illustration-vector.jpg" alt="Tournament Preview" id="preview-edit" class="w-full h-full object-cover cursor-pointer -translate-y-8">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M4 13.5V19h5.5l9.207-9.207a1.5 1.5 0 00-2.121-2.121L4 13.5z"/>
+                        </svg>
+                    </div>
+                </label>
+                {{ form.preview(id="preview-file", accept="image/*", style="display: none;") }}
             </div>
             <div class="mb-6">
                 {{ form.name.label(class="block text-gray-400 font-bold mb-2") }}
@@ -66,4 +73,5 @@ Tournament Manager - Add Tournament
         </div>
     {% endif %}
 </div>
+<script src="/static/js/render_image.js"></script>
 {% endblock %}

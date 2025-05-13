@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}
+Tournament Manager - Browse Tournaments
+{% endblock %}
+
+{% block body %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-10">
+    {% if tournaments %}
+        {% for tournament in tournaments %}
+            {% include "_tournament.html" %}
+        {% endfor %}
+    {% else %}
+        <h1>There are no tournaments currently available.</h1>
+        <a href="{{ url_for('tournament') }}" class="bg-blue-600 text-white px-6 py-3 rounded-md text-center hover:bg-blue-700 transition hover:no-underline">Create New Tournament</a>
+    {% endif %}
+    </div>
+{% endblock %}
