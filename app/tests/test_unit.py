@@ -29,3 +29,15 @@ def test_check_password(self):
     db.session.add(user)
     db.session.commit()
     self.assertTrue(user.check_password(password))
+
+def test_is_friends_with(self):
+    user1 = Users(username='isaac', email='isaac@example.com', password='123456', profile_picture='pic1.png', private=False)
+    user2 = Users(username='jordan', email='jordan@example.com', password='789', profile_picture='pic2.png', private=False)
+    db.session.add_all([user1, user2])
+    db.session.commit()
+
+    friend = Friends(from_user=user2.id, to_user=user1.id)
+    db.session.add(friend)
+    db.session.commit()
+
+    self.assertTrue(user1.is_friends_with(user2))
