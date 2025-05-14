@@ -8,9 +8,21 @@ Tournament Manager - Home
 <div class="container">
     <main class="container mx-auto p-4 mt-8">
         {% if current_user.is_anonymous %}
-        <section class="welcome-section bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-            <h2 class="text-xl font-semibold mb-2">Welcome to Tournament Manager!</h2>
-            <p class="text-gray-400">Sign up or log in to manage your tournaments or find a new challenge!</p>
+        <section class="bg-gray-900 p-6 rounded-lg shadow-lg mb-8">
+            <h2 class="text-2xl font-bold text-white mb-3">Welcome to Tournament Manager 🎮</h2>
+            <p class="text-gray-300 mb-4">Our new Tournament Manager helps you create, manage, and track competitive 
+            tournaments with ease. Whether if you're organising local gaming events, online challenges, or just 
+            tracking friendly rivalries, our platform has you covered for all of your needs</p>
+            <ul class="text-gray-400 list-disc list-inside mb-4">
+                <li>Create and manage your own tournaments</li>
+                <li>Track game results and player stats</li>
+                <li>Explore public tournaments created by others</li>
+                <li>Connect with friends and follow their activity</li>
+            </ul>
+            <div class="flex space-x-4">
+                <a href="{{ url_for('signup') }}" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition">Sign Up</a>
+                <a href="{{ url_for('login') }}" class="bg-gray-600 text-white px-5 py-2 rounded hover:bg-gray-700 transition">Log In</a>
+            </div>
         </section>
         {% else %}
         <section class="welcome-section bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
