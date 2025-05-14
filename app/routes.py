@@ -3,7 +3,6 @@ from flask import render_template, request, redirect, url_for, jsonify, flash, s
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
 from datetime import datetime, timezone, date
 from hashlib import md5
 import os
@@ -23,7 +22,7 @@ def page_not_found(error):
 @application.errorhandler(500)
 def page_not_found(error):
     db.session.rollback()
-    return render_template("home.html"), 500
+    return render_template("500.html"), 500
 
 # Default route of the application
 @application.route("/")
@@ -50,7 +49,7 @@ def login():
     form = forms.LoginForm()
     if request.method == "POST" and form.validate_on_submit():
         # Retrieve the user from the database based on the provided username/email address
-        username = form.username.data.lower()
+        username = form.username.data.lower().strip()
         user = db.session.scalar(sa.select(models.Users).where((sa.func.lower(models.Users.username) == username) | (models.Users.email == username)))
 
         # Ensure that the user exists and that the password hash matches
@@ -94,7 +93,7 @@ def signup():
             username=username, 
             password=hashed_password, 
             email=email,
-            private=form.privacy.data,
+            private=form.private.data,
             profile_picture='https://www.gravatar.com/avatar/' + md5(email.encode()).hexdigest() + '?d=identicon'
         )
         db.session.add(user)
@@ -152,11 +151,6 @@ def edit_profile():
         email = form.email.data.strip().lower()
         password = form.password.data.strip()
         image = request.files['profile_picture'] # Adapted from https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
-
-        # Check that the password is valid
-        if password and len(password) < 8:
-            flash("The password must be at least 8 characters long")
-            return redirect(url_for('edit_profile'))
         
         # Check if username or email already exists
         existing_user = db.session.scalar(sa.select(models.Users).where((models.Users.username == username) | (models.Users.email == email)))
@@ -164,17 +158,9 @@ def edit_profile():
             flash("A user with this username or email address already exists")
             return redirect(url_for('edit_profile'))
         
-        # Save the uploaded image to the server if one was uploaded
-        img_filename = secure_filename(image.filename)
+        # Save the image to a known location on the server if one was uploaded
+        img_filename = image.filename
         if img_filename != "":
-            # Ensure that the image is roughly square (with a 50px tolerance)
-            img = Image.open(image)   
-            if abs(img.width - img.height) > 50:
-                flash("The profile image must be square")
-                return redirect(url_for('edit_profile'))
-            image.seek(0) # Reset the file point to the start so that it can be saved to the server properly
-
-            # Save the image to a known location on the server (no extension to not fill up the server)
             image.save(os.path.join(application.config['PFP_UPLOAD_PATH'], str(current_user.id)))
         
         # Update the user information based on the provided information
@@ -182,7 +168,7 @@ def edit_profile():
         user.username = username
         user.email = email
         user.private = form.private.data
-        if password: user.password = user.set_password(password)
+        if password: user.password = generate_password_hash(password)
         if image: user.profile_picture = str(current_user.id)
         
         # Save the new information to the database
@@ -280,37 +266,11 @@ def tournament():
     if request.method == "POST" and form.validate_on_submit():
         name = form.name.data
         date = form.date.data.strftime('%Y-%m-%d')
-        points = form.points.data
-        result = form.result.data.lower().strip()
         image = request.files['preview']
 
-        # Ensure that the date is earlier than the current day
-        if date > str(datetime.now().strftime("%Y-%m-%d")):
-            flash("The tournament cannot be after today's date (" + str(datetime.now().strftime("%Y-%m-%d")) + ")")
-            return redirect(url_for('tournament'))
-
-        # Check that the result is valid
-        if result not in ["win", "loss", "draw"]:
-            flash("The result can only be a 'win', 'loss', or 'draw'")
-            return redirect(url_for('tournament'))
-
-        # Save the uploaded image to the server if one was uploaded
-        img_filename = secure_filename(image.filename)
+        # Save the image to a known location on the server if one was uploaded
+        img_filename = image.filename
         if img_filename != "":
-            # Ensure that the image is roughly square (with a 50px tolerance)
-            img = Image.open(image)   
-            if abs(img.width - img.height) > 50:
-                flash("The profile image must be square")
-                return redirect(url_for('tournament'))
-            image.seek(0) # Reset the file point to the start so that it can be saved to the server properly
-            
-            # Ensure that the extension is a valid image extension
-            extension = os.path.splitext(img_filename)[1]
-            if extension not in application.config['UPLOAD_EXTENSIONS']:
-                flash("The profile image can only be in .png, .jpeg or .webp format")
-                return redirect(url_for('tournament'))
-
-            # Save the image to a known location on the server (no extension to not fill up the server)
             img_filename = name + '-' + date + '-' + str(current_user.id)
             image.save(os.path.join(application.config['TP_UPLOAD_PATH'], img_filename))
 
@@ -320,9 +280,9 @@ def tournament():
             name=name,
             game_title=form.game.data.strip(),
             date=date,
-            points=points,
-            result=result,
-            details=form.details.data,
+            points=form.points.data,
+            result=form.result.data.lower().strip(),
+            details=form.details.data.strip(),
             image=img_filename or "https://static.vecteezy.com/system/resources/thumbnails/017/287/469/small_2x/joystick-for-game-console-computer-ps-line-icon-joypad-game-controller-for-videogame-pictogram-computer-gamepad-play-equipment-outline-symbol-editable-stroke-isolated-illustration-vector.jpg" # Retrieved from https://www.vecteezy.com/vector-art/17287469-joystick-for-game-console-computer-ps-line-icon-joypad-game-controller-for-videogame-pictogram-computer-gamepad-play-equipment-outline-symbol-editable-stroke-isolated-vector-illustration
         )
         db.session.add(tournament)
@@ -330,6 +290,41 @@ def tournament():
 
         return redirect(url_for('index'))
     return render_template("add-tournament.html", form=form)
+
+@application.route('/edit_tournament/<id>', methods=["GET", "POST"])
+@login_required
+def edit_tournament(id):
+    tournament = models.Tournaments.query.get(id)
+    form = forms.EditTournamentForm()
+
+    if request.method == "POST" and form.validate_on_submit():
+        # Extract the information from the form
+        name = form.name.data.strip()
+        game = form.game.data.strip()
+        date = form.date.data.strftime('%Y-%m-%d')
+        details = form.details.data.strip()
+        image = request.files['preview']
+
+        # Save the image to a known location on the server if one was uploaded
+        img_filename = image.filename
+        if img_filename != "":
+            img_filename = name + '-' + date + '-' + str(current_user.id)
+            image.save(os.path.join(application.config['TP_UPLOAD_PATH'], img_filename))
+
+        # Update the tournament information based on the provided information
+        tournament.name = name
+        tournament.game = game
+        tournament.date = date
+        tournament.points = form.points.data
+        tournament.result = form.result.data.lower().strip()
+        if details: tournament.details = form.details.data.strip()
+        if image: tournament.image = img_filename
+        
+        # Save the new information to the database
+        db.session.commit()
+
+        return redirect(url_for('profile', username=current_user.username))
+    return render_template("edit-tournament.html", form=form, tournament=tournament)
 
 @application.route('/delete_tournament/<id>', methods=["POST"])
 def remove_tournament(id):
