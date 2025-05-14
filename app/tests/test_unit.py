@@ -51,10 +51,16 @@ class UserModelTestCase(unittest.TestCase):
         db.session.commit()
         self.assertEqual(Tournaments.query.count(), 1)
 
-    def test_user_serialise(self):
-        user = Users(username='arnav', email='arnav@example.com', password='password', profile_picture='arnav.png', private=False)
-        db.session.add(user)
+    def test_add_friend(self):
+        user1 = Users(username='arnav', email='arnav@example.com', password='pw1', profile_picture='arnav1.png', private=False)
+        user2 = Users(username='jay', email='jay@example.com', password='pw2', profile_picture='jay1.png', private=False)
+        db.session.add_all([user1, user2])
         db.session.commit()
-        data = user.serialise()
-        self.assertIn('username', data)
-        self.assertEqual(data['username'], 'arnav')
+
+        friend = Friends(from_user=user1.id, to_user=user2.id)
+        db.session.add(friend)
+        db.session.commit()
+
+        self.assertEqual(Friends.query.count(), 1)
+        self.assertEqual(Friends.query.first().from_user, user1.id)
+        self.assertEqual(Friends.query.first().to_user, user2.id)
