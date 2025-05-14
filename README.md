@@ -14,7 +14,7 @@ git clone https://github.com/saacutter/CITS3403-Project
 3. Create and activate a virtual environment.
     - A virtual environment can be created using `python -m venv /path/to/venv`.
     - The virtual environment is activated depending on the operating system:
-        - UNIX-based (Linux and MacOS): `source path/to/venv/bin/activate`
+        - Linux and MacOS: `source path/to/venv/bin/activate`
         - Windows Command Prompt: `path\to\venv\Scripts\activate`
         - Windows Powershell: `path\to\venv\Scripts\Activate.ps1`
     - The virtual environment can be stopped at any time using the `deactivate` command (operating system agnostic).
@@ -94,15 +94,13 @@ pip install -r requirements.txt
         └── requirements.txt
         </pre>
 
-2. Add the secret key to the file (the below is an example secret key):
-```
-SECRET_KEY="this-is-a-secret-key"
-```
+2. Add the secret key to the file, e.g. `SECRET_KEY="this-is-a-secret-key"`
+    - As this is just setting an environment variable, the following can also be done:
+        - Linux and MacOS: `export SECRET_KEY="this-is-a-secret-key"`
+        - Windows: `set SECRET_KEY="this-is-a-secret-key"`
 
-3. Add the SQLAlchemy database to the file:
-```
-DATABASE_URL = "sqlite:///app.db"
-```
+3. (Optional) Add the SQLAlchemy database URL to the file, e.g. `DATABASE_URL="sqlite:///app.db"`
+    - This is another environment variable, and can be set in the same way as above.
 
 
 ### Starting the Application
@@ -111,7 +109,7 @@ DATABASE_URL = "sqlite:///app.db"
 
 2. Start the flask application using `flask run`.
     - Note that the `.flaskenv` file sets the `FLASK_APP` environment variable. If this does not work, the following should be done:
-        - UNIX-based (Linux and MacOS): `export FLASK_APP=manager.py`
+        - Linux and MacOS: `export FLASK_APP=manager.py`
         - Windows: `set FLASK_APP=manager.py`
 
 
