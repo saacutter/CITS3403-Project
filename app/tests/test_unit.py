@@ -17,8 +17,15 @@ class UserModelTestCase(unittest.TestCase):
         self.app_context.pop()
 
 def test_user_creation(self):
-    user = Users(username='testuser', email='test@example.com', password='hashed', profile_picture='pic.png', private=True)
+    user = Users(username='testuser1', email='testuser@example.com', password='hashed', profile_picture='picture.png', private=True)
     db.session.add(user)
     db.session.commit()
     self.assertEqual(Users.query.count(), 1)
 
+def test_check_password(self):
+    password = 'testpassword'
+    hashed_pw = generate_password_hash(password, method='pbkdf2:sha256')
+    user = Users(username='testuser2', email='testuser2@example.com', password=hashed_pw, profile_picture='pic2.png', private=False)
+    db.session.add(user)
+    db.session.commit()
+    self.assertTrue(user.check_password(password))
