@@ -29,16 +29,37 @@ Tournament Manager - {{ user.username }}
                 {% endif %}
         </div>
         {% if user.private == 0 or user.username == current_user.username or current_user.is_friends_with(user) %}
-            <div class="w-1/2 center bg-gray-800 p-6 rounded-lg shadow-md mt-10 mb-6 text-white">
-                <h2 class="text-xl font-bold mb-4">Match Statistics</h2>
-                <p><strong>Total Games Played: </strong>{{ statistics.total_games }}</p>
-                <p><strong>Wins: </strong>{{ statistics.wins }}</p>
-                <p><strong>Losses: </strong>{{ statistics.losses }}</p>
-                <p><strong>Draws: </strong>{{ statistics.draws }}</p>
-                <p><strong>Average Points: </strong>{{ statistics.avg_points }}</p>
-                <p><strong>Win Percentage: </strong>{{ statistics.win_pct }}%</p>
+            <h1 class="text-3xl font-bold mt-10">User Statistics</h1>
+            <div class="w-95/100 h-auto flex flex-wrap p-6 mb-6 gap-20 text-white justify-center items-center">
+                <div class="flex-col">
+                    <p id="totalGames" class="text-5xl">{{ statistics.total_games }}</p>
+                    <p class="text-bold text-lg">Total Games Played</p>
+                </div>
+                <div class="flex-col">
+                    <p id="avgPoints" class="text-5xl">{{ statistics.avg_points }}</p>
+                    <p class="text-bold text-lg">Average Points</p>
+                </div>
+                <div class="flex-col">
+                    <div class="w-4/5 h-4/5 center mb-5">
+                        <canvas>{{ statistics.win_pct }}</canvas>
+                    </div>
+                    <div class="flex gap-5">
+                        <div class="flex-col">
+                            <p id="wins" class="text-5xl">{{ statistics.wins }}</p>
+                            <p class="text-bold text-lg">Wins</p>
+                        </div>
+                        <div class="flex-col">
+                            <p id="losses" class="text-5xl">{{ statistics.losses }}</p>
+                            <p class="text-bold text-lg">Losses</p>
+                        </div>
+                        <div class="flex-col">
+                            <p id="draws" class="text-5xl">{{ statistics.draws }}</p>
+                            <p class="text-bold text-lg">Draws</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="container flex mt-20 p-5 gap-5 center">
+            <div class="container flex mt-10 p-5 gap-5 center">
                 <div class="w-1/2" id="friends">
                     <h1 class="font-bold text-3xl">Following</h1>
                     <div class="p-2 max-h-60 overflow-y-auto center">
@@ -56,7 +77,7 @@ Tournament Manager - {{ user.username }}
                             </div>
                         {% endfor %}
                     {% else %}
-                        <p class="text-white text-med">This user isn't following anyone.</p>
+                        <p class="text-white text-med">{% if user.username == current_user.username %}You aren't following anyone.{% else %}This user isn't following anyone.{% endif %}</p>
                     {% endif %}
                     </div>
                     {% if user.username == current_user.username %}
@@ -78,7 +99,7 @@ Tournament Manager - {{ user.username }}
                         {% endfor %}
                         </div>
                     {% else %}
-                        <p class="text-white text-med">This user isn't being followed by anyone.</p>
+                        <p class="text-white text-med">{% if user.username == current_user.username %}You aren't being followed by anyone.{% else %}This user isn't being followed by anyone.{% endif %}</p>
                     {% endif %}
                 </div>
             </div>
@@ -106,4 +127,5 @@ Tournament Manager - {{ user.username }}
 <script src="../static/js/delete_tournaments.js"></script>
 <script src="../static/js/remove_friend.js"></script>
 <script src="../static/js/profile_friend_requests.js"></script>
+<script src="../static/js/chart.js"></script>
 {% endblock %}
