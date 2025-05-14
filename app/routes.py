@@ -3,10 +3,9 @@ from flask import render_template, request, redirect, url_for, jsonify, flash, s
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timezone, date
+from datetime import datetime, timezone
 from hashlib import md5
 import os
-from PIL import Image
 
 # Update the last seen time of the user before each request
 @application.before_request
@@ -192,7 +191,8 @@ def upload(filename):
 def search():
     return render_template("search.html")
 
-@application.route('/get_like/<pattern>')
+@application.route('/get_like/<pattern>', methods=["POST"])
+@login_required
 def get_like(pattern):
     # Extract the users from the database that begin with the requested pattern
     users = db.session.scalars(sa.select(models.Users).where(models.Users.username.like(pattern + '%'))).all()
@@ -213,6 +213,7 @@ def get_like(pattern):
     return jsonify(results) # Adapted from: https://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
 
 @application.route('/add_friend/<username>', methods=["POST"])
+@login_required
 def add_friend(username):
     # Retrieve the user with the given username
     user = db.session.scalar(sa.select(models.Users).where(models.Users.username == username))
@@ -239,6 +240,7 @@ def add_friend(username):
     return '', 200
 
 @application.route('/remove_friend/<username>', methods=["POST"])
+@login_required
 def remove_friend(username):
     # Retrieve the user with the given username
     user = db.session.scalar(sa.select(models.Users).where(models.Users.username == username))
@@ -327,6 +329,7 @@ def edit_tournament(id):
     return render_template("edit-tournament.html", form=form, tournament=tournament)
 
 @application.route('/delete_tournament/<id>', methods=["POST"])
+@login_required
 def remove_tournament(id):
     # Retrieve the tournament with the given ID and ensure it belongs to the current user
     tournament = db.session.scalar(sa.select(models.Tournaments).where((models.Tournaments.id == id) & (models.Tournaments.user_id == current_user.id)))

@@ -16,7 +16,7 @@ input.addEventListener('change', () => {
 
     // Make the request to the designated route
     var request = new XMLHttpRequest();
-    request.open('GET', '/get_like/' + value, true);
+    request.open('POST', '/get_like/' + value, true);
     request.onload = () => {
         // Ensure that the request was successful
         if (request.status == 200) {
