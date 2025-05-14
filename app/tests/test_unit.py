@@ -41,3 +41,20 @@ def test_is_friends_with(self):
     db.session.commit()
 
     self.assertTrue(user1.is_friends_with(user2))
+
+def test_tournament_creation(self):
+    user = Users(username='admin', email='admin@example.com', password='hashed', profile_picture='admin.png', private=False)
+    db.session.add(user)
+    db.session.commit()
+    tournament = Tournaments(user_id=user.id, name='Chess Championship', game_title='Chess', date='2025-05-14', points=3, result='win', details='Final round')
+    db.session.add(tournament)
+    db.session.commit()
+    self.assertEqual(Tournaments.query.count(), 1)
+
+def test_user_serialise(self):
+    user = Users(username='arnav', email='arnav@example.com', password='password', profile_picture='arnav.png', private=False)
+    db.session.add(user)
+    db.session.commit()
+    data = user.serialise()
+    self.assertIn('username', data)
+    self.assertEqual(data['username'], 'arnav')
