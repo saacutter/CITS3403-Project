@@ -78,12 +78,6 @@ def signup():
         email = form.email.data.strip().lower()
         password = form.password.data.strip()
         
-        # Check if username or email already exists
-        existing_user = db.session.scalar(sa.select(models.Users).where((models.Users.username == username) | (models.Users.email == email)))
-        if existing_user:
-            flash("A user with this username or email address already exists!")
-            return redirect(url_for('signup'))
-        
         # Hash the password
         hashed_password = generate_password_hash(password)
 
@@ -151,12 +145,6 @@ def edit_profile():
         password = form.password.data.strip()
         image = request.files['profile_picture'] # Adapted from https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
         
-        # Check if username or email already exists
-        existing_user = db.session.scalar(sa.select(models.Users).where((models.Users.username == username) | (models.Users.email == email)))
-        if existing_user and existing_user != current_user:
-            flash("A user with this username or email address already exists")
-            return redirect(url_for('edit_profile'))
-        
         # Save the image to a known location on the server if one was uploaded
         img_filename = image.filename
         if img_filename != "":
@@ -202,8 +190,6 @@ def get_like(pattern):
 
     # Create a list of results that gets all users that match the pattern and aren't already friends with the current user
     results = [user.serialise() for user in users if user.id != current_user.id and user.id not in friends]
-
-    # TODO: Create an attribute if the user is friends with a user and show that on the results by removing the button
     
     # Return an empty JSON object if no users match the specified pattern
     if len(results) == 0:
@@ -296,8 +282,11 @@ def tournament():
 @application.route('/edit_tournament/<id>', methods=["GET", "POST"])
 @login_required
 def edit_tournament(id):
-    tournament = models.Tournaments.query.get(id)
+    tournament = models.Tournaments.query.get_or_404(id)
     form = forms.EditTournamentForm()
+
+    if tournament.user_id != current_user.id:
+        render_template(url_for('index'))
 
     if request.method == "POST" and form.validate_on_submit():
         # Extract the information from the form
