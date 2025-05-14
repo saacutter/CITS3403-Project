@@ -127,9 +127,8 @@ def profile(username):
     wins = sum(1 for m in tournaments if m.result.lower() == 'win')
     losses = sum(1 for m in tournaments if m.result.lower() == 'loss')
     draws = sum(1 for m in tournaments if m.result.lower() == 'draw')
-    win_pct = round((wins / total_games) * 100, 2) if total_games > 0 else 0.00
     avg_points = round(sum(m.points for m in tournaments) / total_games, 2) if total_games > 0 else 0.00
-    statistics = {'total_games': total_games, 'wins': wins, 'losses': losses, 'draws': draws, 'win_pct': win_pct, "avg_points": avg_points}
+    statistics = {'total_games': total_games, 'wins': wins, 'losses': losses, 'draws': draws, "avg_points": avg_points}
 
     return render_template("user.html", user=user, following=users_followed, followers=users_following, statistics=statistics)
 
