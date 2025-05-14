@@ -1,7 +1,6 @@
 from app import application, db, models, forms
 from flask import render_template, request, redirect, url_for, jsonify, flash, send_from_directory
 from flask_login import current_user, login_user, logout_user, login_required
-from flask import abort
 import sqlalchemy as sa
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -18,8 +17,13 @@ def before_request():
         db.session.commit()
 
 @application.errorhandler(404)
-def page_not_found(error_code):
+def page_not_found(error):
     return render_template("404.html"), 404
+
+@application.errorhandler(500)
+def page_not_found(error):
+    db.session.rollback()
+    return render_template("home.html"), 500
 
 # Default route of the application
 @application.route("/")
@@ -50,7 +54,7 @@ def login():
         user = db.session.scalar(sa.select(models.Users).where((sa.func.lower(models.Users.username) == username) | (models.Users.email == username)))
 
         # Ensure that the user exists and that the password hash matches
-        if user is None or not check_password_hash(user.password, form.password.data):
+        if user is None or not user.check_password(form.password.data):
             flash("The username and password do not match")
             return redirect(url_for('login'))
 
@@ -107,12 +111,14 @@ def signout():
     return redirect(url_for('index'))
 
 @application.route('/tournaments')
+@login_required
 def browse():
     # Retrieve all of the tournaments in the database and order by descending date order (newest first)
     tournaments = models.Tournaments.query.join(models.Users, models.Tournaments.user_id == models.Users.id).filter(models.Users.private == False).order_by(models.Tournaments.date.desc()).all()
     return render_template("tournaments.html", tournaments=tournaments)
 
 @application.route('/user/<username>')
+@login_required
 def profile(username):
     # Get the user with the specified ID
     user = db.first_or_404(sa.select(models.Users).where(models.Users.username == username))
@@ -176,7 +182,7 @@ def edit_profile():
         user.username = username
         user.email = email
         user.private = form.private.data
-        if password: user.password = generate_password_hash(password)
+        if password: user.password = user.set_password(password)
         if image: user.profile_picture = str(current_user.id)
         
         # Save the new information to the database
@@ -281,13 +287,6 @@ def tournament():
         # Ensure that the date is earlier than the current day
         if date > str(datetime.now().strftime("%Y-%m-%d")):
             flash("The tournament cannot be after today's date (" + str(datetime.now().strftime("%Y-%m-%d")) + ")")
-            return redirect(url_for('tournament'))
-        
-        # Ensure that the points is a numeric value
-        try:
-            points = int(points)
-        except ValueError:
-            flash("The points must be a numeric value")
             return redirect(url_for('tournament'))
 
         # Check that the result is valid
