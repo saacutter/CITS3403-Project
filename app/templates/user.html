@@ -81,7 +81,7 @@ Tournament Manager - {{ user.username }}
                     {% endif %}
                     </div>
                     {% if user.username == current_user.username %}
-                        <a href="{{ url_for('search') }}" class="block text-med py-1 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Find Users</a>
+                        <a href="{{ url_for('search') }}" class="block text-lg py-2 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Find Users</a>
                     {% endif %}
                 </div>
                 <div class="w-1/2">
@@ -106,16 +106,16 @@ Tournament Manager - {{ user.username }}
             <div class="container w-4/5 p-5 center">
                 <h1 class="font-bold text-3xl">Tournaments</h1>
                 {% if user.tournaments %}
-                    <div class="w-4/5 p-2 flex-grow max-h-80 overflow-y-auto center" id="tournaments">
-                    {% for tournament in user.tournaments %}
-                        {% include "_tournament_profile.html" %}
-                    {% endfor %}
+                    <div class="p-2 flex-grow max-h-80 overflow-y-auto center grid grid-cols-1 md:grid-cols-2 gap-5" id="tournaments">
+                        {% for tournament in user.tournaments %}
+                            {% include "_tournament_profile.html" %}
+                        {% endfor %}
                     </div>
                 {% else %}
                     <p class="text-white text-med">This user has not competed in any tournaments yet.</p>
                 {% endif %}
                 {% if user.username == current_user.username %}
-                    <a href="{{ url_for('tournament') }}" class="block text-med py-1 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Add Tournament</a>
+                    <a href="{{ url_for('tournament') }}" class="block text-lg py-2 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Add Tournament</a>
                 {% endif %}
             </div>
         {% else %}
