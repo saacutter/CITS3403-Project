@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}
+Tournament Manager - Edit Tournament
+{% endblock %}
+
+{% block body %}
+<div id="user-background">
+    <div id="user-profile-panel" class="center">
+        <h1 class="font-bold pt-5 pb-5" style="font-size: 30px;">Edit Tournament</h1>
+        <div class="edit-form center pb-10">
+            <form action="{{ url_for('edit_tournament', id=tournament.id) }}" method="post" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="mb-2 flex relative group w-44 h-44 center">
+                    <label for="preview-file">
+                        <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('upload', filename=tournament.image) }} {% endif %}" alt="Tournament Preview" id="preview-edit" class="w-full h-full object-cover cursor-pointer -translate-y-8">
+                        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M4 13.5V19h5.5l9.207-9.207a1.5 1.5 0 00-2.121-2.121L4 13.5z"/>
+                            </svg>
+                        </div>
+                    </label>
+                    {{ form.preview(id="preview-file", accept="image/*", style="display: none;") }}
+                </div>
+                {{ form.preview.label(class="block text-lg text-gray-400 font-bold center mb-8") }}
+                <div class="mb-6">
+                    {{ form.name.label(class="block text-gray-400 font-bold mb-2") }}
+                    {{ form.name(value=tournament.name, class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
+                </div>
+                <div class="mb-6">
+                    {{ form.game.label(class="block text-gray-400 font-bold mb-2") }}
+                    {{ form.game(value=tournament.game_title, class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
+                </div>
+                <div class="mb-6">
+                    {{ form.date.label(class="block text-gray-400 font-bold mb-2") }}
+                    {{ form.date(value=tournament.date, class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
+                </div>
+                <div class="mb-6">
+                    {{ form.details.label(class="block text-gray-400 font-bold mb-2", id="details-label") }}
+                    {{ form.details(value=tournament.details, class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white", id="details") }}
+                </div>
+                <div class="mb-6">
+                    {{ form.points.label(class="block text-gray-400 font-bold mb-2") }}
+                    {{ form.points(value=tournament.points, class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white", type="number") }}
+                </div>   
+                <div class="mb-6">
+                    {{ form.result.label(class="block text-gray-400 font-bold mb-2") }}
+                    {{ form.result(value=tournament.result, class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white", list="results") }}
+                    <datalist id="results">
+                        <option value="win">
+                        <option value="loss">
+                        <option value="draw">
+                    </datalist>
+                </div>
+                <div class="flex-container items-center justify-between center">
+                    <a href="{{ url_for('profile', username=current_user.username) }}"><input type="button" value="Cancel" class="bg-transparent hover:bg-white hover:border-none hover:text-black border border-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition w-1/5"></a>
+                    {{ form.submit(class="bg-blue-600 hover:bg-blue-700 border border-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition w-1/5") }}
+                </div>
+            </form>
+            {% if get_flashed_messages() or form.errors %}
+                <div class="center error rounded-border-px mt-5">
+                    {% if get_flashed_messages %}
+                        {% for message in get_flashed_messages() %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if form.errors %}
+                        {% for field, errors in form.errors.items() %}
+                            {% for error in errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<script src="/static/js/render_image.js"></script>
+{% endblock %}

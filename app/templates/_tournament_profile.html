@@ -8,7 +8,10 @@
             <div class="flex flex-col mt-2">
                 <a onclick="showDetails('{{ tournament.id }}')" class="btn-details text-blue-400 hover:underline">View Details</a>
                 {% if user.username == current_user.username %}
-                    <button class="bg-red-500 hover:bg-red-700 border-none p-1 mt-5 center">Delete Tournament</button>
+                    <div class="flex center gap-4">
+                        <a href="{{ url_for('edit_tournament', id=tournament.id) }}"><button class="bg-gray-500 hover:bg-gray-700 border-none p-1 mt-5">Edit Tournament</button></a>
+                        <button class="bg-red-500 hover:bg-red-700 border-none p-1 mt-5" id="delete">Delete Tournament</button>
+                    </div>
                 {% endif %}
             </div>
         </div>
