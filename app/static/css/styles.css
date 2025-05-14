@@ -222,6 +222,11 @@ div.search-user {
     padding-top: 1em;
 }
 
+.edit-form {
+    width: 75%;
+    text-align: left;
+}
+
 /* Styling for individual elements */
 #profile-icon {
     cursor: pointer;
@@ -257,11 +262,6 @@ div.search-user {
     margin-top: 2em;
     width: 10em;
     height: auto;
-}
-
-#edit-profile-form {
-    width: 75%;
-    text-align: left;
 }
 
 #heading-404 {

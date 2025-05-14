@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}
+Tounament Manager - 500
+{% endblock %}
+
+{% block body %}
+<div class="black-bg h-screen center pt-20">
+    <h1 id="heading-404">500 - Internal Server Error</h1>
+    <p class="center" style="font-size: 24px; width: 75%;">An unexpected error has occurred, and the last change was not saved.</p>
+    <a href="{{ url_for('index') }}" class="hover:no-underline"><p class="bg-gray-500 hover:bg-gray-700 border-none p-1 mt-5 rounded center w-1/4">Back to Homepage</p></a>
+</div>
+{% endblock %}

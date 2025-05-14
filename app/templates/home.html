@@ -36,6 +36,10 @@ Tournament Manager - Home
                         {% include "_tournament.html" %}
                     {% endfor %}
                 </div>
+            {% else %}
+                <div class="col-span-2 text-center text-gray-400">
+                    <p class="text-white text-xl">There are currently no public tournaments.</p>
+                </div>
             {% endif %}
         </section>
 
@@ -50,7 +54,7 @@ Tournament Manager - Home
                     </div>
                 {% else %}
                     <div class="col-span-2 text-center text-gray-400">
-                        <p class="text-white text-med">Your followers have not competed in any tournaments yet.</p>
+                        <p class="text-white text-xl">Your followers have not competed in any tournaments yet.</p>
                     </div>
                 {% endif %}
             </section>

@@ -1,5 +1,5 @@
 const tournamentsDiv = document.querySelector('#tournaments');
-const tournamentButtons = tournamentsDiv.querySelectorAll('button');
+const tournamentButtons = tournamentsDiv.querySelectorAll('#delete');
 
 for (let i = 0; i < tournamentButtons.length; i++) {
     tournamentButtons[i].addEventListener('click', () => {
