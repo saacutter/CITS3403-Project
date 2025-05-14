@@ -48,6 +48,7 @@ pip install -r requirements.txt
         │   │   │   ├── default.png
         │   │   │   └── user-profile-background.webp
         │   │   ├── js
+        │   │   │   ├── chart.js
         │   │   │   ├── delete_tournaments.js
         │   │   │   ├── details.js
         │   │   │   ├── login.js
@@ -57,13 +58,15 @@ pip install -r requirements.txt
         │   │   │   └── search_users.js
         │   │   ├── previews
         │   │   └── profilepictures
-        │   └── templates
+        │   ├── templates
         │   │   ├── 404.html
+        │   │   ├── 500.html
         │   │   ├── _tournament.html
         │   │   ├── _tournament_profile.html
         │   │   ├── add-tournament.html
         │   │   ├── base.html
         │   │   ├── edit-profile.html
+        │   │   ├── edit-tournament.html
         │   │   ├── home.html
         │   │   ├── login.html
         │   │   ├── privacy-policy.html
