@@ -18,11 +18,9 @@ Tournament Manager - Home
                 <li>Track game results and player stats</li>
                 <li>Explore public tournaments created by others</li>
                 <li>Connect with friends and follow their activity</li>
+                <li>Want to stay under the radar? You can make your profile private with just one click.</li>
             </ul>
-            <div class="flex space-x-4">
-                <a href="{{ url_for('signup') }}" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition">Sign Up</a>
-                <a href="{{ url_for('login') }}" class="bg-gray-600 text-white px-5 py-2 rounded hover:bg-gray-700 transition">Log In</a>
-            </div>
+            
         </section>
         {% else %}
         <section class="welcome-section bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
