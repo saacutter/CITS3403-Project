@@ -64,3 +64,20 @@ class UserModelTestCase(unittest.TestCase):
         self.assertEqual(Friends.query.count(), 1)
         self.assertEqual(Friends.query.first().from_user, user1.id)
         self.assertEqual(Friends.query.first().to_user, user2.id)
+
+    def test_remove_friend(self):
+        user1 = Users(username='arnav', email='arnav@example.com', password='pw1', profile_picture='arnav1.png', private=False)
+        user2 = Users(username='jay', email='jay@example.com', password='pw2', profile_picture='jay1.png', private=False)
+        db.session.add_all([user1, user2])
+        db.session.commit()
+
+        friend = Friends(from_user=user1.id, to_user=user2.id)
+        db.session.add(friend)
+        db.session.commit()
+        self.assertEqual(Friends.query.count(), 1)
+
+    # Remove it
+        db.session.delete(friend)
+        db.session.commit()
+
+        self.assertEqual(Friends.query.count(), 0)
