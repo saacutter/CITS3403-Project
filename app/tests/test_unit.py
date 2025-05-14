@@ -16,45 +16,45 @@ class UserModelTestCase(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
 
-def test_user_creation(self):
-    user = Users(username='testuser1', email='testuser@example.com', password='hashed', profile_picture='picture.png', private=True)
-    db.session.add(user)
-    db.session.commit()
-    self.assertEqual(Users.query.count(), 1)
+    def test_user_creation(self):
+        user = Users(username='testuser1', email='testuser@example.com', password='hashed', profile_picture='picture.png', private=True)
+        db.session.add(user)
+        db.session.commit()
+        self.assertEqual(Users.query.count(), 1)
 
-def test_check_password(self):
-    password = 'testpassword'
-    hashed_pw = generate_password_hash(password, method='pbkdf2:sha256')
-    user = Users(username='testuser2', email='testuser2@example.com', password=hashed_pw, profile_picture='pic2.png', private=False)
-    db.session.add(user)
-    db.session.commit()
-    self.assertTrue(user.check_password(password))
+    def test_check_password(self):
+        password = 'testpassword'
+        hashed_pw = generate_password_hash(password, method='pbkdf2:sha256')
+        user = Users(username='testuser2', email='testuser2@example.com', password=hashed_pw, profile_picture='pic2.png', private=False)
+        db.session.add(user)
+        db.session.commit()
+        self.assertTrue(user.check_password(password))
 
-def test_is_friends_with(self):
-    user1 = Users(username='isaac', email='isaac@example.com', password='123456', profile_picture='pic1.png', private=False)
-    user2 = Users(username='jordan', email='jordan@example.com', password='789', profile_picture='pic2.png', private=False)
-    db.session.add_all([user1, user2])
-    db.session.commit()
+    def test_is_friends_with(self):
+        user1 = Users(username='isaac', email='isaac@example.com', password='123456', profile_picture='pic1.png', private=False)
+        user2 = Users(username='jordan', email='jordan@example.com', password='789', profile_picture='pic2.png', private=False)
+        db.session.add_all([user1, user2])
+        db.session.commit()
 
-    friend = Friends(from_user=user2.id, to_user=user1.id)
-    db.session.add(friend)
-    db.session.commit()
+        friend = Friends(from_user=user2.id, to_user=user1.id)
+        db.session.add(friend)
+        db.session.commit()
 
-    self.assertTrue(user1.is_friends_with(user2))
+        self.assertTrue(user1.is_friends_with(user2))
 
-def test_tournament_creation(self):
-    user = Users(username='admin', email='admin@example.com', password='hashed', profile_picture='admin.png', private=False)
-    db.session.add(user)
-    db.session.commit()
-    tournament = Tournaments(user_id=user.id, name='Chess Championship', game_title='Chess', date='2025-05-14', points=3, result='win', details='Final round')
-    db.session.add(tournament)
-    db.session.commit()
-    self.assertEqual(Tournaments.query.count(), 1)
+    def test_tournament_creation(self):
+        user = Users(username='admin', email='admin@example.com', password='hashed', profile_picture='admin.png', private=False)
+        db.session.add(user)
+        db.session.commit()
+        tournament = Tournaments(user_id=user.id, name='Chess Championship', game_title='Chess', date='2025-05-14', points=3, result='win', details='Final round')
+        db.session.add(tournament)
+        db.session.commit()
+        self.assertEqual(Tournaments.query.count(), 1)
 
-def test_user_serialise(self):
-    user = Users(username='arnav', email='arnav@example.com', password='password', profile_picture='arnav.png', private=False)
-    db.session.add(user)
-    db.session.commit()
-    data = user.serialise()
-    self.assertIn('username', data)
-    self.assertEqual(data['username'], 'arnav')
+    def test_user_serialise(self):
+        user = Users(username='arnav', email='arnav@example.com', password='password', profile_picture='arnav.png', private=False)
+        db.session.add(user)
+        db.session.commit()
+        data = user.serialise()
+        self.assertIn('username', data)
+        self.assertEqual(data['username'], 'arnav')
