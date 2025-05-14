@@ -7,25 +7,8 @@ Tournament Manager - Edit Profile
 {% block body %}
 <div id="user-background">
     <div id="user-profile-panel" class="center">
-        <h1 class="font-bold pt-5" style="font-size: 30px;">Edit profile</h1>
-        {% if get_flashed_messages() or form.errors %}
-            <div class="center error rounded-border-px">
-                {% if get_flashed_messages %}
-                    {% for message in get_flashed_messages() %}
-                        <p>{{ message }}</p>
-                    {% endfor %}
-                {% endif %}
-
-                {% if form.errors %}
-                    {% for field, errors in form.errors.items() %}
-                        {% for error in errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    {% endfor %}
-                {% endif %}
-            </div>
-        {% endif %}
-        <div id="edit-profile-form" class="center pb-5">
+        <h1 class="font-bold pt-5" style="font-size: 30px;">Edit Profile</h1>
+        <div class="edit-form center pb-5">
             <form action="{{ url_for('edit_profile') }}" method="post" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
                 <div class="mb-6 flex relative group w-32 h-44 center">
@@ -63,6 +46,23 @@ Tournament Manager - Edit Profile
                     {{ form.submit(class="bg-blue-600 hover:bg-blue-700 border border-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition w-1/5") }}
                 </div>
             </form>
+            {% if get_flashed_messages() or form.errors %}
+                <div class="center error rounded-border-px mt-5">
+                    {% if get_flashed_messages %}
+                        {% for message in get_flashed_messages() %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if form.errors %}
+                        {% for field, errors in form.errors.items() %}
+                            {% for error in errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>
