@@ -6,7 +6,7 @@ class Config:
     # Load the environment variables from the .env file
    
     # Set the secret key
-    SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret")
+    SECRET_KEY = os.environ['SECRET_KEY']
 
     # Set the database URL
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL") or "sqlite:///" + os.path.join(os.path.abspath(os.path.dirname(__file__)), "app.db")
