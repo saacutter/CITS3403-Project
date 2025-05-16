@@ -2,12 +2,12 @@ const input = document.querySelector('input');
 const usersDiv = document.querySelector('#retrievedUsers');
 
 // Make a request to the database whenever the input value changes
-input.addEventListener('change', () => {
+input.addEventListener('input', () => {
     // Clear the div to remove elements already there
     let children = usersDiv.children;
     if (children.length > 0) {
-        for (let i = 0; i < children.length; i++) {
-            usersDiv.removeChild(children[i]);
+        while (usersDiv.firstChild) {
+            usersDiv.removeChild(usersDiv.firstChild);
         }
     }
 
@@ -22,6 +22,7 @@ input.addEventListener('change', () => {
         if (request.status == 200) {
             // Parse the result
             users = JSON.parse(request.responseText);
+            console.log(users);
             
             // Display an error message if no users matching the name was found
             if (users[0].username == null) {
