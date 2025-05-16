@@ -131,3 +131,24 @@ TEMPORARY
 
 
 ## References
+[1] M, Grinberg, "The Flask Mega-Tutorial," Miguel Grinberg Blog. [Online]. Available: https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world
+
+[2] “Jsonify a SQLAlchemy result set in Flask,” Stack Overflow. [Online]. Available: https://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
+
+[3] “Creating a new DOM element from an HTML string using built-in DOM methods or properties,” Stack Overflow. [Online]. Available: https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro
+
+[4] “How can I assign a multiline string literal to a variable,” Stack Overflow. [Online]. Available: https://stackoverflow.com/questions/805107/how-can-i-assign-a-multiline-string-literal-to-a-variable
+
+[5] M. Grinberg, “Handling File Uploads with Flask,” Miguel Grinberg Blog. [Online]. Available: https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
+
+[6] “How to set image source as input file using JavaScript,” Stack Overflow. [Online]. Available: https://stackoverflow.com/questions/69595046/how-to-set-image-source-as-input-file-using-javascript
+
+[7] “Fancy Cushion Pattern,” Toptal Subtle Patterns. [Online]. Available: https://www.toptal.com/designers/subtlepatterns/fancy-cushion-pattern/
+
+[8] “Joystick for Game Console – Vector Art,” Vecteezy. [Online]. Available: https://www.vecteezy.com/vector-art/17287469-joystick-for-game-console-computer-ps-line-icon-joypad-game-controller-for-videogame-pictogram-computer-gamepad-play-equipment-outline-symbol-editable-stroke-isolated-vector-illustration
+
+[9] “No Photo Available,” Wikipedia. [Online]. Available: https://en.m.wikipedia.org/wiki/File:No_photo_available.svg
+
+[10] Crash Course - WTForms Documentation. [Online]. Available: https://wtforms.readthedocs.io/en/3.0.x/crash_course/#displaying-errors
+
+[11] Doughnut and Pie Charts, Chart.js. [Online]. Available: https://www.chartjs.org/docs/latest/charts/doughnut.html
