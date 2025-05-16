@@ -282,3 +282,12 @@ div.search-user {
         width: 95%;
     }
 }
+
+.sample-tournament {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sample-tournament:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 10px rgba(100, 200, 255, 0.3);
+}
