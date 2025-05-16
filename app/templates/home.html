@@ -8,9 +8,18 @@ Tournament Manager - Home
 <div class="container">
     <main class="container mx-auto p-4 mt-8">
         {% if current_user.is_anonymous %}
-        <section class="welcome-section bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-            <h2 class="text-xl font-semibold mb-2">Welcome to Tournament Manager!</h2>
-            <p class="text-gray-400">Sign up or log in to manage your tournaments or find a new challenge!</p>
+        <section class="bg-gray-900 p-6 rounded-lg shadow-lg mb-8">
+            <h2 class="text-2xl font-bold text-white mb-3">Welcome to Tournament Manager 🎮</h2>
+            <p class="text-gray-300 mb-4">Our new Tournament Manager helps you create, manage, and track competitive 
+            tournaments with ease. Whether if you're organising local gaming events, online challenges, or just 
+            tracking friendly rivalries, our platform has you covered for all of your needs</p>
+            <ul class="text-gray-400 list-disc list-inside mb-4">
+                <li>Create and manage your own tournaments</li>
+                <li>Track game results and player stats</li>
+                <li>Explore public tournaments created by others</li>
+                <li>Connect with friends and follow their activity</li>
+                <li>Want to stay under the radar? You can make your profile private with just one click.</li>
+            </ul>
         </section>
         {% else %}
         <section class="welcome-section bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
@@ -29,7 +38,7 @@ Tournament Manager - Home
         {% endif %}
 
         <section class="mb-8">
-            <h3 class="text-2xl font-semibold mb-4">Featured Tournaments</h3>
+            <h3 class="text-lg font-semibold mb-4 text-blue-400">Featured Tournaments</h3>
             {% if public_tournaments %}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {% for tournament in public_tournaments %}
@@ -39,6 +48,36 @@ Tournament Manager - Home
             {% else %}
                 <div class="col-span-2 text-center text-gray-400">
                     <p class="text-white text-xl">There are currently no public tournaments.</p>
+                    <p class="text-gray-400 mt-2">Check out how a tournament panel looks!</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 px-4">
+                        <div class="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center">
+                            <div class="mr-6">
+                                <img src="{{ url_for('static', filename='img/profilepic1.png') }}" alt="Profile Picture" class="w-24 h-24 rounded-full mb-2">
+                                <p class="text-white font-semibold">rocketfan123</p>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="text-lg font-semibold text-white mb-1">Rocket League Rumble</h3>
+                                <p class="text-gray-300">Game: Rocket League</p>
+                                <p class="text-gray-300">Date: 14-05-2025</p>
+                                <p class="text-gray-400 mt-2">A fun and fast-paced competition for all levels.</p>
+                            </div>
+                            <img src="{{ url_for('static', filename='img/rocketleague.png') }}" alt="Game Preview" class="w-24 h-24 object-cover rounded-md ml-4">
+                        </div>
+
+                        <div class="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center">
+                            <div class="mr-6">
+                                <img src="{{ url_for('static', filename='img/profilepic2.png') }}" alt="Profile Picture" class="w-24 h-24 rounded-full mb-2">
+                                <p class="text-white font-semibold">chessmasterX</p>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="text-lg font-semibold text-white mb-1">Chess Masters 2025</h3>
+                                <p class="text-gray-300">Game: Chess</p>
+                                <p class="text-gray-300">Date: 16-05-2025</p>
+                                <p class="text-gray-400 mt-2">Classic strategy showdown for elite minds.</p>
+                            </div>
+                            <img src="{{ url_for('static', filename='img/chess.png') }}" alt="Game Preview" class="w-24 h-24 object-cover rounded-md ml-4">
+                        </div>
+                    </div>
                 </div>
             {% endif %}
         </section>
