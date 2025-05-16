@@ -15,6 +15,7 @@ def before_request():
         current_user.last_login = datetime.now(timezone.utc)
         db.session.commit()
 
+# Error handlers for 404 and 500 error codes
 @blueprint.errorhandler(404)
 def page_not_found(error):
     return render_template("404.html"), 404
