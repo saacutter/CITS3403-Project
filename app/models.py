@@ -6,7 +6,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timezone
 from typing import List
 
-
 @login.user_loader
 def load_user(id):
     return Users.query.get(id)
@@ -46,7 +45,6 @@ class Friends(db.Model):
 
     def getUser(id):
         return db.session.scalar(sa.select(Users).where((Users.id == id)))
-
     
 class Tournaments(db.Model):
     id:         Mapped[int] = mapped_column(db.Integer, primary_key=True)
