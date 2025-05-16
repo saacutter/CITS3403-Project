@@ -1,3 +1,11 @@
+:root {
+    font-family: Orbitron, Helvetica, Arial, sans-serif;
+    color: whitesmoke;
+    background-color: rgba(26, 26, 26, 0.975);
+    line-height: 1.6;
+    margin: 0px;
+}
+
 body {
     font-family: 'Chakra Petch', sans-serif;
     line-height: 1.6;
@@ -6,6 +14,12 @@ body {
     margin: 0px;
 }
 
+html,
+body {
+    min-height: 100vh; /* Ensure the background covers the full height */
+}
+
+/* Styling for HTML elements */
 h1,
 h2,
 h3 {
@@ -23,19 +37,6 @@ a:hover {
     cursor: pointer;
 }
 
-/* Ensure the background covers the full height */
-html,
-body {
-    min-height: 100vh;
-}
-
-:root {
-    font-family: Orbitron, Helvetica, Arial, sans-serif;
-    color: whitesmoke;
-    background-color: rgba(26, 26, 26, 0.975);
-}
-
-/* Styling for HTML elements */
 a:visited {
     color: white;
 }
@@ -110,7 +111,6 @@ input[type="file"]:hover, input[type="file"]::file-selector-button:hover {
     cursor: pointer;
 }
 
-/* Styles for pseudo-classes */
 input::placeholder {
     font-family: Quantico, "Chakra Petch", Orbitron, Helvetica, Arial, sans-serif;
 }

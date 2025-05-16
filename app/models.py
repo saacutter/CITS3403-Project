@@ -6,7 +6,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timezone
 from typing import List
 
-
 @login.user_loader
 def load_user(id):
     return Users.query.get(id)
@@ -22,7 +21,7 @@ class Users(db.Model, UserMixin):
     last_login:      Mapped[datetime] = mapped_column(nullable=False, index=True, default=lambda: datetime.now(timezone.utc))
     tournaments:     Mapped[List["Tournaments"]] = db.relationship('Tournaments', backref='user')
 
-    def __repr__(self):
+    def __str__(self):
          return f"{self.id}, {self.username}, {self.email}, {self.password}, {self.creation_date}, {self.last_login}"
     
     def check_password(self, password):
@@ -46,7 +45,6 @@ class Friends(db.Model):
 
     def getUser(id):
         return db.session.scalar(sa.select(Users).where((Users.id == id)))
-
     
 class Tournaments(db.Model):
     id:         Mapped[int] = mapped_column(db.Integer, primary_key=True)
@@ -58,6 +56,3 @@ class Tournaments(db.Model):
     result:     Mapped[str] = mapped_column(db.Text, nullable=False, index=True)
     details:    Mapped[str] = mapped_column(db.Text, nullable=True) 
     image:      Mapped[str] = mapped_column(db.Text, nullable=True)
-
-    def getTournaments(id):
-        return db.session.scalar(sa.select(Tournaments).where((Tournaments.user_id == id)))

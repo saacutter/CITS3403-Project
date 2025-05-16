@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timezone
 from hashlib import md5
 import os
+import logging
 
 # Update the last seen time of the user before each request
 @application.before_request
@@ -58,6 +59,7 @@ def login():
 
         # Log the user in
         login_user(user, remember=form.remember_user.data)
+        application.logger.info('User ' + user.username + ' has logged in')
 
         # Extract the next page from the form and redirect them to that page
         next_page = request.form.get('next')
@@ -78,12 +80,6 @@ def signup():
         email = form.email.data.strip().lower()
         password = form.password.data.strip()
         
-        # Check if username or email already exists
-        existing_user = db.session.scalar(sa.select(models.Users).where((models.Users.username == username) | (models.Users.email == email)))
-        if existing_user:
-            flash("A user with this username or email address already exists!")
-            return redirect(url_for('signup'))
-        
         # Hash the password
         hashed_password = generate_password_hash(password)
 
@@ -97,6 +93,7 @@ def signup():
         )
         db.session.add(user)
         db.session.commit()
+        application.logger.info('User with username ' + user.username + ' has created an account')
 
         # Log in the user and redirect them to the homepage
         login_user(user, remember=True)
@@ -120,6 +117,7 @@ def browse():
 def profile(username):
     # Get the user with the specified ID
     user = db.first_or_404(sa.select(models.Users).where(models.Users.username == username))
+    application.logger.info(current_user.username + ' has accessed the profile of user ' + user.username)
 
     # Get the users that the current user is following
     users_followed = list(db.session.scalars(sa.select(models.Users).join(models.Friends, models.Users.id == models.Friends.to_user).where(models.Friends.from_user == user.id)))
@@ -133,9 +131,8 @@ def profile(username):
     wins = sum(1 for m in tournaments if m.result.lower() == 'win')
     losses = sum(1 for m in tournaments if m.result.lower() == 'loss')
     draws = sum(1 for m in tournaments if m.result.lower() == 'draw')
-    win_pct = round((wins / total_games) * 100, 2) if total_games > 0 else 0.00
     avg_points = round(sum(m.points for m in tournaments) / total_games, 2) if total_games > 0 else 0.00
-    statistics = {'total_games': total_games, 'wins': wins, 'losses': losses, 'draws': draws, 'win_pct': win_pct, "avg_points": avg_points}
+    statistics = {'total_games': total_games, 'wins': wins, 'losses': losses, 'draws': draws, "avg_points": avg_points}
 
     return render_template("user.html", user=user, following=users_followed, followers=users_following, statistics=statistics)
 
@@ -150,12 +147,6 @@ def edit_profile():
         email = form.email.data.strip().lower()
         password = form.password.data.strip()
         image = request.files['profile_picture'] # Adapted from https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask
-        
-        # Check if username or email already exists
-        existing_user = db.session.scalar(sa.select(models.Users).where((models.Users.username == username) | (models.Users.email == email)))
-        if existing_user and existing_user != current_user:
-            flash("A user with this username or email address already exists")
-            return redirect(url_for('edit_profile'))
         
         # Save the image to a known location on the server if one was uploaded
         img_filename = image.filename
@@ -172,6 +163,7 @@ def edit_profile():
         
         # Save the new information to the database
         db.session.commit()
+        application.logger.info(str(user.id) + ' has edited their profile information')
 
         return redirect(url_for('profile', username=current_user.username))
     return render_template("edit-profile.html", form=form)
@@ -202,8 +194,6 @@ def get_like(pattern):
 
     # Create a list of results that gets all users that match the pattern and aren't already friends with the current user
     results = [user.serialise() for user in users if user.id != current_user.id and user.id not in friends]
-
-    # TODO: Create an attribute if the user is friends with a user and show that on the results by removing the button
     
     # Return an empty JSON object if no users match the specified pattern
     if len(results) == 0:
@@ -236,6 +226,7 @@ def add_friend(username):
     # Add this relationship to the database
     db.session.add(friend)
     db.session.commit()
+    application.logger.info(current_user.username + ' has followed the user ' + user.username)
 
     return '', 200
 
@@ -257,6 +248,7 @@ def remove_friend(username):
     # Remove the relationship from the database
     db.session.delete(relationship)
     db.session.commit()
+    application.logger.info(current_user.username + ' has unfollowed the user ' + user.username)
 
     return '', 200
 
@@ -289,6 +281,7 @@ def tournament():
         )
         db.session.add(tournament)
         db.session.commit()
+        application.logger.info(current_user.username + ' has created a new tournament (' + name + ')')
 
         return redirect(url_for('index'))
     return render_template("add-tournament.html", form=form)
@@ -296,8 +289,11 @@ def tournament():
 @application.route('/edit_tournament/<id>', methods=["GET", "POST"])
 @login_required
 def edit_tournament(id):
-    tournament = models.Tournaments.query.get(id)
+    tournament = models.Tournaments.query.get_or_404(id)
     form = forms.EditTournamentForm()
+
+    if tournament.user_id != current_user.id:
+        render_template(url_for('index'))
 
     if request.method == "POST" and form.validate_on_submit():
         # Extract the information from the form
@@ -324,6 +320,7 @@ def edit_tournament(id):
         
         # Save the new information to the database
         db.session.commit()
+        application.logger.info(current_user.usernme + ' has edited a tournament with ID ' + str(tournament.id))
 
         return redirect(url_for('profile', username=current_user.username))
     return render_template("edit-tournament.html", form=form, tournament=tournament)
@@ -339,6 +336,7 @@ def remove_tournament(id):
     # Remove the tournament from the database
     db.session.delete(tournament)
     db.session.commit()
+    application.logger.info(current_user.usernme + ' has deleted a tournament with ID ' + str(tournament.id))
 
     return '', 200
 

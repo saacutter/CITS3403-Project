@@ -2,7 +2,7 @@ const input = document.querySelector('input');
 const usersDiv = document.querySelector('#retrievedUsers');
 
 // Make a request to the database whenever the input value changes
-input.addEventListener('change', () => {
+input.addEventListener('input', () => {
     // Clear the div to remove elements already there
     let children = usersDiv.children;
     if (children.length > 0) {
@@ -25,7 +25,10 @@ input.addEventListener('change', () => {
             
             // Display an error message if no users matching the name was found
             if (users[0].username == null) {
-                usersDiv.insertAdjacentHTML('beforeend', '<h3 class="center text-lg">No users were found!</h3>');
+                let error = document.querySelector('#retrievedUsers h1');
+                if (error == null) {
+                    usersDiv.insertAdjacentHTML('beforeend', '<h1 class="center text-lg text-white">No users were found!</h1>');
+                }
                 return;
             } 
 
