@@ -11,7 +11,7 @@ Tournament Manager - Home
         <section class="bg-gray-900 p-6 rounded-lg shadow-lg mb-8">
             <h2 class="text-2xl font-bold text-white mb-3">Welcome to Tournament Manager 🎮</h2>
             <p class="text-gray-300 mb-4">Our new Tournament Manager helps you create, manage, and track competitive 
-            tournaments with ease. Whether if you're organising local gaming events, online challenges, or just 
+            tournaments with ease. Whether you're organising local gaming events, online challenges, or just 
             tracking friendly rivalries, our platform has you covered for all of your needs</p>
             <ul class="text-gray-400 list-disc list-inside mb-4">
                 <li>Create and manage your own tournaments</li>
@@ -30,9 +30,9 @@ Tournament Manager - Home
         <section class="quick-actions mb-8">
             <h3 class="text-2xl font-semibold mb-4">Quick Actions</h3>
             <div class="action-buttons flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-                <a href="{{ url_for('tournament') }}" class="bg-blue-600 text-white px-6 py-3 rounded-md text-center hover:bg-blue-700 transition hover:no-underline">Create New Tournament</a>
-                <a href="{{ url_for('browse') }}" class="bg-gray-700 text-white px-6 py-3 rounded-md text-center hover:bg-gray-600 transition hover:no-underline">Browse Tournaments</a>
-                <a href="{{ url_for('profile', username=current_user.username )}}" class="bg-gray-700 text-white px-6 py-3 rounded-md text-center hover:bg-gray-600 transition hover:no-underline">My Tournaments</a>
+                <a href="{{ url_for('main.tournament') }}" class="bg-blue-600 text-white px-6 py-3 rounded-md text-center hover:bg-blue-700 transition hover:no-underline">Create New Tournament</a>
+                <a href="{{ url_for('main.browse') }}" class="bg-gray-700 text-white px-6 py-3 rounded-md text-center hover:bg-gray-600 transition hover:no-underline">Browse Tournaments</a>
+                <a href="{{ url_for('main.profile', username=current_user.username )}}" class="bg-gray-700 text-white px-6 py-3 rounded-md text-center hover:bg-gray-600 transition hover:no-underline">My Tournaments</a>
             </div>
         </section>
         {% endif %}

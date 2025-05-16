@@ -6,8 +6,8 @@ input.addEventListener('input', () => {
     // Clear the div to remove elements already there
     let children = usersDiv.children;
     if (children.length > 0) {
-        for (let i = 0; i < children.length; i++) {
-            usersDiv.removeChild(children[i]);
+        while (usersDiv.firstChild) {
+            usersDiv.removeChild(usersDiv.firstChild);
         }
     }
 
@@ -22,13 +22,11 @@ input.addEventListener('input', () => {
         if (request.status == 200) {
             // Parse the result
             users = JSON.parse(request.responseText);
+            console.log(users);
             
             // Display an error message if no users matching the name was found
             if (users[0].username == null) {
-                let error = document.querySelector('#retrievedUsers h1');
-                if (error == null) {
-                    usersDiv.insertAdjacentHTML('beforeend', '<h1 class="center text-lg text-white">No users were found!</h1>');
-                }
+                usersDiv.insertAdjacentHTML('beforeend', '<h3 class="center text-lg">No users were found!</h3>');
                 return;
             } 
 

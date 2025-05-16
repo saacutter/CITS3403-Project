@@ -10,89 +10,45 @@
 
 {% block body %}
 <div>
-    <div class="flex-grow mx-auto p-4 mt-8 flex" id="login-panel" {% if login %} style="display: block;" {% else %} style="display: none;" {% endif %}>
+    <div class="mx-auto p-4 mt-8 mb-4" id="login-panel">
         <section class="login-section bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-sm text-left center">
             <h2 class="text-2xl font-semibold mb-6 text-center">Log In</h2>
-            <form action="{{ url_for('login') }}" method="post">
-                {{ loginForm.hidden_tag() }}
+            <form action="{{ url_for('main.login') }}" method="post">
+                {{ form.hidden_tag() }}
                 <input name="next" value="{{ next }}" hidden>
                 <div class="mb-6">
-                    {{ loginForm.username.label(class="block text-gray-400 font-bold mb-2") }}
-                    {{ loginForm.username(placeholder="Enter your username or email address", class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white", autofocus="true") }}
+                    {{ form.username.label(class="block text-gray-400 font-bold mb-2") }}
+                    {{ form.username(placeholder="Enter your username or email address", class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white", autofocus="true") }}
                 </div>
                 <div class="mb-6">
-                    {{ loginForm.password.label(class="block text-gray-400 font-bold mb-2") }}
-                    {{ loginForm.password(placeholder="Enter your password", class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
+                    {{ form.password.label(class="block text-gray-400 font-bold mb-2") }}
+                    {{ form.password(placeholder="Enter your password", class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
                     <!-- <a href="#" class="inline-block align-baseline font-bold text-sm text-blue-400 hover:text-blue-600">
                         Forgot Password?
                     </a> -->
                 </div>
                 <div>
-                    {{ loginForm.remember_user(style="margin-right: 10px;") }} 
-                    {{ loginForm.remember_user.label }}
+                    {{ form.remember_user(style="margin-right: 10px;") }} 
+                    {{ form.remember_user.label }}
                 </div>
                 <div class="flex items-center justify-between">
-                    {{ loginForm.submit(class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition w-full") }}
+                    {{ form.submit(class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition w-full") }}
                 </div>
             </form>
             <p class="text-center text-gray-400 mt-6">
-                Don't have an account? <a id="signup-panel-btn" class="text-blue-600">Sign Up</a>
+                Don't have an account? <a href="{{ url_for('main.signup') }}" class="text-blue-600">Sign Up</a>
             </p>
         </section>
     </div>
-    <div class="flex-grow mx-auto p-4 mt-8 flex" id="signup-panel" {% if login %} style="display: none;" {% else %} style="display: block;" {% endif %}>
-        <section class="login-section bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-sm text-left center">
-            <h2 class="text-2xl font-semibold mb-6 text-center">Sign Up</h2>
-            <form action="{{ url_for('signup') }}" method="post">
-                {{ signupForm.hidden_tag() }}
-                <div class="mb-6">
-                    {{ signupForm.username.label(class="block text-gray-400 font-bold mb-2") }}
-                    {{ signupForm.username(placeholder="Username", class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white", autofocus="true") }}
-                </div>
-                <div class="mb-6">
-                    {{ signupForm.email.label(class="block text-gray-400 font-bold mb-2") }}
-                    {{ signupForm.email(placeholder="Email Address", class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
-                </div>
-                <div class="mb-8">
-                    {{ signupForm.password.label(class="block text-gray-400 font-bold mb-2") }}
-                    {{ signupForm.password(placeholder="Password", class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
-                    {{ signupForm.password_confirm.label(class="block text-gray-400 font-bold mb-2") }}
-                    {{ signupForm.password_confirm(placeholder="Confirm Password", class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white") }}
-                </div>
-                <div>
-                    <label class="inline-flex items-center cursor-pointer mb-5">
-                        {{ signupForm.private(style="margin-right: 10px;", class="sr-only peer", checked="true") }}
-                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
-                        <span class="ms-3 text-med font-medium text-gray-900 dark:text-gray-300">{{ signupForm.private.label(class="text-gray-400 font-bold mb-2") }}</span>
-                    </label>
-                </div>
-                <div class="flex items-center justify-between">
-                    {{ signupForm.submit(class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition w-full") }}
-                </div>
-            </form>
-            <p class="text-center text-gray-400 mt-6">
-                Already have an account? <a id="login-panel-btn" class="text-blue-600">Log In</a>
-            </p>
-        </section>
-    </div>
-    {% if get_flashed_messages() or signupForm.errors or loginForm.errors %}
-        <div class="center error rounded-border-px">
+    {% if get_flashed_messages() or form.errors %}
+        <div class="center error rounded-border-px mt-5">
             {% if get_flashed_messages() %}
                 {% for message in get_flashed_messages() %}
                     <p>{{ message }}</p>
                 {% endfor %}
             {% endif %}
-
-            {% if signupForm.errors %}
-                {% for field, errors in signupForm.errors.items() %}
-                    {% for error in errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                {% endfor %}
-            {% endif %}
-
-            {% if loginForm.errors %}
-                {% for field, errors in loginForm.errors.items() %}
+            {% if form.errors %}
+                {% for field, errors in form.errors.items() %}
                     {% for error in errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
@@ -101,5 +57,4 @@
         </div>
     {% endif %}
 </div>
-<script src="static/js/login.js"></script>
 {% endblock %}
