@@ -45,7 +45,7 @@ def login():
     
     # Extract the next page from the URL and add it to the form
     if request.method == "GET":
-        next_page = request.args.get('next', 'index')
+        next_page = 'main.' + request.args.get('next', 'index').replace('/', '')
 
     form = forms.LoginForm()
     if request.method == "POST" and form.validate_on_submit():

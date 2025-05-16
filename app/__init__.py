@@ -8,7 +8,7 @@ import os
 
 db = SQLAlchemy()
 login = LoginManager()
-login.login_view = 'login' # This sets the page that should be rendered when there is a page that requires a log in to view
+login.login_view = 'main.login' # This sets the page that should be rendered when there is a page that requires a log in to view
 moment = Moment() # This is used for converting the time to human readable time
 
 def create_application(config):
