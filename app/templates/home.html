@@ -20,7 +20,6 @@ Tournament Manager - Home
                 <li>Connect with friends and follow their activity</li>
                 <li>Want to stay under the radar? You can make your profile private with just one click.</li>
             </ul>
-            
         </section>
         {% else %}
         <section class="welcome-section bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
@@ -29,7 +28,7 @@ Tournament Manager - Home
         </section>
 
         <section class="quick-actions mb-8">
-            <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+            <h3 class="text-2xl font-semibold mb-4">Quick Actions</h3>
             <div class="action-buttons flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
                 <a href="{{ url_for('main.tournament') }}" class="bg-blue-600 text-white px-6 py-3 rounded-md text-center hover:bg-blue-700 transition hover:no-underline">Create New Tournament</a>
                 <a href="{{ url_for('main.browse') }}" class="bg-gray-700 text-white px-6 py-3 rounded-md text-center hover:bg-gray-600 transition hover:no-underline">Browse Tournaments</a>
@@ -39,7 +38,7 @@ Tournament Manager - Home
         {% endif %}
 
         <section class="mb-8">
-            <h3 class="text-lg font-semibold mb-4">Featured Tournaments</h3>
+            <h3 class="text-lg font-semibold mb-4 text-blue-400">Featured Tournaments</h3>
             {% if public_tournaments %}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {% for tournament in public_tournaments %}
@@ -49,13 +48,43 @@ Tournament Manager - Home
             {% else %}
                 <div class="col-span-2 text-center text-gray-400">
                     <p class="text-white text-xl">There are currently no public tournaments.</p>
+                    <p class="text-gray-400 mt-2">Check out how a tournament panel looks!</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 px-4">
+                        <div class="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center">
+                            <div class="mr-6">
+                                <img src="{{ url_for('static', filename='img/profilepic1.png') }}" alt="Profile Picture" class="w-24 h-24 rounded-full mb-2">
+                                <p class="text-white font-semibold">rocketfan123</p>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="text-lg font-semibold text-white mb-1">Rocket League Rumble</h3>
+                                <p class="text-gray-300">Game: Rocket League</p>
+                                <p class="text-gray-300">Date: 14-05-2025</p>
+                                <p class="text-gray-400 mt-2">A fun and fast-paced competition for all levels.</p>
+                            </div>
+                            <img src="{{ url_for('static', filename='img/rocketleague.png') }}" alt="Game Preview" class="w-24 h-24 object-cover rounded-md ml-4">
+                        </div>
+
+                        <div class="bg-gray-800 p-6 rounded-lg shadow-lg flex items-center">
+                            <div class="mr-6">
+                                <img src="{{ url_for('static', filename='img/profilepic2.png') }}" alt="Profile Picture" class="w-24 h-24 rounded-full mb-2">
+                                <p class="text-white font-semibold">chessmasterX</p>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="text-lg font-semibold text-white mb-1">Chess Masters 2025</h3>
+                                <p class="text-gray-300">Game: Chess</p>
+                                <p class="text-gray-300">Date: 16-05-2025</p>
+                                <p class="text-gray-400 mt-2">Classic strategy showdown for elite minds.</p>
+                            </div>
+                            <img src="{{ url_for('static', filename='img/chess.png') }}" alt="Game Preview" class="w-24 h-24 object-cover rounded-md ml-4">
+                        </div>
+                    </div>
                 </div>
             {% endif %}
         </section>
 
         {% if current_user.is_authenticated %}
             <section class="mb-16">
-                <h3 class="text-lg font-semibold mb-4">Friends Tournaments</h3>
+                <h3 class="text-2xl font-semibold mb-4">Friends Tournaments</h3>
                 {% if friend_tournaments %}
                     <div class="p-2 max-h-80 overflow-y-auto">
                         {% for tournament in friend_tournaments %}

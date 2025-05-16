@@ -14,6 +14,9 @@ class Config:
     PFP_UPLOAD_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/profilepictures')
     TP_UPLOAD_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/previews')
 
+    # Set configuration variable for log uploading
+    LOG_PATH = os.getenv('LOG_PATH') or 'logs'
+
 class DeploymentConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL") or "sqlite:///" + os.path.join(os.path.abspath(os.path.dirname(__file__)), "app.db")
 

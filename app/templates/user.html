@@ -30,36 +30,34 @@ Tournament Manager - {{ user.username }}
         </div>
         {% if user.private == 0 or user.username == current_user.username or current_user.is_friends_with(user) %}
             <h1 class="text-3xl font-bold mt-10">User Statistics</h1>
-            <div class="w-95/100 h-auto flex flex-wrap p-6 mb-6 gap-20 text-white justify-center items-center">
+            <div class="flex-col w-1/6 h-1/6 mt-5 center">
+                    <div class="center h-5/6 w-5/6">
+                        <canvas></canvas>
+                    </div>
+                </div>
+            <div class="w-95/100 h-auto flex flex-wrap p-6 mb-2 gap-20 text-white justify-center items-center">
                 <div class="flex-col">
                     <p id="totalGames" class="text-5xl">{{ statistics.total_games }}</p>
-                    <p class="text-bold text-lg">Total Games Played</p>
+                    <p class="text-bold text-lg">TOTAL GAMES PLAYED</p>
                 </div>
                 <div class="flex-col">
                     <p id="avgPoints" class="text-5xl">{{ statistics.avg_points }}</p>
-                    <p class="text-bold text-lg">Average Points</p>
+                    <p class="text-bold text-lg">AVERAGE POINTS</p>
                 </div>
                 <div class="flex-col">
-                    <div class="w-4/5 h-4/5 center mb-5">
-                        <canvas>{{ statistics.win_pct }}</canvas>
-                    </div>
-                    <div class="flex gap-5">
-                        <div class="flex-col">
-                            <p id="wins" class="text-5xl">{{ statistics.wins }}</p>
-                            <p class="text-bold text-lg">Wins</p>
-                        </div>
-                        <div class="flex-col">
-                            <p id="losses" class="text-5xl">{{ statistics.losses }}</p>
-                            <p class="text-bold text-lg">Losses</p>
-                        </div>
-                        <div class="flex-col">
-                            <p id="draws" class="text-5xl">{{ statistics.draws }}</p>
-                            <p class="text-bold text-lg">Draws</p>
-                        </div>
-                    </div>
+                    <p id="wins" class="text-5xl">{{ statistics.wins }}</p>
+                    <p class="text-bold text-lg">WINS</p>
+                </div>
+                <div class="flex-col">
+                    <p id="losses" class="text-5xl">{{ statistics.losses }}</p>
+                    <p class="text-bold text-lg">LOSSES</p>
+                </div>
+                <div class="flex-col">
+                    <p id="draws" class="text-5xl">{{ statistics.draws }}</p>
+                    <p class="text-bold text-lg">DRAWS</p>
                 </div>
             </div>
-            <div class="container flex mt-10 p-5 gap-5 center">
+            <div class="container flex mt-5 p-5 gap-5 center">
                 <div class="w-1/2" id="friends">
                     <h1 class="font-bold text-3xl">Following</h1>
                     <div class="p-2 max-h-60 overflow-y-auto center">
@@ -106,10 +104,10 @@ Tournament Manager - {{ user.username }}
             <div class="container w-4/5 p-5 center">
                 <h1 class="font-bold text-3xl">Tournaments</h1>
                 {% if user.tournaments %}
-                    <div class="w-4/5 p-2 flex-grow max-h-80 overflow-y-auto center" id="tournaments">
-                    {% for tournament in user.tournaments %}
-                        {% include "_tournament_profile.html" %}
-                    {% endfor %}
+                    <div class="p-2 flex-grow max-h-80 overflow-y-auto center grid grid-cols-1 md:grid-cols-2 gap-5" id="tournaments">
+                        {% for tournament in user.tournaments %}
+                            {% include "_tournament_profile.html" %}
+                        {% endfor %}
                     </div>
                 {% else %}
                     <p class="text-white text-med">This user has not competed in any tournaments yet.</p>
