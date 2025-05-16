@@ -1,20 +1,16 @@
 import unittest
-from app import db, application
+from app import create_application, db
+from app.config import *
 from app.models import Users, Tournaments, Friends
 from werkzeug.security import generate_password_hash
 
-class UserModelTestCase(unittest.TestCase):
+class UnitTests(unittest.TestCase):
     def setUp(self):
-        application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-        application.config['TESTING'] = True
-        self.app_context = application.app_context()
+        testApplication = create_application(TestingConfig)
+        self.app_context = testApplication.app_context()
         self.app_context.push()
         db.create_all()
-
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-        self.app_context.pop()
+        return super().setUp()
 
     def test_user_creation(self):
         user = Users(username='testuser1', email='testuser@example.com', password='hashed', profile_picture='picture.png', private=True)
@@ -76,8 +72,13 @@ class UserModelTestCase(unittest.TestCase):
         db.session.commit()
         self.assertEqual(Friends.query.count(), 1)
 
-    # Remove it
         db.session.delete(friend)
         db.session.commit()
 
         self.assertEqual(Friends.query.count(), 0)
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
+        return super().tearDown()

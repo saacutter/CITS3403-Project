@@ -9,11 +9,11 @@ Tournament Manager - Edit Tournament
     <div id="user-profile-panel" class="center">
         <h1 class="font-bold pt-5 pb-5" style="font-size: 30px;">Edit Tournament</h1>
         <div class="edit-form center pb-10">
-            <form action="{{ url_for('edit_tournament', id=tournament.id) }}" method="post" enctype="multipart/form-data">
+            <form action="{{ url_for('main.edit_tournament', id=tournament.id) }}" method="post" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
                 <div class="mb-2 flex relative group w-44 h-44 center">
                     <label for="preview-file">
-                        <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('upload', filename=tournament.image) }} {% endif %}" alt="Tournament Preview" id="preview-edit" class="w-full h-full object-cover cursor-pointer -translate-y-8">
+                        <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('main.upload', filename=tournament.image) }} {% endif %}" alt="Tournament Preview" id="preview-edit" class="w-full h-full object-cover cursor-pointer -translate-y-8">
                         <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M4 13.5V19h5.5l9.207-9.207a1.5 1.5 0 00-2.121-2.121L4 13.5z"/>
@@ -53,7 +53,7 @@ Tournament Manager - Edit Tournament
                     </datalist>
                 </div>
                 <div class="flex-container items-center justify-between center">
-                    <a href="{{ url_for('profile', username=current_user.username) }}"><input type="button" value="Cancel" class="bg-transparent hover:bg-white hover:border-none hover:text-black border border-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition w-1/5"></a>
+                    <a href="{{ url_for('main.profile', username=current_user.username) }}"><input type="button" value="Cancel" class="bg-transparent hover:bg-white hover:border-none hover:text-black border border-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition w-1/5"></a>
                     {{ form.submit(class="bg-blue-600 hover:bg-blue-700 border border-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition w-1/5") }}
                 </div>
             </form>

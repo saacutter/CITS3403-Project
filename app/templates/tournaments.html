@@ -14,7 +14,7 @@ Tournament Manager - Browse Tournaments
     {% else %}
         <div class="center ">
             <h1 class="heading m-5">There are no tournaments currently available.</h1>
-            <a href="{{ url_for('tournament') }}" class="bg-gray-600 text-white px-6 py-3 rounded-md text-center hover:bg-gray-700 transition hover:no-underline">Create New Tournament</a>
+            <a href="{{ url_for('main.tournament') }}" class="bg-gray-600 text-white px-6 py-3 rounded-md text-center hover:bg-gray-700 transition hover:no-underline">Create New Tournament</a>
         </div>
     {% endif %}
 {% endblock %}

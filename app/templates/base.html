@@ -24,32 +24,32 @@
     <body class="antialiased flex flex-col min-h-screen">
         <header class="flex flex-col md:flex-row justify-between items-center p-4 bg-gray-900 text-white relative">
             <div id="titlebar" class="mb-4 md:mb-0">
-                <h1 class="text-3xl font-bold"><a href="{{ url_for('index') }}" class="hover:text-gray-300 hover:no-underline">Tournament Manager</a></h1>
+                <h1 class="text-3xl font-bold"><a href="{{ url_for('main.index') }}" class="hover:text-gray-300 hover:no-underline">Tournament Manager</a></h1>
             </div>
             {% if current_user.is_anonymous %}
                 <div id="account-buttons" class="flex space-x-4">
                     <div id="login-btn">
-                        <a href="{{ url_for('login') }}" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition hover:no-underline">Log In</a>
+                        <a href="{{ url_for('main.login') }}" class="block px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 transition hover:no-underline">Log In</a>
                     </div>
                     <div id="signup-btn">
-                        <a href="{{ url_for('signup') }}" class="block px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition hover:no-underline">Sign Up</a>
+                        <a href="{{ url_for('main.signup') }}" class="block px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition hover:no-underline">Sign Up</a>
                     </div>
                 </div>
             {% else %}
                 <div class="flex items-center space-x-4">
                     <div class="relative">
-                        <img src="{% if current_user.profile_picture.startswith('http') %} {{current_user.profile_picture}} {% else %} {{ url_for('upload', filename=current_user.profile_picture) }} {% endif %}" alt="Profile Picture" id="profile-icon-picture" class="cursor-pointer mr-4">
+                        <img src="{% if current_user.profile_picture.startswith('http') %} {{current_user.profile_picture}} {% else %} {{ url_for('main.upload', filename=current_user.profile_picture) }} {% endif %}" alt="Profile Picture" id="profile-icon-picture" class="cursor-pointer mr-4">
                         <div id="dropdownMenu" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-50">
                             <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="dropdownButton">
-                                <a href="{{ url_for('profile', username=current_user.username) }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                <a href="{{ url_for('main.profile', username=current_user.username) }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
                                     <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Profile" class="h-6 w-6 mr-2">
                                     <span class="text-black">Profile</span>
                                 </a>
-                                <a href="{{ url_for('search') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                <a href="{{ url_for('main.search') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
                                     <img src="https://cdn-icons-png.flaticon.com/512/149/149852.png" alt="Search" class="h-6 w-6 mr-2">
                                     <span class="text-black">User Search</span>
                                 </a>
-                                <a href="{{ url_for('signout') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                <a href="{{ url_for('main.signout') }}" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
                                     <img src="https://cdn-icons-png.flaticon.com/128/1828/1828479.png" alt="Sign Out" class="h-6 w-6 mr-2" style="border-radius: 0px;">
                                     <span class="text-black">Sign Out</span>
                                 </a>
@@ -79,7 +79,7 @@
             {% block body %}{% endblock %}
         </main>
         <footer class="bg-gray-900 text-white text-center p-4 mt-auto">
-            Copyright © 2025 Tournament Manager Inc. All rights reserved. |<a href="{{ url_for('privacy_policy') }}" class="text-blue-400 hover:underline"> Privacy Policy</a>
+            Copyright © 2025 Tournament Manager Inc. All rights reserved. |<a href="{{ url_for('main.privacy_policy') }}" class="text-blue-400 hover:underline"> Privacy Policy</a>
         </footer>
     </body>
 </html>

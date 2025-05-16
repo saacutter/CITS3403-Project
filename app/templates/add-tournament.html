@@ -8,7 +8,7 @@ Tournament Manager - Add Tournament
 <div class="flex-grow mx-auto p-6">
     <section class="bg-gray-800 p-8 rounded-lg shadow-lg w-3/4 text-left center">
         <h2 class="text-2xl font-semibold mb-6 text-center">Add Tournament</h2>
-        <form action="{{ url_for('tournament') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ url_for('main.tournament') }}" method="post" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <div class="mb-2 flex relative group w-44 h-44 center">
                 <label for="preview-file">

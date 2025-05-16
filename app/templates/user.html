@@ -8,14 +8,14 @@ Tournament Manager - {{ user.username }}
 <div id="user-background">
     <div id="user-profile-panel" class="center">
         <div class="flex items-center gap-4" id="user-heading">
-            <img src="{% if user.profile_picture.startswith('http') %} {{ user.profile_picture}} {% else %} {{ url_for('upload', filename=user.profile_picture) }} {% endif %}" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover">
+            <img src="{% if user.profile_picture.startswith('http') %} {{ user.profile_picture}} {% else %} {{ url_for('main.upload', filename=user.profile_picture) }} {% endif %}" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover">
             <div class="flex flex-col">
                 <h1 class="font-bold text-white text-left text-3xl">{{ user.username }}</h1>
                 {% if user.private == 0 or user.username == current_user.username or current_user.is_friends_with(user) %}
                     <p class="text-med text-gray-500 text-left">This user was last seen {{ moment(user.last_login).fromNow() }} ({{ moment(user.last_login).format('LLLL') }})</p>
                 {% endif %}
                 {% if user.username == current_user.username %}
-                    <a href="{{ url_for('edit_profile') }}" style="text-align: left;">Edit Profile</a>
+                    <a href="{{ url_for('main.edit_profile') }}" style="text-align: left;">Edit Profile</a>
                 {% endif %}
             </div>
                 {% if user != current_user %}
@@ -66,7 +66,7 @@ Tournament Manager - {{ user.username }}
                     {% if following %}
                         {% for follow in following %}
                             <div class="flex items-center h-20 bg-gray-900 mt-2 pl-2 gap-4 rounded-border" id="{{ follow.username }}">
-                                <a href="{{ url_for('profile', username=follow.username) }}"><img src="{% if follow.profile_picture.startswith('http') %} {{ follow.profile_picture }} {% else %} {{ url_for('upload', filename=follow.profile_picture) }} {% endif %}" alt="Profile Picture" class="h-[4em]"></a>
+                                <a href="{{ url_for('main.profile', username=follow.username) }}"><img src="{% if follow.profile_picture.startswith('http') %} {{ follow.profile_picture }} {% else %} {{ url_for('main.upload', filename=follow.profile_picture) }} {% endif %}" alt="Profile Picture" class="h-[4em]"></a>
                                 <div class="flex flex-col">
                                     <p class="text-med font-bold text-left">{{ follow.username }}</p>
                                     <p class="text-sm text-gray-500 text-left">Following since {{ moment(follow.last_login).format('LL') }}</p>
@@ -81,7 +81,7 @@ Tournament Manager - {{ user.username }}
                     {% endif %}
                     </div>
                     {% if user.username == current_user.username %}
-                        <a href="{{ url_for('search') }}" class="block text-med py-1 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Find Users</a>
+                        <a href="{{ url_for('main.search') }}" class="block text-med py-1 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Find Users</a>
                     {% endif %}
                 </div>
                 <div class="w-1/2">
@@ -90,7 +90,7 @@ Tournament Manager - {{ user.username }}
                         <div class="p-2 max-h-60 overflow-y-auto center">
                         {% for follow in followers %}
                             <div class="flex items-center h-20 bg-gray-900 mt-2 pl-2 gap-4 rounded-border" id="{{ follow.username }}">
-                                <a href="{{ url_for('profile', username=follow.username) }}"><img src="{% if follow.profile_picture.startswith('http') %} {{ follow.profile_picture }} {% else %} {{ url_for('upload', filename=follow.profile_picture) }} {% endif %}" alt="Profile Picture" class="h-[4em]"></a>
+                                <a href="{{ url_for('main.profile', username=follow.username) }}"><img src="{% if follow.profile_picture.startswith('http') %} {{ follow.profile_picture }} {% else %} {{ url_for('main.upload', filename=follow.profile_picture) }} {% endif %}" alt="Profile Picture" class="h-[4em]"></a>
                                 <div class="flex flex-col">
                                     <p class="text-med font-bold text-left">{{ follow.username }}</p>
                                     <p class="text-sm text-gray-500 text-left">Followed since {{ moment(follow.last_login).format('LL') }}</p>
@@ -115,7 +115,7 @@ Tournament Manager - {{ user.username }}
                     <p class="text-white text-med">This user has not competed in any tournaments yet.</p>
                 {% endif %}
                 {% if user.username == current_user.username %}
-                    <a href="{{ url_for('tournament') }}" class="block text-med py-1 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Add Tournament</a>
+                    <a href="{{ url_for('main.tournament') }}" class="block text-med py-1 bg-gray-700 hover:bg-gray-600 transition hover:no-underline w-1/5 mt-2 rounded center">Add Tournament</a>
                 {% endif %}
             </div>
         {% else %}

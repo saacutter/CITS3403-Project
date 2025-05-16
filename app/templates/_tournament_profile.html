@@ -9,13 +9,13 @@
                 <a onclick="showDetails('{{ tournament.id }}')" class="btn-details text-blue-400 hover:underline">View Details</a>
                 {% if user.username == current_user.username %}
                     <div class="flex center gap-4">
-                        <a href="{{ url_for('edit_tournament', id=tournament.id) }}"><button class="bg-gray-500 hover:bg-gray-700 border-none p-1 mt-5">Edit Tournament</button></a>
+                        <a href="{{ url_for('main.edit_tournament', id=tournament.id) }}"><button class="bg-gray-500 hover:bg-gray-700 border-none p-1 mt-5">Edit Tournament</button></a>
                         <button class="bg-red-500 hover:bg-red-700 border-none p-1 mt-5" id="delete">Delete Tournament</button>
                     </div>
                 {% endif %}
             </div>
         </div>
-        <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('upload', filename=tournament.image) }} {% endif %}" alt="Game Preview" class="w-24 h-24 object-cover rounded-md ml-4">
+        <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('main.upload', filename=tournament.image) }} {% endif %}" alt="Game Preview" class="w-24 h-24 object-cover rounded-md ml-4">
     </div>
     <div id="details-{{ tournament.id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg p-6 max-w-lg w-full relative">
@@ -27,7 +27,7 @@
             <p class="mb-2 text-gray-700"><strong>Game:</strong> {{ tournament.game_title }}</p>
             <p class="mb-2 text-gray-700"><strong>Date:</strong> {{ tournament.date }}</p>
             <p class="mb-2 text-gray-700"><strong>Details:</strong> {{ tournament.details or "No details provided." }}</p>
-            <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('upload', filename=tournament.image) }} {% endif %}" alt="{{ tournament.name }}" class="w-32 h-32 object-cover rounded-md mt-2 center">
+            <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('main.upload', filename=tournament.image) }} {% endif %}" alt="{{ tournament.name }}" class="w-32 h-32 object-cover rounded-md mt-2 center">
         </div>
     </div>
 </div>
