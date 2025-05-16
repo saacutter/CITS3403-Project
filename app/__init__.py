@@ -20,7 +20,7 @@ os.makedirs(application.config['PFP_UPLOAD_PATH'], exist_ok=True) # This is used
 os.makedirs(application.config['TP_UPLOAD_PATH'], exist_ok=True) # This is used to create the directory for tournament previews
 
 # Make a log for keeping a backup of errors (adapted from https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-vii-error-handling)
-os.makedirs('logs', exist_ok=True)
+os.makedirs(application.config['LOG_PATH'], exist_ok=True)
 file_handler = RotatingFileHandler('logs/manager.log', maxBytes=10240, backupCount=10)
 file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
 file_handler.setLevel(logging.INFO)
