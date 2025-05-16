@@ -20,9 +20,6 @@ class Users(db.Model, UserMixin):
     creation_date:   Mapped[datetime] = mapped_column(nullable=False, index=True, default=lambda: datetime.now(timezone.utc))
     last_login:      Mapped[datetime] = mapped_column(nullable=False, index=True, default=lambda: datetime.now(timezone.utc))
     tournaments:     Mapped[List["Tournaments"]] = db.relationship('Tournaments', backref='user')
-
-    def __str__(self):
-         return f"{self.id}, {self.username}, {self.email}, {self.password}, {self.creation_date}, {self.last_login}"
     
     def check_password(self, password):
         return check_password_hash(self.password, password)

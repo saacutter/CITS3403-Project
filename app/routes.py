@@ -21,7 +21,7 @@ def page_not_found(error):
     return render_template("404.html"), 404
 
 @blueprint.errorhandler(500)
-def page_not_found(error):
+def internal_server_error(error):
     db.session.rollback()
     return render_template("500.html"), 500
 
@@ -98,7 +98,7 @@ def signup():
 
         # Log in the user and redirect them to the homepage
         login_user(user, remember=True)
-        return redirect('/')
+        return redirect(url_for('main.index'))
     return render_template("register.html", form=form) # Display sign up page
 
 @blueprint.route('/signout')
@@ -294,7 +294,7 @@ def edit_tournament(id):
     form = forms.EditTournamentForm()
 
     if tournament.user_id != current_user.id:
-        render_template(url_for('index'))
+        return render_template(url_for('main.index'))
 
     if request.method == "POST" and form.validate_on_submit():
         # Extract the information from the form
@@ -312,7 +312,7 @@ def edit_tournament(id):
 
         # Update the tournament information based on the provided information
         tournament.name = name
-        tournament.game = game
+        tournament.game_title = game
         tournament.date = date
         tournament.points = form.points.data
         tournament.result = form.result.data.lower().strip()
@@ -321,7 +321,7 @@ def edit_tournament(id):
         
         # Save the new information to the database
         db.session.commit()
-        current_app.logger.info(current_user.usernme + ' has edited a tournament with ID ' + str(tournament.id))
+        current_app.logger.info(current_user.username + ' has edited a tournament with ID ' + str(tournament.id))
 
         return redirect(url_for('main.profile', username=current_user.username))
     return render_template("edit-tournament.html", form=form, tournament=tournament)
@@ -337,7 +337,7 @@ def remove_tournament(id):
     # Remove the tournament from the database
     db.session.delete(tournament)
     db.session.commit()
-    current_app.logger.info(current_user.usernme + ' has deleted a tournament with ID ' + str(tournament.id))
+    current_app.logger.info(current_user.username + ' has deleted a tournament with ID ' + str(tournament.id))
 
     return '', 200
 

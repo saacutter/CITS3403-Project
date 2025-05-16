@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, BooleanField, PasswordField, SubmitField, FileField, DateField, TextAreaField
-from wtforms.validators import DataRequired, Optional, Email, EqualTo, Regexp, Length, AnyOf, ValidationError
+from wtforms.validators import DataRequired, Optional, Email, EqualTo, Regexp, Length, ValidationError
 from flask_wtf.file import FileAllowed
 from flask_login import current_user
 from app import db, models
@@ -28,6 +28,11 @@ def is_valid_image(form, field):
         if abs(img.width - img.height) > 50:
             raise ValidationError("The profile image must be square")
         image.seek(0) # Reset the file point to the start so that it can be saved to the server properly
+
+def is_valid_result(form, field):
+    # Check if the result is valid
+    if field.data.lower() not in ['win', 'loss', 'draw']:
+        raise ValidationError("The result can only be a 'win', 'loss', or 'draw'")
 
 class LoginForm(FlaskForm):
     username      = StringField('Username or Email Address', validators=[DataRequired()])
@@ -81,7 +86,7 @@ class AddTournamentForm(FlaskForm):
     game    = StringField('Game', validators=[DataRequired()])
     date    = DateField('Date', format='%Y-%m-%d', validators=[DataRequired(), is_valid_date], render_kw={"type": "date", "max": str(datetime.now().strftime("%Y-%m-%d"))})
     points  = IntegerField('Points', validators=[DataRequired()])
-    result  = StringField('Result', validators=[DataRequired(), AnyOf(['win', 'loss', 'draw'], message="The result can only be a 'win', 'loss', or 'draw'")])
+    result  = StringField('Result', validators=[DataRequired(), is_valid_result])
     details = TextAreaField('Tournament Details', validators=[Optional(), Length(max=64)])
     submit  = SubmitField('Add Tournament')
 
@@ -91,6 +96,6 @@ class EditTournamentForm(FlaskForm):
     game    = StringField('Game', validators=[DataRequired()])
     date    = DateField('Date', format='%Y-%m-%d', validators=[DataRequired(), is_valid_date], render_kw={"type": "date", "max": str(datetime.now().strftime("%Y-%m-%d"))})
     points  = IntegerField('Points', validators=[DataRequired()])
-    result  = StringField('Result', validators=[DataRequired(), AnyOf(['win', 'loss', 'draw'], message="The result can only be a 'win', 'loss', or 'draw'")])
+    result  = StringField('Result', validators=[DataRequired(), is_valid_result])
     details = TextAreaField('Tournament Details', validators=[Optional(), Length(max=64)])
     submit  = SubmitField('Save Changes')

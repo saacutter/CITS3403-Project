@@ -1,5 +1,5 @@
 <div id="tournament">
-    <div class="tournament-card bg-gray-800 p-6 rounded-lg shadow-lg flex items-center mb-4">
+    <div class="tournament-card bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col items-center mb-4 2xl:flex-row">
         <div class="flex-grow" id="{{ tournament.id }}">
             <h4 class="text-md font-semibold mb-2 text-white">{{ tournament.name }}</h4>
             <p class="text-gray-300">Game: {{ tournament.game_title }}</p>
@@ -15,7 +15,7 @@
                 {% endif %}
             </div>
         </div>
-        <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('main.upload', filename=tournament.image) }} {% endif %}" alt="Game Preview" class="w-24 h-24 object-cover rounded-md ml-4">
+        <img src="{% if tournament.image.startswith('http') %} {{ tournament.image }} {% else %} {{ url_for('main.upload', filename=tournament.image) }} {% endif %}" alt="Game Preview" class="w-24 h-24 object-cover rounded-md ml-4 hidden 2xl:block">
     </div>
     <div id="details-{{ tournament.id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg p-6 max-w-lg w-full relative">
