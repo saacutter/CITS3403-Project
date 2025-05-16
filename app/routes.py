@@ -7,7 +7,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timezone
 from hashlib import md5
 import os
-import logging
 
 # Update the last seen time of the user before each request
 @blueprint.before_request
@@ -61,12 +60,12 @@ def login():
 
         # Log the user in
         login_user(user, remember=form.remember_user.data)
-        application.logger.info('User ' + user.username + ' has logged in')
+        current_app.logger.info('User ' + user.username + ' has logged in')
 
         # Extract the next page from the form and redirect them to that page
         next_page = request.form.get('next')
         return redirect(url_for(next_page))
-    return render_template("login.html", login=True, loginForm=form, signupForm=forms.RegistrationForm(), next=next_page) # Display login page
+    return render_template("login.html", form=form, next=next_page) # Display login page
 
 # Signup route of the application
 @blueprint.route("/register", methods=["GET", "POST"])
@@ -95,12 +94,12 @@ def signup():
         )
         db.session.add(user)
         db.session.commit()
-        application.logger.info('User with username ' + user.username + ' has created an account')
+        current_app.logger.info('User with username ' + user.username + ' has created an account')
 
         # Log in the user and redirect them to the homepage
         login_user(user, remember=True)
         return redirect('/')
-    return render_template("login.html", login=False, loginForm=forms.LoginForm(), signupForm=form) # Display sign up page
+    return render_template("register.html", form=form) # Display sign up page
 
 @blueprint.route('/signout')
 def signout():
@@ -119,7 +118,7 @@ def browse():
 def profile(username):
     # Get the user with the specified ID
     user = db.first_or_404(sa.select(models.Users).where(models.Users.username == username))
-    application.logger.info(current_user.username + ' has accessed the profile of user ' + user.username)
+    current_app.logger.info(current_user.username + ' has accessed the profile of user ' + user.username)
 
     # Get the users that the current user is following
     users_followed = list(db.session.scalars(sa.select(models.Users).join(models.Friends, models.Users.id == models.Friends.to_user).where(models.Friends.from_user == user.id)))
@@ -165,7 +164,7 @@ def edit_profile():
         
         # Save the new information to the database
         db.session.commit()
-        application.logger.info(str(user.id) + ' has edited their profile information')
+        current_app.logger.info(str(user.id) + ' has edited their profile information')
 
         return redirect(url_for('main.profile', username=current_user.username))
     return render_template("edit-profile.html", form=form)
@@ -228,7 +227,7 @@ def add_friend(username):
     # Add this relationship to the database
     db.session.add(friend)
     db.session.commit()
-    application.logger.info(current_user.username + ' has followed the user ' + user.username)
+    current_app.logger.info(current_user.username + ' has followed the user ' + user.username)
 
     return '', 200
 
@@ -250,7 +249,7 @@ def remove_friend(username):
     # Remove the relationship from the database
     db.session.delete(relationship)
     db.session.commit()
-    application.logger.info(current_user.username + ' has unfollowed the user ' + user.username)
+    current_app.logger.info(current_user.username + ' has unfollowed the user ' + user.username)
 
     return '', 200
 
@@ -283,7 +282,7 @@ def tournament():
         )
         db.session.add(tournament)
         db.session.commit()
-        application.logger.info(current_user.username + ' has created a new tournament (' + name + ')')
+        current_app.logger.info(current_user.username + ' has created a new tournament (' + name + ')')
 
         return redirect(url_for('main.index'))
     return render_template("add-tournament.html", form=form)
@@ -322,7 +321,7 @@ def edit_tournament(id):
         
         # Save the new information to the database
         db.session.commit()
-        application.logger.info(current_user.usernme + ' has edited a tournament with ID ' + str(tournament.id))
+        current_app.logger.info(current_user.usernme + ' has edited a tournament with ID ' + str(tournament.id))
 
         return redirect(url_for('main.profile', username=current_user.username))
     return render_template("edit-tournament.html", form=form, tournament=tournament)
@@ -338,7 +337,7 @@ def remove_tournament(id):
     # Remove the tournament from the database
     db.session.delete(tournament)
     db.session.commit()
-    application.logger.info(current_user.usernme + ' has deleted a tournament with ID ' + str(tournament.id))
+    current_app.logger.info(current_user.usernme + ' has deleted a tournament with ID ' + str(tournament.id))
 
     return '', 200
 
